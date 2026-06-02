@@ -1,0 +1,45 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$queryParam = 'q';
+try {
+    $configProvider = $block->getData('configProvider');
+    if ($configProvider instanceof \Magento\Search\ViewModel\ConfigProvider) {
+        $queryParam = $configProvider->getQueryParamName();
+    }
+} catch (\Throwable $e) {
+    // use default catalog search query param
+}
+$query = (string) $block->getRequest()->getParam($queryParam);
+?>
+<div class="block block-search">
+    <div class="block block-content">
+        <form class="form minisearch"
+              id="search_mini_form"
+              action="<?= $block->escapeUrl($block->getUrl('catalogsearch/result')) ?>"
+              method="get">
+            <div class="field search">
+                <label class="label" for="search">
+                    <span class="bd-sr-only"><?= $block->escapeHtml(__('Search')) ?></span>
+                </label>
+                <div class="control">
+                    <input id="search"
+                           type="text"
+                           name="<?= $block->escapeHtmlAttr($queryParam) ?>"
+                           value="<?= $block->escapeHtmlAttr($query) ?>"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Search Keyword')) ?>"
+                           class="input-text"
+                           maxlength="128"
+                           autocomplete="off"/>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit"
+                        class="action search"
+                        title="<?= $block->escapeHtmlAttr(__('Search')) ?>"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Search')) ?>">
+                    <span class="bd-sr-only"><?= $block->escapeHtml(__('Search')) ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

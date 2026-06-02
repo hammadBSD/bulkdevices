@@ -24,14 +24,9 @@
                    template="BSD_Theme::html/header.phtml"
                    before="-">
                 <block class="Magento\Theme\Block\Html\Header\Logo" name="logo"/>
-                <block class="Magento\Framework\View\Element\Template" name="top.search"
-                       as="topSearch"
-                       template="Magento_Search::form.mini.phtml">
-                    <arguments>
-                        <argument name="configProvider" xsi:type="object">Magento\Search\ViewModel\ConfigProvider</argument>
-                        <argument name="additionalSearchFormData" xsi:type="object">Magento\Search\ViewModel\AdditionalSearchFormData</argument>
-                    </arguments>
-                </block>
+                <block class="Magento\Framework\View\Element\Template"
+                       name="bd.top.search"
+                       template="BSD_Theme::html/search.phtml"/>
                 <block class="Magento\Checkout\Block\Cart\Sidebar" name="minicart"
                        template="Magento_Checkout::cart/minicart.phtml">
                     <arguments>

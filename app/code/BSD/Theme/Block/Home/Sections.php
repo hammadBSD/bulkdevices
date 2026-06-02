@@ -10,6 +10,7 @@ use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCo
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory as ProductCollectionFactory;
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Framework\Pricing\Render;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Template;
 use Magento\Store\Model\StoreManagerInterface;
 
@@ -51,16 +52,56 @@ class Sections extends Template
         return $items;
     }
 
+    private const PROMO_ROOT_CATEGORY_ID = 9969;
+
     /**
-     * Newest in-stock products for promotional grid.
+     * Brand tabs for the promotional products row (matches production).
+     *
+     * @return array<int, array{label: string, id: int, url: string}>
+     */
+    public function getPromoFilters(): array
+    {
+        $activeId = (int) $this->getRequest()->getParam('promo_brand', 0);
+        $homeUrl = $this->getUrl('');
+
+        $filters = [
+            ['label' => (string) __('All'), 'id' => 0],
+            ['label' => 'HP', 'id' => 9970],
+            ['label' => 'Cisco', 'id' => 9971],
+            ['label' => 'Seagate', 'id' => 9973],
+            ['label' => 'Dell', 'id' => 9974],
+            ['label' => (string) __('Western Digital'), 'id' => 9972],
+        ];
+
+        $out = [];
+        foreach ($filters as $filter) {
+            $id = $filter['id'];
+            $out[] = [
+                'label' => $filter['label'],
+                'id' => $id,
+                'active' => ($activeId === 0 && $id === 0) || ($activeId > 0 && $activeId === $id),
+                'url' => $id === 0 ? $homeUrl : $homeUrl . '?promo_brand=' . $id,
+            ];
+        }
+        return $out;
+    }
+
+    /**
+     * Products from the Promotional Products category (and brand subcategories).
      */
     public function getPromoProducts(): \Magento\Catalog\Model\ResourceModel\Product\Collection
     {
         $storeId = (int) $this->storeManager->getStore()->getId();
+        $brandId = (int) $this->getRequest()->getParam('promo_brand', 0);
+        $categoryIds = $brandId > 0
+            ? [$brandId]
+            : [self::PROMO_ROOT_CATEGORY_ID, 9970, 9971, 9972, 9973, 9974];
+
         $collection = $this->productCollectionFactory->create();
         $collection->setStoreId($storeId);
         $collection->addStoreFilter($storeId);
-        $collection->addAttributeToSelect(['name', 'price', 'small_image', 'url_key']);
+        $collection->addAttributeToSelect(['name', 'price', 'small_image', 'image', 'url_key']);
+        $collection->addCategoriesFilter(['in' => $categoryIds]);
         $collection->addAttributeToFilter('status', 1);
         $collection->setVisibility([
             Visibility::VISIBILITY_IN_CATALOG,
@@ -68,19 +109,69 @@ class Sections extends Template
         ]);
         $collection->addMinimalPrice();
         $collection->addUrlRewrite();
-        $collection->setOrder('created_at', 'desc');
+        $collection->setOrder('entity_id', 'desc');
         $collection->setPageSize(10);
         return $collection;
     }
 
+    public function getPlaceholderImageUrl(): string
+    {
+        return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA)
+            . 'catalog/product/placeholder/default/placeholder_1.webp';
+    }
+
     public function getHeroBannerUrl(): string
     {
-        return (string) $this->getViewFileUrl('images/hero-banner.png');
+        return (string) $this->getViewFileUrl('images/hero-banner.webp');
+    }
+
+    public function getTrustIconUrl(string $name): string
+    {
+        return (string) $this->getViewFileUrl('images/trust/' . $name . '.png');
     }
 
     public function getProductImageUrl(Product $product): string
     {
-        return (string) $this->imageHelper->init($product, 'category_page_grid')->getUrl();
+        $image = (string) $product->getSmallImage();
+        if ($image === '' || $image === 'no_selection') {
+            $image = (string) $product->getImage();
+        }
+        if ($image === '' || $image === 'no_selection') {
+            return $this->getPlaceholderImageUrl();
+        }
+
+        $url = (string) $this->imageHelper->init($product, 'category_page_grid')->getUrl();
+        if ($url === '' || str_contains($url, 'placeholder/.') || str_contains($url, '/placeholder/.')) {
+            return $this->getPlaceholderImageUrl();
+        }
+
+        return $url;
+    }
+
+    public function getFormattedPrice(Product $product): string
+    {
+        $price = $product->getFinalPrice();
+        if ($price === null || $price === '') {
+            return '';
+        }
+        return (string) $this->storeManager->getStore()->getCurrentCurrency()->format(
+            (float) $price,
+            [],
+            false
+        );
+    }
+
+    public function isQuoteProduct(Product $product): bool
+    {
+        return (float) $product->getFinalPrice() <= 0;
+    }
+
+    public function getAddToCartUrl(Product $product): string
+    {
+        return $this->getUrl('checkout/cart/add', [
+            'product' => (int) $product->getId(),
+            '_secure' => $this->getRequest()->isSecure(),
+        ]);
     }
 
     public function getProductPriceHtml(Product $product): string

@@ -2,6 +2,7 @@
 /** @var \BSD\Theme\Block\Home\Sections $block */
 $heroUrl = $block->getHeroBannerUrl();
 $products = $block->getPromoProducts();
+$promoFilters = $block->getPromoFilters();
 ?>
 <div class="bd-home">
     <section class="bd-hero" style="--bd-hero-image: url('<?= $block->escapeUrl($heroUrl) ?>')">
@@ -19,28 +20,28 @@ $products = $block->getPromoProducts();
             <div class="bd-container bd-trust-bar__grid">
                 <div class="bd-trust-bar__item">
                     <span class="bd-trust-bar__icon bd-trust-bar__icon--price" aria-hidden="true"></span>
-                    <div>
+                    <div class="bd-trust-bar__text">
                         <strong><?= $block->escapeHtml(__('Price Match Guarantee')) ?></strong>
                         <p><?= $block->escapeHtml(__('Get the best price with our price match guarantee.')) ?></p>
                     </div>
                 </div>
                 <div class="bd-trust-bar__item">
                     <span class="bd-trust-bar__icon bd-trust-bar__icon--return" aria-hidden="true"></span>
-                    <div>
+                    <div class="bd-trust-bar__text">
                         <strong><?= $block->escapeHtml(__('Easy Return')) ?></strong>
                         <p><?= $block->escapeHtml(__('Enjoy hassle-free returns on all purchases.')) ?></p>
                     </div>
                 </div>
                 <div class="bd-trust-bar__item">
                     <span class="bd-trust-bar__icon bd-trust-bar__icon--secure" aria-hidden="true"></span>
-                    <div>
+                    <div class="bd-trust-bar__text">
                         <strong><?= $block->escapeHtml(__('Secure Payment')) ?></strong>
                         <p><?= $block->escapeHtml(__('Shop confidently with our secure payment options.')) ?></p>
                     </div>
                 </div>
                 <div class="bd-trust-bar__item">
                     <span class="bd-trust-bar__icon bd-trust-bar__icon--ship" aria-hidden="true"></span>
-                    <div>
+                    <div class="bd-trust-bar__text">
                         <strong><?= $block->escapeHtml(__('Free Shipping')) ?></strong>
                         <p><?= $block->escapeHtml(__('Free shipping on all orders*.')) ?></p>
                     </div>
@@ -49,29 +50,60 @@ $products = $block->getPromoProducts();
         </div>
     </section>
 
-    <section class="bd-section bd-section--products">
+    <section class="bd-promo-section" id="promotional-products">
         <div class="bd-container">
-            <h2 class="bd-section__title"><?= $block->escapeHtml(__('PROMOTIONAL PRODUCTS')) ?></h2>
-            <div class="bd-product-grid bd-product-grid--home">
+            <h2 class="bd-promo-section__title"><?= $block->escapeHtml(__('Promotional Products')) ?></h2>
+
+            <nav class="bd-promo-filters" aria-label="<?= $block->escapeHtmlAttr(__('Filter promotional products by brand')) ?>">
+                <?php foreach ($promoFilters as $index => $filter): ?>
+                    <?php if ($index > 0): ?>
+                        <span class="bd-promo-filters__sep" aria-hidden="true">|</span>
+                    <?php endif; ?>
+                    <a href="<?= $block->escapeUrl($filter['url']) ?>"
+                       class="bd-promo-filters__link<?= $filter['active'] ? ' is-active' : '' ?>">
+                        <?= $block->escapeHtml($filter['label']) ?>
+                    </a>
+                <?php endforeach; ?>
+            </nav>
+
+            <div class="bd-promo-grid">
                 <?php foreach ($products as $product): ?>
-                    <article class="bd-product-card">
-                        <a class="bd-product-card__image" href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                    <?php
+                    $isQuote = $block->isQuoteProduct($product);
+                    $price = $block->getFormattedPrice($product);
+                    ?>
+                    <article class="bd-promo-card">
+                        <a class="bd-promo-card__image" href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
                             <img src="<?= $block->escapeUrl($block->getProductImageUrl($product)) ?>"
                                  alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
                                  loading="lazy"
-                                 width="280" height="280"/>
+                                 width="220" height="220"/>
                         </a>
-                        <h3 class="bd-product-card__name">
+                        <h3 class="bd-promo-card__name">
                             <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
                                 <?= $block->escapeHtml($product->getName()) ?>
                             </a>
                         </h3>
-                        <div class="bd-product-card__price">
-                            <?= /* @noEscape */ $block->getProductPriceHtml($product) ?>
-                        </div>
-                        <a class="bd-btn bd-btn--primary bd-btn--block" href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
-                            <?= $block->escapeHtml(__('ADD TO CART')) ?>
-                        </a>
+                        <?php if ($price !== ''): ?>
+                            <div class="bd-promo-card__price"><?= $block->escapeHtml($price) ?></div>
+                        <?php endif; ?>
+                        <?php if ($isQuote): ?>
+                            <a class="bd-promo-card__btn bd-promo-card__btn--quote"
+                               href="<?= $block->escapeUrl($block->getUrl('contact')) ?>">
+                                <?= $block->escapeHtml(__('QUOTE NOW')) ?>
+                            </a>
+                        <?php else: ?>
+                            <form class="bd-promo-card__form"
+                                  action="<?= $block->escapeUrl($block->getAddToCartUrl($product)) ?>"
+                                  method="post">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <input type="hidden" name="product" value="<?= (int) $product->getId() ?>"/>
+                                <input type="hidden" name="qty" value="1"/>
+                                <button type="submit" class="bd-promo-card__btn">
+                                    <?= $block->escapeHtml(__('ADD TO CART')) ?>
+                                </button>
+                            </form>
+                        <?php endif; ?>
                     </article>
                 <?php endforeach; ?>
             </div>
