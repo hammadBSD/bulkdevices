@@ -1,0 +1,25 @@
+{
+    "name": "quickbuy/module-quickbuy",
+    "description": "Magento2 Quick Buy Module",
+    "homepage": "https://github.com/quickbuy/magento2-quickbuy",
+    "type": "magento2-module",
+    "version": "1.3.0",
+    "license": "GPL-3.0-or-later",
+    "authors": [
+        {
+          "name": "Prince Patel",
+          "email": "mail.quickbuy@gmail.com"
+        }
+    ],
+    "support": {
+        "issues": "https://github.com/quickbuy/magento2-quickbuy/issues"
+    },
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "BSD\\QuickBuy\\": ""
+        }
+    }
+}

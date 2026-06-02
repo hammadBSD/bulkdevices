@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Shipping\Model\Shipping">
+        <plugin name="pnp_disable_freeshipping_by_weight"
+                type="Pnp\DisableFreeShippingByWeight\Plugin\Shipping\DisableFreeShippingByWeight" />
+    </type>
+</config>
+

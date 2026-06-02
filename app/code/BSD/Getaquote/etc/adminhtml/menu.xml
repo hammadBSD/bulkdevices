@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Backend/etc/menu.xsd">
+    <menu>
+        <add id="BSD_Getaquote::parent" title="Get a Quote" module="BSD_Getaquote" sortOrder="100" resource="BSD_Getaquote::parent"/>
+        <add id="BSD_Getaquote::getaquote" title="Get a Quote" module="BSD_Getaquote" sortOrder="20" parent="BSD_Getaquote::parent" action="getaquote/getaquote" resource="BSD_Getaquote::getaquote"/>
+    </menu>
+</config>

@@ -1,0 +1,18 @@
+<?php
+/**
+ * @var \Magento\Theme\Block\Html\Header\Logo $block
+ */
+$logoUrl = $block->getViewFileUrl('images/logo.png');
+$logoAlt = $block->getLogoAlt() ?: __('Bulk Devices');
+?>
+<a class="bd-logo-link"
+   href="<?= $block->escapeUrl($block->getUrl('')) ?>"
+   title="<?= $block->escapeHtmlAttr($logoAlt) ?>"
+   aria-label="store logo">
+    <img src="<?= $block->escapeUrl($logoUrl) ?>"
+         alt="<?= $block->escapeHtmlAttr($logoAlt) ?>"
+         width="180"
+         height="52"
+         loading="eager"
+         decoding="async"/>
+</a>

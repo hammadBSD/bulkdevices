@@ -1,0 +1,16 @@
+<?php
+/** @var \Magento\Catalog\Block\Category\View $block */
+$category = $block->getCurrentCategory();
+if (!$category || !$category->getData('bottom_description')) {
+    return;
+}
+?>
+<section class="bd-category-seo">
+    <div class="bd-container">
+        <?= /* @noEscape */ $this->helper(\Magento\Catalog\Helper\Output::class)->categoryAttribute(
+            $category,
+            $category->getData('bottom_description'),
+            'bottom_description'
+        ) ?>
+    </div>
+</section>

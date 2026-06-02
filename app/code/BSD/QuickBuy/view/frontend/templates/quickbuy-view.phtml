@@ -1,0 +1,27 @@
+<?php
+/**
+ * MagePrince
+ * Copyright (C) 2020 BSD <info@quickbuy.com>
+ *
+ * @package BSD_QuickBuy
+ * @copyright Copyright (c) 2020 BSD (http://www.quickbuy.com/)
+ * @license http://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MagePrince <info@quickbuy.com>
+ */
+?>
+
+<?php $helper = $this->helper("BSD\QuickBuy\Helper\Data"); ?>
+<?php $formId = $helper->getAddToCartFormId(); ?>
+<?php $buttonTitle = $helper->getButtonTitle() ?>
+<button type="submit" title="<?php /* @escapeNotVerified */
+echo __($buttonTitle) ?>" id="quick-buy" class="action primary" data-mage-init='
+    {
+        "BSD_QuickBuy/js/quick-buy": {
+            "form": "#<?php echo $formId; ?>"
+        }
+    }
+    '>
+    <?php if ($this->getRequest()->getFullActionName() == "catalog_product_view") $buttonTitle = "QUICK BUY"; ?>
+    <span><?php /* @escapeNotVerified */
+        echo __($buttonTitle) ?></span>
+</button>

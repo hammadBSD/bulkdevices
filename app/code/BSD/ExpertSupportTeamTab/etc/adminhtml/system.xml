@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="whatsApp" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <class>separator-top</class>
+            <label>WhatsApp Settings</label>
+            <tab>bsd</tab>
+            <resource>BSD_ExpertSupportTeamTab::whatsApp</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>General WhatsApp Chat</label>
+                <field id="enabled" translate="label" type="select" sortOrder="10" showInDefault="1"
+                       showInWebsite="1" showInStore="0" canRestore="1">
+                    <label>Status</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable/disable General WhatsApp Chat</comment>
+                </field>
+                <field id="phone_number" translate="label" type="text" sortOrder="30" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Phone Number</label>
+                    <comment>Full phone number in international format. Example: +923xxxxxxxxx</comment>
+                </field>
+                <field id="message" translate="label" type="text" sortOrder="40" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Default Message</label>
+                    <comment>Pre-filled message that will automatically appear in the text field of a chat</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

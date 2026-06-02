@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+
+    <menu>
+        <add id="BSD_Banner::elements" title="BSD Banners" module="BSD_Banner" resource="BSD_Banner::manage_banners" sortOrder="50"/>
+
+        <add id="BSD_Banner::banner" title="Manage Banners" module="BSD_Banner" resource="BSD_Banner::manage_banners" parent="BSD_Banner::elements" sortOrder="1" action="banner/banner/" />
+        <add id="BSD_Banner::configuration" title="Configuration" module="BSD_Banner" resource="BSD_Banner::config_banner" parent="BSD_Banner::elements" sortOrder="2" action="admin/system_config/edit/section/bsd_banner/"/>
+    </menu>
+</config>

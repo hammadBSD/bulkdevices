@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="carriers">
+            <group id="freeshipping" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="disable_under_weight_enabled" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Disable Free Shipping if weight is below minimum</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="max_weight" translate="label" type="text" sortOrder="91" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Maximum Weight for Free Shipping</label>
+                    <validate>validate-number</validate>
+                    <comment>Free shipping is disabled if the total weight is greater than or equal to this value.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

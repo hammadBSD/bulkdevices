@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_OneStepCheckout
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2017-2018 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="bss_onstepcheckout_delivery" instance="Bss\OneStepCheckout\Observer\SalesEventQuoteSubmitBeforeObserver" shared="false" />
+    </event>
+    <event name="sales_order_place_after">
+        <observer name="bss_onstepcheckout_save_guest" instance="Bss\OneStepCheckout\Observer\GuestSave" />
+    </event>
+    <event name="layout_load_before">
+        <observer name="bss_onstepcheckout_layout_load_before" instance="Bss\OneStepCheckout\Observer\BeforeLoad" />
+    </event>
+    <event name="email_order_set_template_vars_before">
+        <observer name="bss-osc-order-comment" instance="Bss\OneStepCheckout\Observer\EmailTemplateVars"/>
+    </event>
+</config>

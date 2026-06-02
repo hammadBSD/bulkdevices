@@ -1,0 +1,24 @@
+<div class="bd-utility-bar" role="region" aria-label="<?= $block->escapeHtmlAttr(__('Store information')) ?>">
+    <div class="bd-container bd-utility-bar__inner">
+        <div class="bd-utility-bar__messages">
+            <span class="bd-utility-bar__msg">
+                <span class="bd-icon bd-icon--truck" aria-hidden="true"></span>
+                <?= $block->escapeHtml(__('Fast & Tracked US Shipping On All Full Systems')) ?>
+            </span>
+            <span class="bd-utility-bar__msg">
+                <span class="bd-icon bd-icon--plane" aria-hidden="true"></span>
+                <?= $block->escapeHtml(__('Cheapest Worldwide Delivery Rates Anywhere')) ?>
+            </span>
+        </div>
+        <div class="bd-utility-bar__account">
+            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/login')) ?>">
+                <span class="bd-icon bd-icon--user" aria-hidden="true"></span>
+                <?= $block->escapeHtml(__('Sign in')) ?>
+            </a>
+            <a href="<?= $block->escapeUrl($block->getUrl('customer/account/create')) ?>">
+                <span class="bd-icon bd-icon--register" aria-hidden="true"></span>
+                <?= $block->escapeHtml(__('Register Account')) ?>
+            </a>
+        </div>
+    </div>
+</div>

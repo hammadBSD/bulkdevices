@@ -1,0 +1,46 @@
+<?php
+/** @var \BSD\Theme\Block\Html\Footer $block */
+?>
+<footer class="bd-footer">
+    <div class="bd-footer__newsletter">
+        <div class="bd-container bd-footer__newsletter-inner">
+            <p class="bd-footer__newsletter-title"><?= $block->escapeHtml(__('SIGN UP ON NEWSLETTER')) ?></p>
+            <?= $block->getChildHtml('form.subscribe') ?>
+        </div>
+    </div>
+    <div class="bd-container bd-footer__grid">
+        <div class="bd-footer__col">
+            <h3><?= $block->escapeHtml(__('About Bulk Devices')) ?></h3>
+            <ul>
+                <li><a href="<?= $block->escapeUrl($block->getUrl('about-us')) ?>"><?= $block->escapeHtml(__('About Us')) ?></a></li>
+                <li><a href="<?= $block->escapeUrl($block->getUrl('contact')) ?>"><?= $block->escapeHtml(__('Contact Us')) ?></a></li>
+                <li><a href="<?= $block->escapeUrl($block->getUrl('privacy-policy')) ?>"><?= $block->escapeHtml(__('Privacy Policy')) ?></a></li>
+            </ul>
+        </div>
+        <div class="bd-footer__col">
+            <h3><?= $block->escapeHtml(__('Featured Categories')) ?></h3>
+            <ul>
+                <li><a href="<?= $block->escapeUrl($block->getUrl('hard-drive')) ?>"><?= $block->escapeHtml(__('Hard Drive')) ?></a></li>
+                <li><a href="<?= $block->escapeUrl($block->getUrl('memory')) ?>"><?= $block->escapeHtml(__('Memory')) ?></a></li>
+                <li><a href="<?= $block->escapeUrl($block->getUrl('cpu')) ?>"><?= $block->escapeHtml(__('CPU')) ?></a></li>
+            </ul>
+        </div>
+        <div class="bd-footer__col">
+            <h3><?= $block->escapeHtml(__('Account')) ?></h3>
+            <ul>
+                <li><a href="<?= $block->escapeUrl($block->getUrl('customer/account')) ?>"><?= $block->escapeHtml(__('My Account')) ?></a></li>
+                <li><a href="<?= $block->escapeUrl($block->getUrl('sales/order/history')) ?>"><?= $block->escapeHtml(__('Order History')) ?></a></li>
+            </ul>
+        </div>
+        <div class="bd-footer__col">
+            <h3><?= $block->escapeHtml(__('Contact Info')) ?></h3>
+            <p><?= $block->escapeHtml(__('(800) 577-4333')) ?></p>
+            <p><a href="mailto:support@bulkdevices.com">support@bulkdevices.com</a></p>
+        </div>
+    </div>
+    <div class="bd-footer__bottom">
+        <div class="bd-container">
+            <p>&copy; <?= (int) date('Y') ?> <?= $block->escapeHtml(__('Bulk Devices. All rights reserved.')) ?></p>
+        </div>
+    </div>
+</footer>

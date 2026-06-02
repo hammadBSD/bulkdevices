@@ -1,0 +1,19 @@
+<?php
+/** @var \Magento\Catalog\Block\Category\View $block */
+$category = $block->getCurrentCategory();
+if (!$category) {
+    return;
+}
+?>
+<div class="bd-category-header">
+    <h1 class="bd-category-header__title"><?= $block->escapeHtml($category->getName()) ?></h1>
+    <?php if ($category->getDescription()): ?>
+        <div class="bd-category-header__intro">
+            <?= /* @noEscape */ $this->helper(\Magento\Catalog\Helper\Output::class)->categoryAttribute(
+                $category,
+                $category->getDescription(),
+                'description'
+            ) ?>
+        </div>
+    <?php endif; ?>
+</div>

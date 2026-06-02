@@ -1,0 +1,40 @@
+<?php
+/** @var $block \Magento\Framework\View\Element\Template */
+/** @var \Magento\Search\ViewModel\ConfigProvider $configProvider */
+$configProvider = $block->getData('configProvider');
+?>
+<div class="block block-search">
+    <div class="block block-title"><strong><?= $block->escapeHtml(__('Search')) ?></strong></div>
+    <div class="block block-content">
+        <form class="form minisearch" id="search_mini_form"
+              action="<?= $block->escapeUrl($block->getUrl('catalogsearch/result')) ?>" method="get">
+            <div class="field search">
+                <label class="label" for="search" data-role="minisearch-label">
+                    <span><?= $block->escapeHtml(__('Search')) ?></span>
+                </label>
+                <div class="control">
+                    <input id="search"
+                           type="text"
+                           name="<?= $block->escapeHtmlAttr($configProvider->getQueryParamName()) ?>"
+                           value="<?= $block->escapeHtmlAttr($block->getRequest()->getQuery($configProvider->getQueryParamName())) ?>"
+                           placeholder="<?= $block->escapeHtmlAttr(__('Search Keyword')) ?>"
+                           class="input-text"
+                           maxlength="<?= (int) $configProvider->getMaxQueryLength() ?>"
+                           role="combobox"
+                           aria-haspopup="false"
+                           aria-autocomplete="both"
+                           autocomplete="off"
+                           aria-expanded="false"/>
+                </div>
+            </div>
+            <div class="actions">
+                <button type="submit"
+                        title="<?= $block->escapeHtmlAttr(__('Search')) ?>"
+                        class="action search"
+                        aria-label="<?= $block->escapeHtmlAttr(__('Search')) ?>">
+                    <span><?= $block->escapeHtml(__('Search')) ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>

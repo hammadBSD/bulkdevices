@@ -1,0 +1,87 @@
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category  BSS
+ * @package   Bss_OneStepCheckout
+ * @author    Extension Team
+ * @copyright Copyright (c) 2017-2018 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license   http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+
+<!-- ko foreach: getRegion('before_details') -->
+<!-- ko template: getTemplate() --><!-- /ko -->
+<!-- /ko -->
+<div class="product-item-details">
+    <div class="product-item-inner">
+        <div class="product-item-name-block">
+            <strong class="product-item-name">
+                <a data-bind="html: $parent.name, attr: {href: getProductUrl($parent.item_id)}"></a>
+            </strong>
+            <div class="details-qty">
+                <span class="label"><!-- ko i18n: 'Qty' --><!-- /ko --></span>
+                <input type="number" class="input-text qty" data-bind="
+                    value: $parent.qty,
+                    event: {
+                        change: function () {updateQty($parent);}
+                    },
+                    attr: {
+                        title: titleQtyBox
+                    }"/>
+                <span class="qty-button">
+                    <span class="increase" data-bind="attr: {action: 'increase', itemId: $parent.item_id}, click: updateQtyButton">&nbsp;</span>
+                    <span class="decrease" data-bind="attr: {action: 'decrease', itemId: $parent.item_id}, click: updateQtyButton">&nbsp;</span>
+                </span>
+                <span class="error-message" data-bind="attr: {itemId: $parent.item_id}"></span>
+            </div>
+            <button class="delete-button checkout_delete_btn test" data-bind="event:{ click: function() { deleteCartItem($parent) }}">
+                <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" viewBox="0 0 24 24">
+                    <path fill-rule="evenodd" d="M8.586 2.586A2 2 0 0 1 10 2h4a2 2 0 0 1 2 2v2h3a1 1 0 1 1 0 2v12a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V8a1 1 0 0 1 0-2h3V4a2 2 0 0 1 .586-1.414ZM10 6h4V4h-4v2Zm1 4a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Zm4 0a1 1 0 1 0-2 0v8a1 1 0 1 0 2 0v-8Z" clip-rule="evenodd"/>
+                </svg>
+            </button>
+        </div>
+        <!-- ko foreach: getRegion('after_details') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+    </div>
+    <div class="product actions">
+        <div class="secondary">
+            <span data-bind="attr: {action: 'increase', itemId: $parent.item_id}, click: removeItemProduct"
+                  class="action delete">
+                <span data-bind="i18n: 'Remove'"></span>
+            </span>
+        </div>
+    </div>
+    <!-- ko if: (JSON.parse($parent.options).length > 0)-->
+    <div class="product options" data-bind="mageInit: {'collapsible':{'openedState': 'active'}}">
+        <span data-role="title" class="toggle"><!-- ko i18n: 'View Details' --><!-- /ko --></span>
+        <div data-role="content" class="content">
+            <strong class="subtitle"><!-- ko i18n: 'Options Details' --><!-- /ko --></strong>
+            <dl class="item-options">
+                <!--ko foreach: JSON.parse($parent.options)-->
+                <dt class="label" data-bind="text: label"></dt>
+                <!-- ko if: ($data.full_view)-->
+                <dd class="values" data-bind="html: full_view"></dd>
+                <!-- /ko -->
+                <!-- ko ifnot: ($data.full_view)-->
+                <dd class="values" data-bind="html: value"></dd>
+                <!-- /ko -->
+                <!-- /ko -->
+            </dl>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>
+<!-- ko ifnot: is230Ver() -->
+<!-- ko foreach: getRegion('item_message') -->
+<!-- ko template: getTemplate() --><!-- /ko -->
+<!-- /ko -->
+<!-- /ko -->

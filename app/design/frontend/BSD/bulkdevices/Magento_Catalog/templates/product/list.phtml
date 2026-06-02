@@ -1,0 +1,61 @@
+<?php
+use Magento\Framework\App\Action\Action;
+
+/**
+ * Bulk Devices PLP product grid
+ *
+ * @var $block \Magento\Catalog\Block\Product\ListProduct
+ * @var \Magento\Framework\Escaper $escaper
+ */
+?>
+<?php
+$_productCollection = $block->getLoadedProductCollection();
+$_helper = $block->getData('outputHelper');
+?>
+<?php if (!$_productCollection->count()): ?>
+    <div class="message info empty"><div><?= $escaper->escapeHtml(__('We can\'t find products matching the selection.')) ?></div></div>
+<?php else: ?>
+    <div class="bd-plp-toolbar"><?= $block->getToolbarHtml() ?></div>
+    <div class="bd-product-grid products wrapper grid products-grid">
+        <?php foreach ($_productCollection as $_product): ?>
+            <?php
+            $productImage = $block->getImage($_product, 'category_page_grid');
+            ?>
+            <article class="bd-product-card product-item">
+                <a class="bd-product-card__image product photo product-item-photo"
+                   href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>">
+                    <?= $productImage->toHtml() ?>
+                </a>
+                <h3 class="bd-product-card__name product name product-item-name">
+                    <a href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>">
+                        <?= /* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
+                    </a>
+                </h3>
+                <div class="bd-product-card__price">
+                    <?= /* @noEscape */ $block->getProductPrice($_product) ?>
+                </div>
+                <?php if ($_product->isSaleable()): ?>
+                    <?php $postParams = $block->getAddToCartPostParams($_product); ?>
+                    <form data-role="tocart-form"
+                          data-product-sku="<?= $escaper->escapeHtmlAttr($_product->getSku()) ?>"
+                          action="<?= $escaper->escapeUrl($postParams['action']) ?>"
+                          method="post"
+                          class="bd-product-card__form">
+                        <input type="hidden" name="product" value="<?= (int) $_product->getId() ?>">
+                        <input type="hidden" name="<?= /* @noEscape */ Action::PARAM_NAME_URL_ENCODED ?>"
+                               value="<?= /* @noEscape */ $postParams['data'][Action::PARAM_NAME_URL_ENCODED] ?>">
+                        <?= $block->getBlockHtml('formkey') ?>
+                        <div class="bd-qty">
+                            <label class="bd-sr-only" for="qty-<?= (int) $_product->getId() ?>"><?= $escaper->escapeHtml(__('Qty')) ?></label>
+                            <input type="number" id="qty-<?= (int) $_product->getId() ?>" name="qty" value="1" min="1" class="bd-qty__input"/>
+                        </div>
+                        <button type="submit" class="bd-btn bd-btn--primary bd-btn--block" title="<?= $escaper->escapeHtmlAttr(__('Add to Cart')) ?>">
+                            <?= $escaper->escapeHtml(__('ADD TO CART')) ?>
+                        </button>
+                    </form>
+                <?php endif; ?>
+            </article>
+        <?php endforeach; ?>
+    </div>
+    <div class="bd-plp-toolbar bd-plp-toolbar--bottom"><?= $block->getToolbarHtml() ?></div>
+<?php endif; ?>

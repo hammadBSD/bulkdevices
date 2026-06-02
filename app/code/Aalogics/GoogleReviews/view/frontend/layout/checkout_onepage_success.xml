@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="before.body.end">
+            <block ifconfig="google_reviews/general/enabled" class="Aalogics\GoogleReviews\Block\GoogleReviews" name="aalogics.google.reviews.checkout" template="Aalogics_GoogleReviews::google_reviews.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd"> 
+     <preference for="BSD\Banner\Api\BannerRepositoryInterface" type="BSD\Banner\Model\BannerRepository" />
+    <type name="Magento\Framework\EntityManager\MetadataPool">
+        <arguments>
+            <argument name="metadata" xsi:type="array">
+                <item name="BSD\Banner\Api\Data\BannerInterface" xsi:type="array">
+                    <item name="entityTableName" xsi:type="string">bsd_banner</item>
+                    <item name="identifierField" xsi:type="string">banner_id</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="BSD\Banner\Api\Data\BannerInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="storeReader" xsi:type="string">BSD\Banner\Model\ResourceModel\Banner\Relation\Store\ReadHandler</item>
+                    </item>
+                    <item name="create" xsi:type="array">
+                        <item name="storeCreator" xsi:type="string">BSD\Banner\Model\ResourceModel\Banner\Relation\Store\SaveHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="storeUpdater" xsi:type="string">BSD\Banner\Model\ResourceModel\Banner\Relation\Store\SaveHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+
+    <type name="Magento\Framework\EntityManager\Operation\ExtensionPool">
+        <arguments>
+            <argument name="extensionActions" xsi:type="array">
+                <item name="BSD\Banner\Api\Data\BannerInterface" xsi:type="array">
+                    <item name="read" xsi:type="array">
+                        <item name="customerGroupReader"
+                              xsi:type="string">BSD\Banner\Model\ResourceModel\Banner\Relation\CustomerGroup\ReadHandler</item>
+                    </item> 
+                    <item name="create" xsi:type="array">
+                        <item name="customerGroupCreator"
+                              xsi:type="string">BSD\Banner\Model\ResourceModel\Banner\Relation\CustomerGroup\SaveHandler</item>
+                    </item>
+                    <item name="update" xsi:type="array">
+                        <item name="customerGroupUpdater"
+                              xsi:type="string">BSD\Banner\Model\ResourceModel\Banner\Relation\CustomerGroup\SaveHandler</item>
+                    </item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\EntityManager\HydratorPool">
+        <arguments>
+            <argument name="hydrators" xsi:type="array">
+                <item name="BSD\Banner\Api\Data\BannerInterface" xsi:type="string">Magento\Framework\EntityManager\AbstractModelHydrator</item>
+            </argument>
+        </arguments>
+    </type>
+  
+</config>

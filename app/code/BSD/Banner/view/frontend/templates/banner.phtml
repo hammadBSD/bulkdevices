@@ -1,0 +1,90 @@
+<?php if (!empty($block->getBanner())): ?>
+    <?php $styleVar ='';
+    if ($block->getConfig('bsd_banner/advance/left_padding') !='') {
+        $styleVar .= "padding-left :".$block->getConfig('bsd_banner/advance/left_padding').";";
+    }  ?>
+      <?php if ($block->getConfig('bsd_banner/advance/right_padding') !='') {
+            $styleVar .= "padding-right :".$block->getConfig('bsd_banner/advance/right_padding').";";
+      }  ?>
+<div class="bsd_banner" style="<?php echo $styleVar; ?>"  >
+    <style>
+        .bsd_banner_slider{
+            display: none;
+        }
+        .slick-initialized.bsd_banner_slider{
+            display: block;
+        }
+    </style>
+    <div class="bsd_banner_slider">
+        <?php  foreach ($block->getBanner() as $banner): ?>
+        <div>
+            <?php if ($banner->getBannerType() == "Video"):?>
+                 <div class="video-thumb">
+                    <video
+                        controls
+                        <?= $banner->getBannerVideoThumbImage() ? "poster='" . $block->getMediaPath().$banner->getBannerVideoThumbImage() . "'" : '' ?>
+                        <?= $banner->getBannerVideoAutoplay() ? "autoplay" : "" ?>
+                        muted
+                        loop>
+                  <source src="<?= $block->escapeHtml($block->getMediaPath().$banner->getBannerVideo()) ?>" type="video/mp4">
+                    </video>
+                </div>
+            <?php endif;?>
+
+            <?php if ($banner->getBannerType() == "Youtube"):?>
+                <div class="youtube-thumb">
+                    <iframe src="https://www.youtube.com/embed/<?= $block->escapeUrl($banner->getBannerYoutube()) ?>?controls=0&rel=0<?php if ($banner->getBannerVideoAutoplay()) { echo "&autoplay=1";
+                                                               } else { echo "&autoplay=0"; } ?>&modestbranding=1&disablekb=1"
+                        <?php if ($banner->getBannerVideoAutoplay()) { echo "allow='autoplay;'"; } ?> frameborder="0" allowfullscreen>
+                    </iframe>
+                </div>
+            <?php endif;?>
+            <?php if ($banner->getBannerType() == "Vimeo"):?>
+                 <iframe src="https://player.vimeo.com/video/<?= $block->escapeUrl($banner->getBannerVimeo()) ?>?&byline=0"  frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+                <div class="vimeo-wrapper">
+
+                </div>
+            <?php endif;?>
+            <?php if ($banner->getBannerType() == "Image"):?>
+                <?php if ($banner->getLabelButtonText() == "" && $banner->getCallToAction() != ""): ?><a href="<?= $block->escapeHtml(($banner->getCallToAction()?$banner->getCallToAction():'#')) ?>" class="btn btn-md btn-banner" target="_blank"><?php endif;?>
+                <div class="image-thumb">
+                    <img src="<?= $block->escapeHtml($block->getMediaPath().$banner->getBannerImage()) ?>" alt="<?= /* @noEscape */ ($banner->getBannerTitle()?$banner->getBannerTitle():"BSD Banner");?>" height="530" width="1280">
+                </div>
+                <?php if ($banner->getBannerDescription() != "" || $banner->getBannerTitle() != ""):?>
+                    <div class="caption">
+                        <div class="title">
+                            <div class="container">
+                                <?php if ($banner->getBannerTitle() != ""):?>
+                                <h2><?= $block->escapeHtml($banner->getBannerTitle()) ?></h2>
+                                <?php endif; ?>
+                                <?php if ($banner->getBannerDescription() != ""):?>
+                                    <?= /* @noEscape */ $block->getCmsFilterContent($banner->getBannerDescription()) ?>
+                                <?php endif; ?>
+                            </div>
+                        </div>
+                        <?php if ($banner->getLabelButtonText() != ""): ?>
+                        <div class="container">
+                            <a href="<?= $block->escapeHtml(($banner->getCallToAction()?$banner->getCallToAction():'#')) ?>" class="btn btn-md btn-banner" target="_blank">
+                                <?= $block->escapeHtml($banner->getLabelButtonText()) ?>
+                            </a>
+                        </div>
+                        <?php endif; ?>
+                    </div>
+                <?php endif;?>
+                <?php if ($banner->getLabelButtonText() == "" && $banner->getCallToAction() != ""): ?></a><?php endif;?>
+            <?php endif;?>
+        </div>
+        <?php endforeach;  ?>
+    </div>
+</div>
+<script type="text/x-magento-init">
+{
+    "*": {
+        "BSD_Banner/js/banner-slider": {
+            "autoplay": "<?= /* @noEscape */ $block->getConfig('bsd_banner/advance/auto_rotation'); ?>",
+            "autoplay_speed": "<?= /* @noEscape */ $block->getConfig('bsd_banner/advance/auto_rotation_speed'); ?>"
+        }
+    }
+}
+</script>
+<?php endif; ?>

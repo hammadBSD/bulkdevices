@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * MagePrince
+ * Copyright (C) 2020 BSD <info@quickbuy.com>
+ *
+ * @package BSD_QuickBuy
+ * @copyright Copyright (c) 2020 BSD (http://www.quickbuy.com/)
+ * @license http://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MagePrince <info@quickbuy.com>
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <quickbuy>
+            <general>
+                <keep_cart_products>1</keep_cart_products>
+                <enable_list>1</enable_list>
+                <enable_view>1</enable_view>
+                <enable_search>1</enable_search>
+                <enable_advanced_search>1</enable_advanced_search>
+                <addtocart_id>product_addtocart_form</addtocart_id>
+                <button_title>Quick Buy</button_title>
+                <custom_quickbuy_button_code><![CDATA[$buyNowHtml = $this->getLayout()
+    ->createBlock('BSD\QuickBuy\Block\Product\ListProduct')
+    ->setProduct($_item)
+    ->setTemplate('BSD_QuickBuy::quickbuy-list.phtml')
+    ->toHtml();
+echo $buyNowHtml;]]>
+                </custom_quickbuy_button_code>
+            </general>
+        </quickbuy>
+    </default>
+</config>

@@ -1,0 +1,22 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
+<div class="checkout-success">
+    <div class="checkout-success__wrapper">
+        <div class="checkout-success__image">
+            <img clsas="right-img" src="<?= $block->getBaseUrl()."media/package.png"?>" alt="" width="111" height="104">
+        </div>
+        <h1 class="checkout-success__heading">Order Recieved!</h1>
+        <span class="checkout-success__text">You have successfully placed an order, your product will be delivered in 4 days.</span>
+        <div class="actions-toolbar">
+            <div class="primary">
+                <a class="action primary continue"
+                   href="<?= $block->escapeUrl($block->getContinueUrl()) ?>"><span><?= $block->escapeHtml(__('OK')) ?></span></a>
+            </div>
+        </div>
+    </div>
+</div>

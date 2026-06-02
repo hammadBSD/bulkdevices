@@ -1,0 +1,155 @@
+<?php
+/**
+ * Copyright © 2015 Magento. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+
+$product = $block->getProduct(); 
+$image = $this->helper('Magento\Catalog\Helper\Image')->init($product, 'product_base_image')->constrainOnly(true)->keepAspectRatio(true)->keepTransparency(true)->keepFrame(false)->resize(150, 150)->getUrl();
+?>
+
+<?php
+/*
+
+ <div id="sidebar-cta">
+    <ul>
+        <li>
+            <a href="#">
+                <i class="fa fa-phone"></i>
+                <span>Guaranteed Price Match</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-user"></i>
+                <span>24/7 Customer Support</span>
+            </a>
+        </li>
+        <li>
+            <a href="#">
+                <i class="fa fa-check"></i>
+                <span>Best Quality Products</span>
+            </a>
+        </li>
+    </ul>
+</div>
+
+ */
+?>
+<div class="row">
+    <div class="col-md-12">
+
+        <form name="addtoquoteData" method="post" id="addtoquoteData" class="form"
+              action="<?php /* @escapeNotVerified */
+              echo $block->getFormAction(); ?>"
+              data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+              data-mage-init='{"validation":{}}'>
+            
+            <fieldset class="fieldset">
+                <legend class="legend"><span><?= $block->escapeHtmlAttr(__('Request For Free Quotation')) ?></span>
+                </legend>
+                <div class="side-form-detail">
+                        <span><strong>Sku:</strong><?php echo $product->getSku(); ?></span>
+                        <div class="p-img-bg">
+                            <img src="<?php echo $image ?>" style="margin-bottom: 0;"/>
+                        </div>
+                </div>
+                <fieldset class="fieldset row">
+                    <div class="fields col-md-12">
+                        <div class="field name required">
+                            <div class="control">
+                                <input placeholder="<?= $block->escapeHtmlAttr(__('Name')) ?>" name="name" id="name"
+                                       title="Name" value="" class="input-text" type="text"
+                                       data-validate="{required:true, 'validate-alphanum-with-spaces':true}">
+                            </div>
+                        </div>
+
+                        <div class="field name required">
+                            <div class="control">
+                                <input placeholder="<?= $block->escapeHtmlAttr(__('Telephone')) ?>" name="phone"
+                                       id="phone" title="Telephone" value="" class="input-text"
+                                       type="text" data-validate="{required:true}">
+                            </div>
+                        </div>
+
+                        <div class="field name required">
+                            <div class="control">
+                                <input placeholder="<?= $block->escapeHtmlAttr(__('Email')) ?>" name="email" id="email"
+                                       title="Email" value="" class="input-text" type="text"
+                                       data-validate="{required:true, 'validate-email':true}">
+                            </div>
+                        </div>
+
+                        <div class="field name required">
+                            <div class="control">
+                                <input placeholder="<?= $block->escapeHtmlAttr(__('Price')) ?>" name="price" id="price"
+                                       title="price" value="" class="input-text"
+                                       type="text" data-validate="{required:true}">
+                            </div>
+                        </div>
+
+                        <div class="field name required">
+                            <div class="control">
+                                <input placeholder="<?= $block->escapeHtmlAttr(__('Quantity')) ?>" name="quantity"
+                                       id="quantity" title="quantity" value="" class="input-text"
+                                       type="text" data-validate="{required:true}">
+                            </div>
+                        </div>
+                    </div>
+                </fieldset>
+            </fieldset>
+            <div class="actions-toolbar">
+                <div class="primary">
+                    <input type="hidden" name="hideit" id="hideit" value="" />
+                    <input type="hidden" name="request_type" id="request_type" value="Side Bar Request"/>
+                    <input name="sku" id="sku" title="sku" value="<?php echo $product->getSku(); ?>" class="input-text"
+                           type="hidden" data-validate="{required:true}">
+                    <p class="responce_message" style="padding: 5px 10px;text-align: center;"></p>
+                    <button type="submit" class="action submit primary" title="Save">
+                        <span><?= $block->escapeHtmlAttr(__('Send')) ?></span></button>
+                </div>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    require([
+        "jquery",
+        "jquery/ui"
+    ], function ($v) {
+//<![CDATA[
+        $v = jQuery.noConflict();
+        $v(document).ready(function () {
+            var dataForm = $v('#addtoquoteData');
+            var AjaxUrl = '<?php echo $block->getFormAction(); ?>';
+            console.log('jquery loaded from emq.js');
+            $v(".submit").on('click', function (e) {
+                var param = dataForm.serialize();
+                console.log(param);
+
+                $v.ajax({
+                    showLoader: true,
+                    url: AjaxUrl,
+                    data: param,
+                    type: "POST"
+                }).done(function (data) {
+                    $v('.responce_message').html(data);
+                    $v('.responce_message').css('color', 'red');
+                    setTimeout(function(){
+                        $v('.responce_message').empty();
+                    }, 3000);
+                    document.getElementById("addtoquoteData").reset();
+                });
+                return false;
+            });
+        });
+//]]>
+    });
+</script>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../Magento/Widget/etc/widget.xsd">
+	<widget id="rltsquare_homepage_blogs" class="RLTSquare\HomepageBlogs\Block\Widget\HomepageBlogs">
+		<label translate="true">HomePage Blog Widget</label>
+		<description>RLTSquare Homepage Blog Widget</description>
+		<parameters>
+			<parameter name="blogsCount" xsi:type="text"  visible="true" sort_order="1" >
+				<label translate="true">Blogs Count</label>
+			</parameter>
+		</parameters>
+	</widget>
+</widgets>

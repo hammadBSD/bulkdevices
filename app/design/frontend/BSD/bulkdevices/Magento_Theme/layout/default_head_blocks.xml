@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <css src="css/bulkdevices.css"/>
+        <script src="js/bd/theme.js" defer="defer"/>
+        <remove src="css/styles-m.css"/>
+        <remove src="css/styles-l.css"/>
+        <remove src="Mageplaza_Blog::css/mpBlogIcon.css"/>
+        <remove src="Smartwave_Dailydeals::css/style.css"/>
+        <remove src="Smartwave_Filterproducts::css/owl.carousel/assets/owl.carousel.css"/>
+    </head>
+</page>

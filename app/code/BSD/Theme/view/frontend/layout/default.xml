@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="head.additional">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="bd.robots"
+                   template="BSD_Theme::html/robots.phtml"/>
+            <block class="Magento\Framework\View\Element\Template"
+                   name="bd.schema"
+                   template="BSD_Theme::html/schema.phtml"/>
+        </referenceBlock>
+
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="bd.promo.bar"
+                   template="BSD_Theme::html/promo-bar.phtml"
+                   before="-"/>
+        </referenceContainer>
+
+        <referenceContainer name="header.container" htmlClass="bd-header-container">
+            <block class="BSD\Theme\Block\Html\Header"
+                   name="bd.site.header"
+                   template="BSD_Theme::html/header.phtml"
+                   before="-">
+                <block class="Magento\Theme\Block\Html\Header\Logo" name="logo"/>
+                <block class="Magento\Framework\View\Element\Template" name="top.search"
+                       as="topSearch"
+                       template="Magento_Search::form.mini.phtml">
+                    <arguments>
+                        <argument name="configProvider" xsi:type="object">Magento\Search\ViewModel\ConfigProvider</argument>
+                        <argument name="additionalSearchFormData" xsi:type="object">Magento\Search\ViewModel\AdditionalSearchFormData</argument>
+                    </arguments>
+                </block>
+                <block class="Magento\Checkout\Block\Cart\Sidebar" name="minicart"
+                       template="Magento_Checkout::cart/minicart.phtml">
+                    <arguments>
+                        <argument name="jsLayout" xsi:type="array">
+                            <item name="types" xsi:type="array"/>
+                            <item name="components" xsi:type="array">
+                                <item name="minicart_content" xsi:type="array">
+                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/minicart</item>
+                                    <item name="config" xsi:type="array">
+                                        <item name="template" xsi:type="string">Magento_Checkout/minicart/content</item>
+                                    </item>
+                                    <item name="children" xsi:type="array">
+                                        <item name="subtotal.container" xsi:type="array">
+                                            <item name="component" xsi:type="string">uiComponent</item>
+                                            <item name="config" xsi:type="array">
+                                                <item name="displayArea" xsi:type="string">subtotalContainer</item>
+                                            </item>
+                                            <item name="children" xsi:type="array">
+                                                <item name="subtotal" xsi:type="array">
+                                                    <item name="component" xsi:type="string">uiComponent</item>
+                                                    <item name="config" xsi:type="array">
+                                                        <item name="template" xsi:type="string">Magento_Checkout/minicart/subtotal</item>
+                                                    </item>
+                                                </item>
+                                            </item>
+                                        </item>
+                                    </item>
+                                </item>
+                            </item>
+                        </argument>
+                    </arguments>
+                </block>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="page.top">
+            <block class="BSD\Theme\Block\Html\Megamenu"
+                   name="bd.megamenu"
+                   template="BSD_Theme::html/megamenu.phtml"
+                   before="-"/>
+        </referenceContainer>
+
+        <referenceContainer name="footer-container">
+            <block class="BSD\Theme\Block\Html\Footer"
+                   name="bd.site.footer"
+                   template="BSD_Theme::html/footer.phtml"
+                   before="-">
+                <block class="Magento\Newsletter\Block\Subscribe"
+                       name="form.subscribe"
+                       as="form.subscribe"
+                       template="BSD_Theme::html/newsletter.phtml"/>
+            </block>
+        </referenceContainer>
+
+        <referenceBlock name="header.panel.wrapper" remove="true"/>
+        <referenceBlock name="header-wrapper" remove="true"/>
+        <referenceBlock name="navigation.sections" remove="true"/>
+        <referenceBlock name="catalog.topnav" remove="true"/>
+        <referenceBlock name="sw.topnav" remove="true"/>
+        <referenceContainer name="div.onepage.category" remove="true"/>
+        <referenceBlock name="footer" remove="true"/>
+        <referenceBlock name="copyright" remove="true"/>
+        <referenceBlock name="report.bugs" remove="true"/>
+    </body>
+</page>
