@@ -140,12 +140,24 @@ class Sections extends Template
             return $this->getPlaceholderImageUrl();
         }
 
+        if (!$this->isCatalogImageAvailable($image)) {
+            return $this->getPlaceholderImageUrl();
+        }
+
         $url = (string) $this->imageHelper->init($product, 'category_page_grid')->getUrl();
         if ($url === '' || str_contains($url, 'placeholder/.') || str_contains($url, '/placeholder/.')) {
             return $this->getPlaceholderImageUrl();
         }
 
         return $url;
+    }
+
+    private function isCatalogImageAvailable(string $imagePath): bool
+    {
+        $relative = ltrim($imagePath, '/');
+        $file = BP . '/pub/media/catalog/product/' . $relative;
+
+        return is_readable($file);
     }
 
     public function getFormattedPrice(Product $product): string

@@ -535,7 +535,8 @@ body {
 
 /* Promotional products — production layout */
 .bd-promo-section {
-  padding: 48px 0 56px;
+  /* Trust bar overlaps hero bottom by ~56px; pad content below cards */
+  padding: 104px 0 56px;
   background: #efefef;
 }
 .bd-promo-section__title {
@@ -728,6 +729,7 @@ body {
   .bd-hero { min-height: 480px; padding: 72px 0 110px; }
   .bd-hero h1 { font-size: 36px; }
   .bd-trust-bar__grid { grid-template-columns: repeat(4, 1fr); }
+  .bd-promo-section { padding-top: 128px; }
   .bd-megamenu__columns { grid-template-columns: repeat(4, 1fr); }
   .bd-megamenu:hover .bd-megamenu__dropdown,
   .bd-megamenu.is-open .bd-megamenu__dropdown {
