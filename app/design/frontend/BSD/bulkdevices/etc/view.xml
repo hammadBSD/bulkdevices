@@ -7,6 +7,10 @@
                 <width>280</width>
                 <height>280</height>
             </image>
+            <image id="bd_home_product" type="small_image">
+                <width>200</width>
+                <height>200</height>
+            </image>
             <image id="category_page_list" type="small_image">
                 <width>280</width>
                 <height>280</height>

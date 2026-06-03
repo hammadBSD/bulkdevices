@@ -598,6 +598,33 @@ body {
   contain-intrinsic-size: auto 520px;
 }
 
+/* Lazy background photos (industries, contact) — same look as CSS backgrounds */
+.bd-section-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.bd-section-bg__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+@media (max-width: 639px) {
+  .bd-home > .bd-industries-section,
+  .bd-home > .bd-featured-section,
+  .bd-home > .bd-top-categories,
+  .bd-home > .bd-why-us,
+  .bd-home > .bd-hp-contact,
+  .bd-home > .bd-seo-content {
+    contain-intrinsic-size: auto 720px;
+  }
+}
+
 /* Promotional products — production layout */
 .bd-promo-section {
   /* Space below hero trust cards (mobile stack is taller than desktop row) */
@@ -719,11 +746,11 @@ body {
   color: #fff;
   text-align: center;
   background-color: #0a1424;
-  background-image:
-    var(--bd-industries-bg, none);
-  background-size: cover;
-  background-position: center center;
-  background-repeat: no-repeat;
+  overflow: hidden;
+}
+.bd-industries-section > .bd-container {
+  position: relative;
+  z-index: 1;
 }
 .bd-industries-section__header {
   max-width: 900px;
@@ -982,10 +1009,11 @@ body {
   padding: 56px 0 64px;
   color: #fff;
   background-color: #1a1a1a;
-  background-image: var(--bd-hp-contact-bg, none);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  overflow: hidden;
+}
+.bd-hp-contact > .bd-container {
+  position: relative;
+  z-index: 1;
 }
 .bd-hp-contact__header {
   text-align: center;

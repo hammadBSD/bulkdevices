@@ -428,12 +428,22 @@ class Sections extends Template
             return $this->getPlaceholderImageUrl();
         }
 
-        $url = (string) $this->imageHelper->init($product, 'category_page_grid')->getUrl();
+        $url = (string) $this->imageHelper->init($product, 'bd_home_product')->getUrl();
         if ($url === '' || str_contains($url, 'placeholder/.') || str_contains($url, '/placeholder/.')) {
             return $this->getPlaceholderImageUrl();
         }
 
         return $url;
+    }
+
+    public function isPlaceholderImageUrl(string $url): bool
+    {
+        return $url === '' || str_contains($url, '/placeholder/');
+    }
+
+    public function getHomeProductImageSizes(): string
+    {
+        return '(max-width: 639px) 42vw, (max-width: 1023px) 28vw, 200px';
     }
 
     private function isCatalogImageAvailable(string $imagePath): bool

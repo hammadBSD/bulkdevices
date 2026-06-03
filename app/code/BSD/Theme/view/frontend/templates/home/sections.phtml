@@ -23,7 +23,7 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
                      width="1280"
                      height="480"
                      fetchpriority="high"
-                     decoding="async"/>
+                     decoding="sync"/>
             </picture>
         </div>
         <div class="bd-hero__overlay"></div>
@@ -96,15 +96,22 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
                     <?php
                     $isQuote = $block->isQuoteProduct($product);
                     $price = $block->getFormattedPrice($product);
+                    $productImageUrl = $block->getProductImageUrl($product);
+                    $productImageIsPlaceholder = $block->isPlaceholderImageUrl($productImageUrl);
                     ?>
                     <article class="bd-promo-card">
-                        <a class="bd-promo-card__image" href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
-                            <img src="<?= $block->escapeUrl($block->getProductImageUrl($product)) ?>"
+                        <a class="bd-promo-card__image"
+                           href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                            <img src="<?= $block->escapeUrl($productImageUrl) ?>"
                                  alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
                                  loading="lazy"
                                  fetchpriority="low"
                                  decoding="async"
-                                 width="220" height="220"/>
+                                 <?php if (!$productImageIsPlaceholder): ?>
+                                 sizes="<?= $block->escapeHtmlAttr($block->getHomeProductImageSizes()) ?>"
+                                 <?php endif; ?>
+                                 width="200"
+                                 height="200"/>
                         </a>
                         <h3 class="bd-promo-card__name">
                             <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
@@ -137,9 +144,17 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
         </div>
     </section>
 
-    <section class="bd-industries-section"
-             id="industries-we-serve"
-             style="--bd-industries-bg: url('<?= $block->escapeUrl($industriesBg) ?>')">
+    <section class="bd-industries-section" id="industries-we-serve">
+        <div class="bd-section-bg" aria-hidden="true">
+            <img class="bd-section-bg__img"
+                 src="<?= $block->escapeUrl($industriesBg) ?>"
+                 alt=""
+                 width="1920"
+                 height="1080"
+                 loading="lazy"
+                 fetchpriority="low"
+                 decoding="async"/>
+        </div>
         <div class="bd-container">
             <header class="bd-industries-section__header">
                 <h2 class="bd-industries-section__title"><?= $block->escapeHtml(__('Industries We Serve')) ?></h2>
@@ -174,15 +189,22 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
                     <?php
                     $isQuote = $block->isQuoteProduct($product);
                     $price = $block->getFormattedPrice($product);
+                    $productImageUrl = $block->getProductImageUrl($product);
+                    $productImageIsPlaceholder = $block->isPlaceholderImageUrl($productImageUrl);
                     ?>
                     <article class="bd-promo-card">
-                        <a class="bd-promo-card__image" href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
-                            <img src="<?= $block->escapeUrl($block->getProductImageUrl($product)) ?>"
+                        <a class="bd-promo-card__image"
+                           href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                            <img src="<?= $block->escapeUrl($productImageUrl) ?>"
                                  alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
                                  loading="lazy"
                                  fetchpriority="low"
                                  decoding="async"
-                                 width="200" height="160"/>
+                                 <?php if (!$productImageIsPlaceholder): ?>
+                                 sizes="<?= $block->escapeHtmlAttr($block->getHomeProductImageSizes()) ?>"
+                                 <?php endif; ?>
+                                 width="200"
+                                 height="200"/>
                         </a>
                         <h3 class="bd-promo-card__name">
                             <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
@@ -281,9 +303,17 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
         </div>
     </section>
 
-    <section class="bd-hp-contact"
-             id="get-started-today"
-             style="--bd-hp-contact-bg: url('<?= $block->escapeUrl($hpContactBg) ?>')">
+    <section class="bd-hp-contact" id="get-started-today">
+        <div class="bd-section-bg" aria-hidden="true">
+            <img class="bd-section-bg__img"
+                 src="<?= $block->escapeUrl($hpContactBg) ?>"
+                 alt=""
+                 width="1920"
+                 height="720"
+                 loading="lazy"
+                 fetchpriority="low"
+                 decoding="async"/>
+        </div>
         <div class="bd-container">
             <header class="bd-hp-contact__header">
                 <h2 class="bd-hp-contact__title"><?= $block->escapeHtml(__('Get Started Today')) ?></h2>
