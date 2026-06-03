@@ -2,6 +2,8 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
+        <title>Bulk Devices | Refurbished &amp; New IT Hardware Components</title>
+        <meta name="description" content="Shop refurbished and new IT hardware at Bulk Devices. Servers, storage, memory, CPUs, networking, and more with price match guarantee and free shipping."/>
         <block class="BSD\Theme\Block\Home\Sections"
                name="bd.homepage.preload"
                template="BSD_Theme::html/homepage-preload.phtml"/>
