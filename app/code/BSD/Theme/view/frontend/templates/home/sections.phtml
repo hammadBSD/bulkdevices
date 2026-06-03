@@ -11,8 +11,21 @@ $topCategories = $block->getTopCategoryBlocks();
 $hpContactBg = $block->getHpContactBackgroundUrl();
 ?>
 <div class="bd-home">
-    <section class="bd-hero"
-             style="--bd-hero-image: url('<?= $block->escapeUrl($heroUrl) ?>'); --bd-hero-image-mobile: url('<?= $block->escapeUrl($heroMobileUrl) ?>')">
+    <section class="bd-hero">
+        <div class="bd-hero__media" aria-hidden="true">
+            <picture>
+                <source media="(min-width: 1024px)"
+                        type="image/webp"
+                        srcset="<?= $block->escapeUrl($heroUrl) ?>"/>
+                <img class="bd-hero__img"
+                     src="<?= $block->escapeUrl($heroMobileUrl) ?>"
+                     alt=""
+                     width="1280"
+                     height="480"
+                     fetchpriority="high"
+                     decoding="async"/>
+            </picture>
+        </div>
         <div class="bd-hero__overlay"></div>
         <div class="bd-container bd-hero__inner">
             <div class="bd-hero__content">
@@ -89,6 +102,8 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
                             <img src="<?= $block->escapeUrl($block->getProductImageUrl($product)) ?>"
                                  alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
                                  loading="lazy"
+                                 fetchpriority="low"
+                                 decoding="async"
                                  width="220" height="220"/>
                         </a>
                         <h3 class="bd-promo-card__name">
@@ -139,7 +154,9 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
                                  alt=""
                                  width="72"
                                  height="72"
-                                 loading="lazy"/>
+                                 loading="lazy"
+                                 fetchpriority="low"
+                                 decoding="async"/>
                         </div>
                         <h3 class="bd-industries-card__title"><?= $block->escapeHtml($industry['title']) ?></h3>
                         <p class="bd-industries-card__text"><?= $block->escapeHtml($industry['description']) ?></p>
@@ -163,6 +180,8 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
                             <img src="<?= $block->escapeUrl($block->getProductImageUrl($product)) ?>"
                                  alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
                                  loading="lazy"
+                                 fetchpriority="low"
+                                 decoding="async"
                                  width="200" height="160"/>
                         </a>
                         <h3 class="bd-promo-card__name">
@@ -207,7 +226,9 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
                                  alt="<?= $block->escapeHtmlAttr($category['title']) ?>"
                                  width="100"
                                  height="100"
-                                 loading="lazy"/>
+                                 loading="lazy"
+                                 fetchpriority="low"
+                                 decoding="async"/>
                         </figure>
                         <div class="bd-top-categories__body">
                             <h3 class="bd-top-categories__name"><?= $block->escapeHtml($category['title']) ?></h3>
@@ -253,7 +274,9 @@ $hpContactBg = $block->getHpContactBackgroundUrl();
                      alt="<?= $block->escapeHtmlAttr(__('Why Bulk Devices')) ?>"
                      width="560"
                      height="520"
-                     loading="lazy"/>
+                     loading="lazy"
+                     decoding="async"
+                     fetchpriority="low"/>
             </figure>
         </div>
     </section>

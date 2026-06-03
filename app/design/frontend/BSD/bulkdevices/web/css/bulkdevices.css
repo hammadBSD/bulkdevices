@@ -422,16 +422,25 @@ body {
   min-height: 0;
   padding: 0;
   color: #fff;
-  background: #fff;
-  background-image: none;
+  background: var(--bd-navy);
   overflow: hidden;
 }
-.bd-hero::before {
-  content: "";
-  display: block;
+.bd-hero__media {
+  position: relative;
   height: 300px;
-  background: var(--bd-navy) 72% center/cover no-repeat;
-  background-image: var(--bd-hero-image-mobile, var(--bd-hero-image));
+  z-index: 0;
+  overflow: hidden;
+  background: var(--bd-navy);
+}
+.bd-hero__media picture,
+.bd-hero__img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.bd-hero__img {
+  object-fit: cover;
+  object-position: 72% center;
 }
 .bd-hero__overlay {
   position: absolute;
@@ -439,6 +448,7 @@ body {
   left: 0;
   right: 0;
   height: 300px;
+  z-index: 1;
   background: linear-gradient(
     180deg,
     rgba(0, 33, 71, 0.72) 0%,
@@ -451,7 +461,7 @@ body {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 1;
+  z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -575,6 +585,18 @@ body {
 }
 
 .bd-home { padding-bottom: 48px; }
+
+/* Homepage: defer paint for below-the-fold sections (no visual change when scrolled) */
+.bd-home > .bd-promo-section,
+.bd-home > .bd-industries-section,
+.bd-home > .bd-featured-section,
+.bd-home > .bd-top-categories,
+.bd-home > .bd-why-us,
+.bd-home > .bd-hp-contact,
+.bd-home > .bd-seo-content {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
+}
 
 /* Promotional products — production layout */
 .bd-promo-section {
@@ -1441,27 +1463,34 @@ body {
 /* Tablet */
 @media (min-width: 640px) {
   .bd-utility-bar__messages { display: flex; }
-  .bd-hero::before {
-    display: none;
-  }
   .bd-hero {
     min-height: 400px;
     padding: 48px 0 120px;
-    background: var(--bd-navy) center/cover no-repeat;
-    background-image: var(--bd-hero-image-mobile, var(--bd-hero-image));
-    background-position: center;
     overflow: visible;
+  }
+  .bd-hero__media {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
   }
   .bd-hero__overlay {
     inset: 0;
     height: auto;
   }
   .bd-hero__inner {
-    position: relative;
-    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     height: auto;
-    padding: 0;
+    padding: 48px 16px 120px;
     text-align: center;
+    box-sizing: border-box;
   }
   .bd-trust-bar {
     position: absolute;
@@ -1625,20 +1654,23 @@ body {
   .bd-hero {
     min-height: 480px;
     padding: 72px 0 120px;
-    background-image: var(--bd-hero-image);
-    background-position: center;
     overflow: visible;
+  }
+  .bd-hero__img {
+    object-position: center center;
   }
   .bd-hero__overlay {
     background: linear-gradient(90deg, rgba(0, 20, 50, 0.82) 0%, rgba(0, 20, 50, 0.35) 55%, rgba(0, 20, 50, 0.15) 100%);
   }
   .bd-hero__inner {
-    display: block;
+    justify-content: flex-start;
+    padding: 72px 24px 120px;
     text-align: left;
   }
   .bd-hero__content {
     max-width: 560px;
     margin: 0;
+    width: 100%;
   }
   .bd-hero__title {
     font-size: 36px;
