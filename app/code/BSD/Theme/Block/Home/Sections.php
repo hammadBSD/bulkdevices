@@ -54,6 +54,9 @@ class Sections extends Template
 
     private const PROMO_ROOT_CATEGORY_ID = 9969;
 
+    /** Featured Product row on homepage (production category_id=253). */
+    private const FEATURED_CATEGORY_ID = 253;
+
     /**
      * Brand tabs for the promotional products row (matches production).
      *
@@ -114,6 +117,193 @@ class Sections extends Template
         return $collection;
     }
 
+    /**
+     * Featured products (production Featured Product section).
+     */
+    public function getFeaturedProducts(): \Magento\Catalog\Model\ResourceModel\Product\Collection
+    {
+        $storeId = (int) $this->storeManager->getStore()->getId();
+
+        $collection = $this->productCollectionFactory->create();
+        $collection->setStoreId($storeId);
+        $collection->addStoreFilter($storeId);
+        $collection->addAttributeToSelect(['name', 'price', 'small_image', 'image', 'url_key']);
+        $collection->addCategoriesFilter(['in' => [self::FEATURED_CATEGORY_ID]]);
+        $collection->addAttributeToFilter('status', 1);
+        $collection->setVisibility([
+            Visibility::VISIBILITY_IN_CATALOG,
+            Visibility::VISIBILITY_BOTH,
+        ]);
+        $collection->addMinimalPrice();
+        $collection->addUrlRewrite();
+        $collection->setOrder('entity_id', 'desc');
+        $collection->setPageSize(5);
+
+        return $collection;
+    }
+
+    /**
+     * Top Categories row (production feature-cat section).
+     *
+     * @return array<int, array{
+     *     title: \Magento\Framework\Phrase,
+     *     image: string,
+     *     see_all_url: string,
+     *     links: array<int, array{label: \Magento\Framework\Phrase, url: string}>
+     * }>
+     */
+    public function getTopCategoryBlocks(): array
+    {
+        return [
+            [
+                'title' => __('Hard Drive'),
+                'image' => 'tc-hdrive-wb.webp',
+                'see_all_url' => 'storage-devices',
+                'links' => [
+                    [
+                        'label' => __('Solid State Drives'),
+                        'url' => 'storage-devices/internal-storage/solid-state-drives',
+                    ],
+                    [
+                        'label' => __('Desktop Storage'),
+                        'url' => 'storage-devices/internal-storage/desktop-hard-drive',
+                    ],
+                    [
+                        'label' => __('Server Storage'),
+                        'url' => 'storage-devices/internal-storage/server-hard-drive',
+                    ],
+                ],
+            ],
+            [
+                'title' => __('CPUS'),
+                'image' => 'tc-cpus-wb.webp',
+                'see_all_url' => 'processors',
+                'links' => [
+                    [
+                        'label' => __('Server Motherboards'),
+                        'url' => 'motherboards/motherboards-classification/server-motherboards',
+                    ],
+                    [
+                        'label' => __('Desktop Motherboards'),
+                        'url' => 'motherboards/motherboards-classification/desktop-motherboards',
+                    ],
+                    [
+                        'label' => __('Laptop Motherboards'),
+                        'url' => 'motherboards/motherboards-classification/laptop-motherboards',
+                    ],
+                ],
+            ],
+            [
+                'title' => __('Memory'),
+                'image' => 'tc-ram-wb.webp',
+                'see_all_url' => 'memory',
+                'links' => [
+                    [
+                        'label' => __('Server Memory'),
+                        'url' => 'memory/memory-classification/server-memory',
+                    ],
+                    [
+                        'label' => __('Desktop Memory'),
+                        'url' => 'memory/memory-classification/desktop-memory',
+                    ],
+                    [
+                        'label' => __('Laptop Memory'),
+                        'url' => 'memory/memory-classification/laptop-memory',
+                    ],
+                ],
+            ],
+            [
+                'title' => __('Motherboard'),
+                'image' => 'tc-motherboard-wb.webp',
+                'see_all_url' => 'motherboards',
+                'links' => [
+                    [
+                        'label' => __('Network Switches'),
+                        'url' => 'networking-devices/switches/network-switches',
+                    ],
+                    [
+                        'label' => __('Wireless Routers'),
+                        'url' => 'networking-devices/wireless-products/wireless-router',
+                    ],
+                    [
+                        'label' => __('KVM Switches'),
+                        'url' => 'networking-devices/switches/kvm-switches',
+                    ],
+                    [
+                        'label' => __('Network Adaptors'),
+                        'url' => 'networking-devices/network-products/network-adapters',
+                    ],
+                ],
+            ],
+        ];
+    }
+
+    public function getTopCategoryImageUrl(string $filename): string
+    {
+        $base = pathinfo($filename, PATHINFO_FILENAME);
+        $themeWebp = BP . '/app/design/frontend/BSD/bulkdevices/web/images/top-categories/' . $base . '.webp';
+        if (is_readable($themeWebp)) {
+            return (string) $this->getViewFileUrl('images/top-categories/' . $base . '.webp');
+        }
+
+        $media = $this->getWysiwygMediaUrl($filename);
+        if ($media !== '') {
+            return $media;
+        }
+
+        return '';
+    }
+
+    /**
+     * Why Bulk Devices section (production whyus block).
+     *
+     * @return array<int, \Magento\Framework\Phrase>
+     */
+    public function getWhyUsBullets(): array
+    {
+        return [
+            __('Dedicated Account Manager'),
+            __('Procurement & Purchasing Partner'),
+            __('Special ICT Support Services'),
+            __('Certified Professional Support'),
+        ];
+    }
+
+    public function getWhyUsImageUrl(): string
+    {
+        $themeWebp = BP . '/app/design/frontend/BSD/bulkdevices/web/images/why-us-nimg.webp';
+        if (is_readable($themeWebp)) {
+            return (string) $this->getViewFileUrl('images/why-us-nimg.webp');
+        }
+
+        $media = $this->getWysiwygMediaUrl('why-us-nimg.webp');
+        if ($media !== '') {
+            return $media;
+        }
+
+        return '';
+    }
+
+    public function getHpContactBackgroundUrl(): string
+    {
+        $themeWebp = BP . '/app/design/frontend/BSD/bulkdevices/web/images/hp-contact-bg.webp';
+        if (is_readable($themeWebp)) {
+            return (string) $this->getViewFileUrl('images/hp-contact-bg.webp');
+        }
+
+        $media = $this->getWysiwygMediaUrl('hp-contact-bg.webp');
+        if ($media !== '') {
+            return $media;
+        }
+
+        return '';
+    }
+
+    public function getContactFormAction(): string
+    {
+        return $this->getUrl('contact/index/post', ['_secure' => $this->getRequest()->isSecure()]);
+    }
+
     public function getPlaceholderImageUrl(): string
     {
         return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA)
@@ -125,9 +315,103 @@ class Sections extends Template
         return (string) $this->getViewFileUrl('images/hero-banner.webp');
     }
 
+    public function getHeroMobileBannerUrl(): string
+    {
+        return (string) $this->getViewFileUrl('images/hero-banner-mobile.webp');
+    }
+
     public function getTrustIconUrl(string $name): string
     {
         return (string) $this->getViewFileUrl('images/trust/' . $name . '.png');
+    }
+
+    /**
+     * Industries We Serve — matches production homepage (serve-industry).
+     *
+     * @return array<int, array{key: string, title: \Magento\Framework\Phrase, description: \Magento\Framework\Phrase, icon: string}>
+     */
+    public function getIndustries(): array
+    {
+        return [
+            [
+                'key' => 'enterprise',
+                'title' => __('Enterprise Business'),
+                'description' => __('Empower your enterprise with top-tier IT products from renowned manufacturers'),
+                'icon' => 'icon-enterprise-business.webp',
+            ],
+            [
+                'key' => 'government',
+                'title' => __('Government'),
+                'description' => __('Our IT solutions are tailored to address the specific needs of Government agencies in various Sectors.'),
+                'icon' => 'icon-federal-government.webp',
+            ],
+            [
+                'key' => 'healthcare',
+                'title' => __('Healthcare'),
+                'description' => __('Elevate healthcare excellence with our tailored IT solutions'),
+                'icon' => 'icon-healthcare.webp',
+            ],
+            [
+                'key' => 'education',
+                'title' => __('Education'),
+                'description' => __('Enhance education standards with our tailored IT solutions and revolutionize the learning experience.'),
+                'icon' => 'icon-government.webp',
+            ],
+            [
+                'key' => 'finance',
+                'title' => __('Finance'),
+                'description' => __('Boost financial and banking excellence with our specialized IT solutions'),
+                'icon' => 'icon-finance.webp',
+            ],
+            [
+                'key' => 'retail',
+                'title' => __('Retail'),
+                'description' => __('Transform the retail landscape with our specialized IT solutions'),
+                'icon' => 'icon-retail.webp',
+            ],
+        ];
+    }
+
+    public function getIndustriesBackgroundUrl(): string
+    {
+        $media = $this->getWysiwygMediaUrl('industry-serve-bg.webp');
+        if ($media !== '') {
+            return $media;
+        }
+
+        return (string) $this->getViewFileUrl('images/industry-serve-bg.webp');
+    }
+
+    public function getIndustryIconUrl(string $key): string
+    {
+        $mediaFiles = [
+            'enterprise' => 'icon-enterprise-business.webp',
+            'government' => 'icon-federal-government.webp',
+            'healthcare' => 'icon-healthcare.webp',
+            'education' => 'icon-government.webp',
+            'finance' => 'icon-finance.webp',
+            'retail' => 'icon-retail.webp',
+        ];
+
+        if (isset($mediaFiles[$key])) {
+            $media = $this->getWysiwygMediaUrl($mediaFiles[$key]);
+            if ($media !== '') {
+                return $media;
+            }
+        }
+
+        return (string) $this->getViewFileUrl('images/industries/' . $key . '.svg');
+    }
+
+    private function getWysiwygMediaUrl(string $filename): string
+    {
+        $relative = 'wysiwyg/' . ltrim($filename, '/');
+        $file = BP . '/pub/media/' . $relative;
+        if (!is_readable($file)) {
+            return '';
+        }
+
+        return $this->storeManager->getStore()->getBaseUrl(UrlInterface::URL_TYPE_MEDIA) . $relative;
     }
 
     public function getProductImageUrl(Product $product): string

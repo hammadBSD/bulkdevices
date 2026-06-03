@@ -73,12 +73,7 @@
             <block class="BSD\Theme\Block\Html\Footer"
                    name="bd.site.footer"
                    template="BSD_Theme::html/footer.phtml"
-                   before="-">
-                <block class="Magento\Newsletter\Block\Subscribe"
-                       name="form.subscribe"
-                       as="form.subscribe"
-                       template="BSD_Theme::html/newsletter.phtml"/>
-            </block>
+                   before="-"/>
         </referenceContainer>
 
         <referenceBlock name="header.panel.wrapper" remove="true"/>

@@ -45,4 +45,28 @@
             });
         });
     });
+
+    var seoToggle = document.getElementById('bd-seo-content-toggle');
+    var seoMore = document.getElementById('bd-seo-content-more');
+    if (seoToggle && seoMore) {
+        var seoLabel = seoToggle.querySelector('.bd-seo-content__toggle-label');
+        seoToggle.addEventListener('click', function () {
+            var expanded = seoToggle.getAttribute('aria-expanded') === 'true';
+            expanded = !expanded;
+            seoToggle.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+            seoMore.hidden = !expanded;
+            if (seoLabel) {
+                seoLabel.textContent = expanded
+                    ? (seoLabel.getAttribute('data-less') || 'Show less')
+                    : (seoLabel.getAttribute('data-more') || 'Show more');
+            }
+        });
+    }
+
+    var backToTop = document.getElementById('bd-back-to-top');
+    if (backToTop) {
+        backToTop.addEventListener('click', function () {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
 })();

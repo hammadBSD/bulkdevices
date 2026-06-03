@@ -6,7 +6,14 @@
             <block class="BSD\Theme\Block\Home\Sections"
                    name="bd.homepage"
                    template="BSD_Theme::home/sections.phtml"
-                   before="-"/>
+                   before="-">
+                <block class="BSD\Theme\Block\Home\Sections"
+                       name="bd.home.contact.form"
+                       template="BSD_Theme::home/contact-form.phtml"/>
+                <block class="BSD\Theme\Block\Home\Sections"
+                       name="bd.home.seo.content"
+                       template="BSD_Theme::home/seo-content.phtml"/>
+            </block>
         </referenceContainer>
         <referenceBlock name="page.main.title" remove="true"/>
         <referenceBlock name="cms_page" remove="true"/>
