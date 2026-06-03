@@ -26,8 +26,5 @@
             <block class="Magento\Framework\View\Element\Template" name="mageplaza.top.search" template="Mageplaza_Search::search.phtml" />
         </referenceBlock>
         
-        <referenceContainer name="content">
-        <block class="BSD\Getaquote\Block\Index\Index" name="getaquote_index_index" template="BSD_Getaquote::getaquote_index_index.phtml"/>
-        </referenceContainer>
     </body>
 </page>

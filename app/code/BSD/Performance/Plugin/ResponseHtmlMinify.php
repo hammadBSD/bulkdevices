@@ -13,9 +13,25 @@ class ResponseHtmlMinify
         if ($body === '' || stripos($body, '<html') === false) {
             return;
         }
-        $min = preg_replace('/<!--(?!\s*\[if).*?-->/s', '', $body);
-        $min = preg_replace('/\s{2,}/', ' ', $min);
+        $placeholders = [];
+        $min = preg_replace_callback(
+            '/<(script|style)\b[^>]*>.*?<\/\1>/is',
+            static function (array $matches) use (&$placeholders): string {
+                $key = '%%HTMLMIN' . count($placeholders) . '%%';
+                $placeholders[$key] = $matches[0];
+                return $key;
+            },
+            $body
+        );
+
+        $min = preg_replace('/<!--(?!\s*\[if).*?-->/s', '', (string) $min);
+        $min = preg_replace('/\s{2,}/', ' ', (string) $min);
         $min = preg_replace('/>\s+</', '><', (string) $min);
+
+        if ($placeholders !== []) {
+            $min = strtr((string) $min, $placeholders);
+        }
+
         $subject->setBody(trim((string) $min));
     }
 }
