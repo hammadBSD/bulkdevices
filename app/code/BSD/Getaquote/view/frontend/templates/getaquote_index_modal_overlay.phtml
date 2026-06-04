@@ -25,7 +25,7 @@ if ($_product->getFinalPrice() == 0): ?>
 
                     <fieldset class="fieldset">
                         <legend class="legend">
-                            <span><?= $block->escapeHtmlAttr(__('Request For Free Quotation')) ?></span></legend>
+                            <span id="bd-pdp-quote-modal-title"><?= $block->escapeHtmlAttr(__('Request For Free Quotation')) ?></span></legend>
                         <fieldset class="fieldset row">
                             <div class="fields col-md-12">
                                 <div class="field name required">
@@ -94,24 +94,46 @@ if ($_product->getFinalPrice() == 0): ?>
                 'Magento_Ui/js/modal/modal'
             ],
             function ($, modal) {
+                var $popup = $('#callforprice');
+                if (!$popup.length) {
+                    return;
+                }
+
+                var quoteModalLabel = <?= json_encode((string) __('Request For Free Quotation'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+                var quoteModalCloseLabel = <?= json_encode((string) __('Close'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+
                 var options = {
                     type: 'popup',
                     responsive: true,
                     innerScroll: true,
                     buttons: [],
-                    modalClass: "call-for-price-modal-pdp-popup"
+                    modalClass: 'call-for-price-modal-pdp-popup',
+                    closeText: quoteModalCloseLabel
                 };
 
-                // var popup = modal(options, $('#popup-modal'));
-                // $("#click-me").on('click', function () {
-                //     $("#popup-modal").modal("openModal");
-                // });
+                function setQuoteDialogAccessibleName() {
+                    var $dialog = $popup.closest('[role="dialog"]');
+                    if (!$dialog.length) {
+                        $dialog = $('.call-for-price-modal-pdp-popup[role="dialog"]').last();
+                    }
+                    if ($dialog.length) {
+                        $dialog.attr({
+                            'aria-labelledby': 'bd-pdp-quote-modal-title',
+                            'aria-label': quoteModalLabel
+                        });
+                        $dialog.find('.action-close').attr('aria-label', quoteModalCloseLabel);
+                    }
+                }
+
+                modal(options, $popup);
+
                 $(document).on('click', '#click-me', function (event) {
                     event.preventDefault();
-                    var popup = modal(options, $('#callforprice'));
-                    $('#callforprice').modal(options).modal('openModal');
+                    $popup.modal('openModal');
+                    setQuoteDialogAccessibleName();
                 });
 
+                setQuoteDialogAccessibleName();
             }
         );
     </script>

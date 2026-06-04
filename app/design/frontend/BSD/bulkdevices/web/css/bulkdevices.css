@@ -4,10 +4,11 @@
   --bd-navy-dark: #001a38;
   --bd-orange: #f38120;
   --bd-orange-hover: #e07010;
-  /* WCAG AA: text on white / #efefef, and white text on buttons */
-  --bd-orange-contrast: #a85608;
-  --bd-orange-btn: #c45f00;
-  --bd-orange-btn-hover: #a33d00;
+  /* WCAG AA contrast (4.5:1+ normal text, 3:1+ large/bold UI) */
+  --bd-orange-contrast: #7a4209;
+  --bd-orange-btn: #9d4a00;
+  --bd-orange-btn-hover: #843e00;
+  --bd-orange-on-dark: #f5b87a;
   --bd-text-muted: #5c5c5c;
   --bd-gray-nav: #ececec;
   --bd-gray-sidebar: #4a4a4a;
@@ -409,7 +410,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0 28px;
-  background: var(--bd-orange);
+  background: var(--bd-orange-btn);
   color: #fff !important;
   text-decoration: none;
   font-weight: 700;
@@ -419,7 +420,7 @@ body {
   white-space: nowrap;
   align-self: stretch;
 }
-.bd-main-nav__promo:hover { background: var(--bd-orange-hover); }
+.bd-main-nav__promo:hover { background: var(--bd-orange-btn-hover); }
 
 /* Hero — mobile: banner on top, trust grid below (2×2) */
 .bd-hero {
@@ -1145,14 +1146,18 @@ body {
   padding: 0;
   border: 0;
   background: none;
-  color: var(--bd-orange);
+  color: var(--bd-orange-contrast);
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  text-decoration: none;
+  text-decoration: underline;
+  text-underline-offset: 3px;
 }
 .bd-seo-content__toggle:hover {
-  color: var(--bd-orange-hover);
+  color: var(--bd-orange-btn-hover);
+}
+.bd-seo-content__toggle-label {
+  color: inherit;
 }
 .bd-seo-content__toggle::after {
   content: "";
@@ -1238,7 +1243,7 @@ body {
   text-decoration: none;
 }
 .bd-footer__links a:hover {
-  color: var(--bd-orange);
+  color: var(--bd-orange-on-dark);
 }
 .bd-footer__social {
   display: flex;
@@ -1252,13 +1257,16 @@ body {
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: var(--bd-orange);
+  background: var(--bd-orange-btn);
   color: #fff;
   font-family: Georgia, "Times New Roman", serif;
   font-size: 15px;
   font-weight: 700;
   text-decoration: none;
   line-height: 1;
+}
+.bd-footer__social-link span {
+  color: #fff;
 }
 .bd-footer__social-link[aria-label*="LinkedIn"] span {
   font-family: var(--bd-font);
@@ -1267,7 +1275,7 @@ body {
   letter-spacing: -0.02em;
 }
 .bd-footer__social-link:hover {
-  background: var(--bd-orange-hover);
+  background: var(--bd-orange-btn-hover);
   color: #fff;
 }
 .bd-footer__badge {

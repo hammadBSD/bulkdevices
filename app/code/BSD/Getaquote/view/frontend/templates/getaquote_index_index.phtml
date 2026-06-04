@@ -16,7 +16,7 @@
                   data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
                   data-mage-init='{"validation":{}}'>
                 <p class="bd-quote-modal__message responce_message_call_price_listing"></p>
-                <h2 class="bd-quote-modal__title"><?= $block->escapeHtml(__('Request For Free Quotation')) ?></h2>
+                <h2 id="bd-quote-modal-title" class="bd-quote-modal__title"><?= $block->escapeHtml(__('Request For Free Quotation')) ?></h2>
                 <div class="bd-quote-modal__fields">
                     <input class="bd-quote-modal__input"
                            placeholder="<?= $block->escapeHtmlAttr(__('Name')) ?>"
@@ -63,15 +63,34 @@ require([
         return;
     }
 
+    var quoteModalLabel = <?= json_encode((string) __('Request For Free Quotation'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+    var quoteModalCloseLabel = <?= json_encode((string) __('Close'), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP) ?>;
+
     var options = {
         type: 'popup',
         responsive: true,
         innerScroll: true,
         buttons: [],
-        modalClass: 'call-for-price-modal-plp-popup'
+        modalClass: 'call-for-price-modal-plp-popup',
+        closeText: quoteModalCloseLabel
     };
 
+    function setQuoteDialogAccessibleName() {
+        var $dialog = $popup.closest('[role="dialog"]');
+        if (!$dialog.length) {
+            $dialog = $('.call-for-price-modal-plp-popup[role="dialog"]').last();
+        }
+        if ($dialog.length) {
+            $dialog.attr({
+                'aria-labelledby': 'bd-quote-modal-title',
+                'aria-label': quoteModalLabel
+            });
+            $dialog.find('.action-close').attr('aria-label', quoteModalCloseLabel);
+        }
+    }
+
     modal(options, $popup);
+    setQuoteDialogAccessibleName();
 
     var baseUrl = window.location.origin || '';
 
@@ -92,6 +111,7 @@ require([
             });
         }
         $popup.modal('openModal');
+        setQuoteDialogAccessibleName();
     }
 
     $(document).on('click', '.calltoprice', function (event) {
