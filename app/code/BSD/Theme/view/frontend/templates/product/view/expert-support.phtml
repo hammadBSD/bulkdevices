@@ -40,8 +40,7 @@ $storeEmail = $block->getStoreEmail();
           name="bdExpertSupport"
           id="bd-expert-support-form"
           method="post"
-          action="<?= $block->escapeUrl($formAction) ?>"
-          data-mage-init='{"validation":{}}'>
+          action="<?= $block->escapeUrl($formAction) ?>">
         <div class="bd-pdp-expert__field">
             <input type="text"
                    name="name"
@@ -76,16 +75,37 @@ $storeEmail = $block->getStoreEmail();
     </form>
 </aside>
 <script>
-require(['jquery', 'mage/validation'], function ($) {
+require(['jquery'], function ($) {
     var $form = $('#bd-expert-support-form');
     if (!$form.length) {
         return;
     }
-    $form.on('submit', function (e) {
-        if (!$form.validation() || !$form.validation('isValid')) {
-            return false;
+    var validationReady = false;
+    function ensureValidation(callback) {
+        if (validationReady) {
+            callback();
+            return;
         }
+        require(['mage/validation'], function () {
+            $form.mage('validation', {});
+            validationReady = true;
+            callback();
+        });
+    }
+    $form.find('input').one('focus', function () {
+        ensureValidation(function () {});
+    });
+    $form.on('submit', function (e) {
         e.preventDefault();
+        ensureValidation(function () {
+            if (!$form.validation('isValid')) {
+                return;
+            }
+            submitForm();
+        });
+        return false;
+    });
+    function submitForm() {
         $.ajax({
             showLoader: true,
             url: $form.attr('action'),
@@ -97,7 +117,6 @@ require(['jquery', 'mage/validation'], function ($) {
         }).fail(function () {
             $form.find('.bd-pdp-expert__message').text('<?= $block->escapeJs(__('We can\'t process your request right now. Sorry, that\'s all we know.')) ?>');
         });
-        return false;
-    });
+    }
 });
 </script>

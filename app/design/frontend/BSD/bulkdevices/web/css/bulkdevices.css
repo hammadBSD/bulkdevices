@@ -2121,6 +2121,22 @@ body {
   width: 100%;
   object-fit: contain;
 }
+/* Keep LCP image visible while Fotorama initializes (helps mobile Speed Index) */
+.bd-pdp__media .gallery-placeholder._block-content-loading .gallery-placeholder__image {
+  opacity: 1;
+  visibility: visible;
+}
+@media (max-width: 991px) {
+  .bd-pdp__sidebar,
+  .bd-pdp__below {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 500px;
+  }
+  .bd-pdp__below-aside {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 420px;
+  }
+}
 .bd-pdp__gallery-note {
   margin: 8px 0 0;
   font-size: 11px;

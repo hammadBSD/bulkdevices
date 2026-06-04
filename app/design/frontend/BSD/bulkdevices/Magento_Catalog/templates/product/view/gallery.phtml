@@ -1,0 +1,45 @@
+<?php
+/**
+ * Product gallery – LCP-friendly placeholder (theme override).
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Gallery
+ */
+$images = $block->getGalleryImages()->getItems();
+$mainImage = current(array_filter($images, function ($img) use ($block) {
+    return $block->isMainImage($img);
+}));
+
+if (!empty($images) && empty($mainImage)) {
+    $mainImage = $block->getGalleryImages()->getFirstItem();
+}
+
+$helper = $block->getData('imageHelper');
+$mainImageData = $mainImage
+    ? $mainImage->getData('medium_image_url')
+    : $helper->getDefaultPlaceholderUrl('image');
+?>
+<div class="gallery-placeholder _block-content-loading" data-gallery-role="gallery-placeholder">
+    <img
+        alt="<?= $block->escapeHtmlAttr($block->getProduct() ? $block->getProduct()->getName() : __('main product photo')) ?>"
+        class="gallery-placeholder__image"
+        src="<?= $block->escapeUrl($mainImageData) ?>"
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+        width="700"
+        height="700"
+    />
+</div>
+<script type="text/x-magento-init">
+    {
+        "[data-gallery-role=gallery-placeholder]": {
+            "mage/gallery/gallery": {
+                "magnifierOpts": <?= /* @noEscape */ $block->getMagnifier() ?>,
+                "data": <?= /* @noEscape */ $block->getGalleryImagesJson() ?>,
+                "options": <?= /* @noEscape */ $block->getGalleryOptions()->getOptionsJson() ?>,
+                "fullscreen": <?= /* @noEscape */ $block->getGalleryOptions()->getFSOptionsJson() ?>,
+                "breakpoints": <?= /* @noEscape */ $block->getBreakpoints() ?>
+            }
+        }
+    }
+</script>

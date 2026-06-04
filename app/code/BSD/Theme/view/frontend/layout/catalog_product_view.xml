@@ -2,7 +2,18 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       layout="1column"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <remove src="mage/calendar.css"/>
+        <remove src="Mageplaza_Core::css/owl.carousel.css"/>
+        <remove src="Mageplaza_Core::css/owl.theme.css"/>
+    </head>
     <body>
+        <referenceBlock name="head.additional">
+            <block class="BSD\Theme\Block\Product\MediaPreload"
+                   name="bd.product.media.preload"
+                   template="BSD_Theme::product/view/media-preload.phtml"
+                   before="-"/>
+        </referenceBlock>
         <attribute name="class" value="page-product-bd"/>
 
         <referenceBlock name="page.main.title" remove="true"/>
