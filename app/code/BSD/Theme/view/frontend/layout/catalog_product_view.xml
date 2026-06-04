@@ -23,7 +23,24 @@
                                template="BSD_Theme::product/view/sidebar.phtml"/>
                     </container>
                 </container>
-                <container name="bd.pdp.below" htmlTag="div" htmlClass="bd-pdp__below"/>
+                <container name="bd.pdp.below" htmlTag="div" htmlClass="bd-pdp__below">
+                    <container name="bd.pdp.below.inner" htmlTag="div" htmlClass="bd-pdp__below-inner">
+                        <container name="bd.pdp.below.main" htmlTag="div" htmlClass="bd-pdp__below-main">
+                            <block class="BSD\Theme\Block\Product\View"
+                                   name="bd.product.overview"
+                                   template="BSD_Theme::product/view/overview.phtml"/>
+                        </container>
+                        <container name="bd.pdp.below.aside" htmlTag="div" htmlClass="bd-pdp__below-aside">
+                            <block class="BSD\Theme\Block\Product\View"
+                                   name="team-support"
+                                   template="BSD_Theme::product/view/expert-support.phtml">
+                                <arguments>
+                                    <argument name="view_model" xsi:type="object">BSD\ExpertSupportTeamTab\ViewModel\ExpertSupportTabViewModel</argument>
+                                </arguments>
+                            </block>
+                        </container>
+                    </container>
+                </container>
             </container>
         </referenceContainer>
 
@@ -34,7 +51,9 @@
         </referenceBlock>
         <move element="breadcrumbs" destination="bd.pdp.top" before="-"/>
         <move element="product.info.media" destination="bd.pdp.media" before="-"/>
-        <move element="product.info.details" destination="bd.pdp.below" after="-"/>
+        <referenceBlock name="product.info.details" remove="true"/>
+        <referenceBlock name="catalog.product.related" remove="true"/>
+        <referenceBlock name="product.info.upsell" remove="true"/>
 
         <move element="product.info" destination="bd.product.view.main"/>
         <move element="custom.text" destination="bd.product.view.main"/>

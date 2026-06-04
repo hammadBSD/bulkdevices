@@ -126,6 +126,135 @@ class View extends ProductView
     /**
      * @return array<int, array{image: string, title: string, text: string}>
      */
+    public function getPartNumber(): string
+    {
+        return (string) $this->getProduct()->getSku();
+    }
+
+    public function getConditionLabel(): string
+    {
+        $text = $this->getProduct()->getAttributeText('condition');
+        if (is_string($text) && $text !== '') {
+            return $text;
+        }
+        if (is_array($text) && $text !== []) {
+            return (string) reset($text);
+        }
+
+        return (string) __('New');
+    }
+
+    public function getWarrantyLabel(): string
+    {
+        $product = $this->getProduct();
+        foreach (['warranty', 'product_warranty', 'warranty_period'] as $code) {
+            $attribute = $product->getResource()->getAttribute($code);
+            if (!$attribute || !$attribute->getId()) {
+                continue;
+            }
+            $text = $product->getAttributeText($code);
+            if (is_string($text) && $text !== '') {
+                return $text;
+            }
+            if (is_array($text) && $text !== []) {
+                return (string) reset($text);
+            }
+            $raw = $product->getData($code);
+            if (is_string($raw) && $raw !== '') {
+                return $raw;
+            }
+        }
+
+        return (string) __('1-Year');
+    }
+
+    public function getOverviewHeading(): string
+    {
+        $brand = $this->getBrandName();
+        $sku = $this->getPartNumber();
+        $label = trim($brand !== '' ? $brand . ' ' . $sku : $sku);
+
+        return $label . ' ' . (string) __('Details');
+    }
+
+    public function getOverviewIntro(): string
+    {
+        $product = $this->getProduct();
+        $short = trim(strip_tags((string) $product->getShortDescription()));
+        $sku = $this->getPartNumber();
+
+        if ($short !== '') {
+            return (string) __(
+                'Looking for the %1? %2 BulkDevices offers competitive pricing, fast delivery, and expert support for government and business buyers.',
+                $sku,
+                $short
+            );
+        }
+
+        return (string) __(
+            'Looking for the %1? BulkDevices offers competitive pricing, fast delivery, and expert support for government and business buyers.',
+            $sku
+        );
+    }
+
+    /**
+     * @return array<int, array{label: string, value: string}>
+     */
+    public function getTechnicalSpecs(): array
+    {
+        $brand = $this->getBrandName();
+
+        return [
+            ['label' => (string) __('Brand'), 'value' => $brand !== '' ? $brand : '—'],
+            ['label' => (string) __('Part No.'), 'value' => $this->getPartNumber()],
+            ['label' => (string) __('Condition'), 'value' => $this->getConditionLabel()],
+            ['label' => (string) __('Warranty'), 'value' => $this->getWarrantyLabel()],
+        ];
+    }
+
+    public function getProductDescriptionHtml(): string
+    {
+        $description = trim((string) $this->getProduct()->getDescription());
+        if ($description === '') {
+            $description = trim(strip_tags((string) $this->getProduct()->getShortDescription()));
+        }
+
+        return $description;
+    }
+
+    public function getWhyChooseHeading(): string
+    {
+        $brand = $this->getBrandName();
+        $sku = $this->getPartNumber();
+
+        return (string) __(
+            'Why Choose Us for Your %1 %2: Unveiling the Benefits',
+            $sku,
+            $brand
+        );
+    }
+
+    public function getLowestPriceHtml(): string
+    {
+        $prices = $this->getDisplayPrices();
+        $sku = $this->getPartNumber();
+        $final = $prices['excl'];
+
+        return (string) __(
+            'Lowest price of the %1 is %2',
+            $sku,
+            $final
+        );
+    }
+
+    public function getStoreEmail(): string
+    {
+        return (string) $this->_scopeConfig->getValue(
+            'trans_email/ident_general/email',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+    }
+
     public function getTrustBadges(): array
     {
         return [

@@ -49,7 +49,7 @@ $isCallForPrice = $block->isCallForPrice();
         </div>
     <?php endif; ?>
 
-    <div class="bd-pdp__buybox">
+    <div class="bd-pdp__buybox" id="product-addtocart">
         <?php if ($isCallForPrice): ?>
             <div class="bd-pdp__call-price">
                 <?= $block->getChildHtml('custom.text') ?>
