@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <attribute name="class" value="page-product-bd"/>
+
+        <referenceBlock name="page.main.title" remove="true"/>
+
+        <referenceContainer name="content">
+            <container name="bd.pdp" htmlTag="div" htmlClass="bd-pdp" before="-">
+                <container name="bd.pdp.top" htmlTag="div" htmlClass="bd-pdp__top"/>
+                <container name="bd.pdp.grid" htmlTag="div" htmlClass="bd-pdp__grid">
+                    <container name="bd.pdp.media" htmlTag="div" htmlClass="bd-pdp__media"/>
+                    <container name="bd.pdp.main" htmlTag="div" htmlClass="bd-pdp__main">
+                        <block class="BSD\Theme\Block\Product\View"
+                               name="bd.product.view.main"
+                               template="BSD_Theme::product/view/main.phtml"/>
+                    </container>
+                    <container name="bd.pdp.sidebar" htmlTag="div" htmlClass="bd-pdp__sidebar">
+                        <block class="BSD\Theme\Block\Product\View"
+                               name="bd.product.sidebar"
+                               template="BSD_Theme::product/view/sidebar.phtml"/>
+                    </container>
+                </container>
+                <container name="bd.pdp.below" htmlTag="div" htmlClass="bd-pdp__below"/>
+            </container>
+        </referenceContainer>
+
+        <referenceBlock name="breadcrumbs" template="Magento_Catalog::product/breadcrumbs.phtml">
+            <arguments>
+                <argument name="viewModel" xsi:type="object">Magento\Catalog\ViewModel\Product\Breadcrumbs</argument>
+            </arguments>
+        </referenceBlock>
+        <move element="breadcrumbs" destination="bd.pdp.top" before="-"/>
+        <move element="product.info.media" destination="bd.pdp.media" before="-"/>
+        <move element="product.info.details" destination="bd.pdp.below" after="-"/>
+
+        <move element="product.info" destination="bd.product.view.main"/>
+        <move element="custom.text" destination="bd.product.view.main"/>
+        <move element="product.price.final" destination="bd.product.view.main"/>
+
+        <referenceBlock name="product.info.review" remove="true"/>
+        <referenceBlock name="product.info.overview" remove="true"/>
+        <referenceBlock name="product.info.mailto" remove="true"/>
+        <referenceBlock name="product.info.addto" remove="true"/>
+        <referenceBlock name="view.addto.compare" remove="true"/>
+        <referenceBlock name="product.info.sku" remove="true"/>
+        <referenceBlock name="product.price.tier" remove="true"/>
+        <referenceContainer name="alert.urls" remove="true"/>
+        <referenceContainer name="product.info.extrahint" remove="true"/>
+        <referenceContainer name="product.info.price" remove="true"/>
+        <referenceContainer name="product.info.main" remove="true"/>
+
+        <referenceContainer name="bd.pdp.media">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="bd.product.gallery.note"
+                   template="BSD_Theme::product/view/gallery-note.phtml"
+                   after="product.info.media.image"/>
+        </referenceContainer>
+
+        <referenceBlock name="product.info.addtocart" template="BSD_Theme::product/view/addtocart.phtml"/>
+        <referenceBlock name="product.info.addtocart.additional" template="BSD_Theme::product/view/addtocart.phtml"/>
+    </body>
+</page>

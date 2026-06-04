@@ -1,0 +1,24 @@
+<?php
+/** @var \BSD\Theme\Block\Product\View $block */
+?>
+<aside class="bd-pdp__sidebar-inner" aria-label="<?= $block->escapeHtmlAttr(__('Product information')) ?>">
+    <?php foreach ($block->getSidebarItems() as $item): ?>
+        <div class="bd-pdp__sidebar-item">
+            <img class="bd-pdp__icon bd-pdp__icon--sidebar"
+                 src="<?= $block->escapeUrl($block->getPdpIconUrl($item['image'])) ?>"
+                 alt=""
+                 width="25"
+                 height="25"
+                 loading="lazy"
+                 decoding="async"/>
+            <div class="bd-pdp__sidebar-text">
+                <strong><?= $block->escapeHtml($item['title']) ?></strong>
+                <?php foreach (preg_split('/\r\n|\r|\n/', (string) $item['text']) as $line): ?>
+                    <?php if (trim($line) !== ''): ?>
+                        <p><?= $block->escapeHtml(trim($line)) ?></p>
+                    <?php endif; ?>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    <?php endforeach; ?>
+</aside>

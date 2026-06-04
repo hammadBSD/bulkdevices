@@ -70,6 +70,24 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         }
+
+        document.querySelectorAll('.bd-pdp__qty-control').forEach(function (wrap) {
+            var input = wrap.querySelector('.qty');
+            var minus = wrap.querySelector('.bd-pdp__qty-btn--minus');
+            var plus = wrap.querySelector('.bd-pdp__qty-btn--plus');
+            if (!input || !minus || !plus) {
+                return;
+            }
+            var step = function (delta) {
+                var min = parseInt(input.getAttribute('min'), 10) || 1;
+                var val = parseInt(input.value, 10) || min;
+                val = Math.max(min, val + delta);
+                input.value = String(val);
+                input.dispatchEvent(new Event('change', { bubbles: true }));
+            };
+            minus.addEventListener('click', function () { step(-1); });
+            plus.addEventListener('click', function () { step(1); });
+        });
     }
 
     if (document.readyState === 'loading') {
