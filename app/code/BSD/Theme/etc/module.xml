@@ -11,6 +11,7 @@
             <module name="Magento_Search"/>
             <module name="Magento_Newsletter"/>
             <module name="BSD_Getaquote"/>
+            <module name="Magento_Csp"/>
         </sequence>
     </module>
 </config>
