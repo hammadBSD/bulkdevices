@@ -2096,29 +2096,21 @@ body {
   border: 1px solid #e5e5e5;
   background: #fff;
 }
-.bd-pdp__media .action-skip-wrapper,
-.bd-pdp__media .fotorama__nav-wrap--horizontal.fotorama__nav-wrap {
+.bd-pdp__media .action-skip-wrapper {
   display: none;
 }
-.bd-pdp__media .fotorama__arr {
-  width: 32px;
-  height: 48px;
-  background: transparent;
+/* Side arrows were rendering as a solid orange block without the sprite */
+.bd-pdp__media .fotorama__arr,
+.bd-pdp__media .fotorama__zoom-in,
+.bd-pdp__media .fotorama__zoom-out {
+  display: none !important;
 }
-.bd-pdp__media .fotorama__arr .fotorama__arr__arr {
-  width: 28px;
-  height: 40px;
-  margin: 4px 2px;
-  background-color: var(--bd-orange);
-  background-size: 8px 14px;
-  opacity: 1;
-  border-radius: 0;
+.bd-pdp__media .fotorama__nav-wrap,
+.bd-pdp__media .fotorama__nav--dots {
+  display: none !important;
 }
-.bd-pdp__media .fotorama__arr--prev {
-  left: 0;
-}
-.bd-pdp__media .fotorama__arr--next {
-  right: 0;
+.bd-pdp__media .fotorama__stage__frame {
+  cursor: zoom-in;
 }
 .bd-pdp__media .fotorama__stage__frame .fotorama__img {
   max-height: 400px;
