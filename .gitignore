@@ -58,3 +58,7 @@ atlassian*
 !/vendor/.htaccess
 /generated/*
 !/generated/.htaccess
+
+# Local-only files (not for git)
+/deploy.sh
+/dev/tests/integration/testsuite/Magento/Csp/Helper/CspNonceProviderMock.php
