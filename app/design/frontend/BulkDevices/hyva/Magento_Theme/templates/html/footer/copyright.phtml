@@ -1,28 +1,22 @@
 <?php
 /**
- * Hyvä Themes - https://hyva.io
- * Copyright © Hyvä Themes. All rights reserved.
- * See COPYING.txt for license details.
+ * BulkDevices footer copyright
  */
 
 declare(strict_types=1);
 
-use Magento\Theme\Block\Html\Footer;
 use Magento\Framework\Escaper;
+use Magento\Theme\Block\Html\Footer;
 
 /** @var Footer $block */
 /** @var Escaper $escaper */
+
+$copyright = trim((string) $block->getCopyright());
 ?>
-<small class="text-sm text-gray-800 sm:ml-6 sm:mt-0 mt-4">
-    © 2020 Hyva Themes B.V. —
-    <a
-        href="https://www.linkedin.com/company/hyv%C3%A4-themes/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="text-gray-700 ml-1"
-        aria-label="Go to the Hyva LinkedIn profile"
-    >@hyva_io</a>
-    <?php /* Enable the following line to show the copyright information configured in the admin
-    <span><?= $escaper->escapeHtml($block->getCopyright()) ?></span>
-    */ ?>
-</small>
+<p class="site-footer__copyright">
+    <?php if ($copyright !== ''): ?>
+        <?= $escaper->escapeHtml($copyright) ?>
+    <?php else: ?>
+        <?= $escaper->escapeHtml(__('© %1 BulkDevices. All rights reserved.', date('Y'))) ?>
+    <?php endif; ?>
+</p>

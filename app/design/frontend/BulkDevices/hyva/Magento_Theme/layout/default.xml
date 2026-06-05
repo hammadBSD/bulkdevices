@@ -7,6 +7,15 @@
     <update handle="default_hyva"/>
     <head>
         <css src="css/desktop-menu.css" media="screen and (min-width: 1024px)"/>
+        <css src="css/home-banner.css"/>
+        <css src="css/home-features.css"/>
+        <css src="css/home-industries.css"/>
+        <css src="css/home-product-tabs.css"/>
+        <css src="css/home-top-categories.css"/>
+        <css src="css/home-whyus.css"/>
+        <css src="css/home-seo-content.css"/>
+        <css src="css/footer-middle.css"/>
+        <css src="css/frontendff.css"/>
     </head>
     <body>
         <referenceContainer name="after.body.start">
@@ -163,12 +172,7 @@
 
         <referenceContainer name="footer">
             <block name="footer-content" template="Magento_Theme::html/footer.phtml">
-                <block name="footer-static-links" template="Magento_Theme::html/footer/links.phtml"/>
-                <block class="Magento\Cms\Block\Block" name="footer-cms-content">
-                    <arguments>
-                        <argument name="block_id" xsi:type="string">footer_content</argument>
-                    </arguments>
-                </block>
+                <block name="footer-middle" template="Magento_Theme::html/footer/middle.phtml"/>
                 <block
                     class="Magento\Theme\Block\Html\Footer"
                     name="footer-copyright"
