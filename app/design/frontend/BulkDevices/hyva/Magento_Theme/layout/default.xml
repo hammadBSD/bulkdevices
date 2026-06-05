@@ -1,0 +1,195 @@
+<?xml version="1.0"?>
+<!--
+    BulkDevices Hyvä child theme header layout override.
+    Parent: Hyva/default. Customize blocks/templates here; vendor files stay untouched.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="default_hyva"/>
+    <head>
+        <css src="css/desktop-menu.css" media="screen and (min-width: 1024px)"/>
+        <css src="css/home-banner.css"/>
+        <css src="css/home-features.css"/>
+        <css src="css/home-industries.css"/>
+    </head>
+    <body>
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\FormKey" name="formkey" />
+            <block class="Magento\Theme\Block\Html\Notices" name="global_notices" template="Magento_Theme::html/notices.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="page.messages">
+            <block class="Magento\Framework\View\Element\Messages"
+                   name="messages"
+                   as="messages"
+                   template="Magento_Theme::messages.phtml"
+            />
+        </referenceContainer>
+
+        <referenceContainer name="main.content">
+            <block name="skip_to_content.target" before="-" template="Magento_Theme::html/skiptarget.phtml">
+                <arguments>
+                    <argument name="target_id" xsi:type="string">contentarea</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="header.container">
+            <block name="skip_to_content" template="Magento_Theme::html/skip.phtml" before="-">
+                <arguments>
+                    <argument name="target" xsi:type="string">contentarea</argument>
+                    <argument name="label" translate="true" xsi:type="string">Skip to Content</argument>
+                </arguments>
+            </block>
+            <block name="header-content" template="Magento_Theme::html/header.phtml">
+                <arguments>
+                    <argument name="show_compare" xsi:type="boolean">true</argument>
+                    <!-- <argument name="show_wishlist" xsi:type="boolean">true</argument> -->
+                </arguments>
+
+                <block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
+                    <arguments>
+                        <argument name="logoPathResolver" xsi:type="object">Hyva\Theme\ViewModel\Logo\LogoPathResolver</argument>
+                        <argument name="logo_width" xsi:type="number">189</argument>
+                        <argument name="logo_height" xsi:type="number">64</argument>
+                    </arguments>
+                </block>
+
+                <block name="header-search" template="Magento_Theme::html/header/search-form.phtml"/>
+                <block name="header-compare" as="compare" template="Magento_Theme::html/header/compare.phtml"/>
+
+                <block name="cart-drawer" template="Magento_Theme::html/cart/cart-drawer.phtml" ifconfig="checkout/sidebar/display">
+                    <block name="cart-drawer-loading" as="loading" template="Hyva_Theme::ui/loading.phtml"/>
+                    <container name="extra_actions"/>
+                    <container name="cart-drawer.top"/>
+                    <container name="cart-drawer.items.before"/>
+                    <container name="cart-drawer.totals.before"/>
+                    <container name="cart-drawer.bottom"/>
+                </block>
+
+                <block name="topmenu_generic"
+                       as="topmenu"
+                       template="Magento_Theme::html/header/topmenu.phtml"
+                       ttl="3600"
+                >
+                    <arguments>
+                        <argument name="cache_lifetime" xsi:type="string">3600</argument>
+                    </arguments>
+                    <block name="topmenu_mobile"
+                           as="topmenu.mobile"
+                           template="Magento_Theme::html/header/menu/mobile.phtml"
+                    ></block>
+
+                    <block name="topmenu_desktop"
+                           as="topmenu.desktop"
+                           template="Magento_Theme::html/header/menu/desktop.phtml"
+                    ></block>
+                </block>
+                <container name="header-content.additional" as="additional" />
+            </block>
+        </referenceContainer>
+
+        <!-- Required for getChildHtml('customer') in header.phtml (lost when header-content is redeclared) -->
+        <referenceBlock name="header-content">
+            <block name="header.customer"
+                   as="customer"
+                   class="Magento\Customer\Block\Account\Customer"
+                   template="Magento_Customer::header/customer-menu.phtml">
+                <block name="header.customer.logged.in.links"
+                       class="Hyva\Theme\Block\SortableItems">
+                    <block name="customer.header.dashboard.link"
+                           class="Hyva\Theme\Block\SortableItemInterface">
+                        <arguments>
+                            <argument name="label" xsi:type="string" translate="true">My Account</argument>
+                            <argument name="path" xsi:type="string">customer/account</argument>
+                            <argument name="sort_order" xsi:type="number">10</argument>
+                        </arguments>
+                    </block>
+                    <block name="customer.header.address.book.link"
+                           class="Hyva\Theme\Block\SortableItemInterface">
+                        <arguments>
+                            <argument name="label" xsi:type="string" translate="true">Address Book</argument>
+                            <argument name="path" xsi:type="string">customer/address</argument>
+                            <argument name="sort_order" xsi:type="number">40</argument>
+                        </arguments>
+                    </block>
+                    <block name="customer.header.sign.out.delimiter"
+                           class="Hyva\Theme\Block\SortableItemInterface"
+                           template="Hyva_Theme::sortable-item/delimiter.phtml">
+                        <arguments>
+                            <argument name="sort_order" xsi:type="number">1990</argument>
+                        </arguments>
+                    </block>
+                    <block name="customer.header.sign.out.link"
+                           class="Hyva\Theme\Block\SortableItemInterface">
+                        <arguments>
+                            <argument name="label" xsi:type="string" translate="true">Sign Out</argument>
+                            <argument name="path" xsi:type="string">customer/account/logout</argument>
+                            <argument name="sort_order" xsi:type="number">2000</argument>
+                        </arguments>
+                    </block>
+                </block>
+                <block name="header.customer.logged.out.links"
+                       class="Hyva\Theme\Block\SortableItems">
+                    <block name="customer.header.sign.in.link"
+                           class="Hyva\Theme\Block\SortableItemInterface"
+                           template="Magento_Customer::header/link/sign-in.phtml">
+                        <arguments>
+                            <argument name="sort_order" xsi:type="number">10</argument>
+                        </arguments>
+                    </block>
+                    <block name="customer.header.register.link"
+                           class="Hyva\Theme\Block\SortableItemInterface"
+                           template="Magento_Customer::header/link/register.phtml">
+                        <arguments>
+                            <argument name="sort_order" xsi:type="number">20</argument>
+                        </arguments>
+                    </block>
+                </block>
+            </block>
+            <block name="authentication-popup"
+                   as="authentication-popup"
+                   class="Magento\Customer\Block\Account\Customer"
+                   template="Magento_Customer::account/authentication-popup.phtml"/>
+            <block name="header.content.wishlist"
+                   as="wishlist"
+                   template="Magento_Wishlist::header/wishlist.phtml"
+                   ifconfig="wishlist/general/active"/>
+        </referenceBlock>
+
+        <referenceContainer name="top.container">
+            <block class="Magento\Theme\Block\Html\Breadcrumbs" name="breadcrumbs" as="breadcrumbs"/>
+        </referenceContainer>
+
+        <referenceContainer name="columns.top">
+            <block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="Magento_Theme::html/title.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="footer">
+            <block name="footer-content" template="Magento_Theme::html/footer.phtml">
+                <block name="footer-static-links" template="Magento_Theme::html/footer/links.phtml"/>
+                <block class="Magento\Cms\Block\Block" name="footer-cms-content">
+                    <arguments>
+                        <argument name="block_id" xsi:type="string">footer_content</argument>
+                    </arguments>
+                </block>
+                <block
+                    class="Magento\Theme\Block\Html\Footer"
+                    name="footer-copyright"
+                    template="Magento_Theme::html/footer/copyright.phtml"
+                    as="copyright"
+                />
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="after.body.start">
+            <block class="Magento\Framework\View\Element\Js\Components" name="head.components" as="components" template="Magento_Theme::html/container.phtml"/>
+            <block name="mobile-safari-bug-workaround" template="Magento_Theme::html/mobile-safari-bug-workaround.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="before.body.end">
+            <block class="Magento\Theme\Block\Html\Footer" name="absolute_footer" template="Magento_Theme::html/absolute_footer.phtml" />
+        </referenceContainer>
+
+        <block name="head.additional" as="head.additional" template="Magento_Theme::html/container.phtml"/>
+    </body>
+</page>

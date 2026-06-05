@@ -1,0 +1,63 @@
+<?php
+/**
+ * @var HomepageBlogs $block ;
+ */
+
+use RLTSquare\HomepageBlogs\Block\Widget\HomepageBlogs;
+
+$posts = $block->getBlogsData();
+$i = 0;
+if (count($posts) > 4):
+?>
+<div class="container">
+    <h2 class="latest-title home-blog-title"><strong>know what's happening latest in the it world</strong></h2>
+    <div class="container-data">
+        <div class="left-column">
+            <figure><a class="image-link" href="<?= $block->getBaseUrl() . "blog/" . $posts[0]['url_key'] ?>"><img class="left-img"
+                         src="<?= $block->getBaseUrl() . "media/mageplaza/blog/post/" . $posts[0]['image'] ?>"
+                         alt="" width="550" height="620"></a></figure>
+            <div class="left-text">
+                <h2 class="title"><?= $posts[0]['name'] ?></h2>
+                <span class="text"><?= $posts[0]['short_description'] ?></span>
+                <a class="link" href="<?= $block->getBaseUrl() . "blog/" . $posts[0]['url_key'] ?>">
+                    <button class="read-more">Read More</button>
+                </a>
+            </div>
+        </div>
+        <div class="right-column">
+            <?php foreach ($posts as $post):
+                if ($i !== 0):?>
+                    <div class="latest-banner">
+                        <figure><a class="link" href="<?= $block->getBaseUrl() . "blog/" . $post['url_key'] ?>"><img
+                        class="right-img" src="<?= $block->getBaseUrl() . "media/mageplaza/blog/post/" . $post['image'] ?>"
+                                     alt="" width="265" height="168"></a></figure>
+                        <span class="description"><?= $post['name'] ?></span>
+                        <a class="link" href="<?= $block->getBaseUrl() . "blog/" . $post['url_key'] ?>">
+                            <button class="read-more">Read More</button>
+                        </a>
+                    </div>
+                <?php
+                endif;
+                $i++;
+            endforeach;
+            endif;
+            ?>
+        </div>
+    </div>
+</div>
+<style>
+    img.left-img {
+        height: 550px;
+        width: 550px;
+        border-radius: 5%;
+    }
+
+    img.right-img {
+        border-radius: 7%;
+        height: 168px;
+        width: 265px;
+    }
+    html .home-blogs-grid .container-data{
+        justify-content: center;
+    }
+</style>

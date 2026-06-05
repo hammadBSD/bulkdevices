@@ -1,0 +1,143 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_OneStepCheckout
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2017-2018 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Quote\Model\Quote\Address">
+        <plugin name="bss_osc_quote_address"
+                type="Bss\OneStepCheckout\Plugin\Model\Quote\Address"/>
+    </type>
+    <type name="Magento\Checkout\Api\PaymentInformationManagementInterface">
+        <plugin name="bss_osc_additional_data" type="Bss\OneStepCheckout\Plugin\Model\Checkout\CustomerAdditionalData"/>
+    </type>
+    <type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
+        <plugin name="bss_osc_guest_additional_data"
+                type="Bss\OneStepCheckout\Plugin\Model\Checkout\GuestAdditionalData"/>
+    </type>
+
+    <!-- Compatible with Company Account -->
+    <type name="Bss\CompanyAccount\Block\Order\Tabs\Approve">
+        <plugin name="get_url_checkout_approve" type="Bss\OneStepCheckout\Plugin\Block\Order\Tabs\Checkout" sortOrder="10" disabled="false"  />
+    </type>
+
+    <type name="Bss\CompanyAccount\Block\Order\Tabs\Waiting">
+        <plugin name="get_url_checkout_waiting" type="Bss\OneStepCheckout\Plugin\Block\Order\Tabs\Checkout" sortOrder="10" disabled="false"  />
+    </type>
+    <!-- End -->
+
+    <!-- Bss add extension attribute to rest api -->
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="bss_osc_add_delivery_extension_attribute"
+                type="Bss\OneStepCheckout\Plugin\Model\Sales\OrderRepository"
+                sortOrder="10"/>
+    </type>
+    <type name="Magento\Sales\Api\InvoiceRepositoryInterface">
+        <plugin name="bss_osc_add_delivery_extension_attribute"
+                type="Bss\OneStepCheckout\Plugin\Model\Sales\InvoiceRepository"
+                sortOrder="10"/>
+    </type>
+    <type name="Magento\Sales\Api\ShipmentRepositoryInterface">
+        <plugin name="bss_osc_add_delivery_extension_attribute"
+                type="Bss\OneStepCheckout\Plugin\Model\Sales\ShipmentRepository"
+                sortOrder="10"/>
+    </type>
+    <type name="Magento\Sales\Api\CreditmemoRepositoryInterface">
+        <plugin name="bss_osc_add_delivery_extension_attribute"
+                type="Bss\OneStepCheckout\Plugin\Model\Sales\CreditmemoRepository"
+                sortOrder="10"/>
+    </type>
+    <!-- End -->
+
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="shipping_arrival_date" xsi:type="string">sales_order.shipping_arrival_date</item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <!-- Module api -->
+    <preference for="Bss\OneStepCheckout\Api\ConfigInterface"
+                type="Bss\OneStepCheckout\Model\GetConfig" />
+    <preference for="Bss\OneStepCheckout\Api\Data\ConfigDataInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\ConfigData" />
+
+    <preference for="Bss\OneStepCheckout\Api\Data\Config\GeneralGroupInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\Config\GeneralGroupConfig" />
+    <preference for="Bss\OneStepCheckout\Api\Data\Config\DisplayFieldInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\Config\DisplayFieldGroupConfig" />
+    <preference for="Bss\OneStepCheckout\Api\Data\Config\AutoCompleteInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\Config\AutoCompleteGroupConfig" />
+    <preference for="Bss\OneStepCheckout\Api\Data\Config\NewsLetterInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\Config\NewsLetterGroupConfig" />
+    <preference for="Bss\OneStepCheckout\Api\Data\Config\OrderDeliveryDateInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\Config\OrderDeliveryDateGroupConfig" />
+    <preference for="Bss\OneStepCheckout\Api\Data\Config\GiftWrapInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\Config\GiftWrapGroupConfig" />
+    <preference for="Bss\OneStepCheckout\Api\Data\Config\CustomCssInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\Config\CustomCssGroupConfig" />
+    <preference for="Bss\OneStepCheckout\Api\Data\Config\GiftMessageInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\Config\GiftMessageGroupConfig" />
+
+    <preference for="Bss\OneStepCheckout\Api\OrderDeliveryDateCommentInterface"
+                type="Bss\OneStepCheckout\Model\Api\OrderDeliveryInfo"/>
+    <preference for="Bss\OneStepCheckout\Api\Data\ResponseSimpleObjectInterface"
+                type="Bss\OneStepCheckout\Model\Api\Data\ResponseSimpleObject"/>
+    <!-- ./ -->
+    <preference for="Bss\OneStepCheckout\Api\GiftWrapManagementInterface" type="Bss\OneStepCheckout\Model\GiftWrapManagement" />
+    <preference for="Bss\OneStepCheckout\Api\GiftWrapValidateManagementInterface" type="Bss\OneStepCheckout\Model\GiftWrapValidateManagement" />
+    <preference for="Bss\OneStepCheckout\Api\UpdateItemManagementInterface"
+                type="Bss\OneStepCheckout\Model\UpdateItemManagement"/>
+    <preference for="Bss\OneStepCheckout\Api\GuestUpdateItemManagementInterface"
+                type="Bss\OneStepCheckout\Model\GuestUpdateItemManagement"/>
+    <preference for="Bss\OneStepCheckout\Api\Data\UpdateItemDetailsInterface"
+                type="Bss\OneStepCheckout\Model\UpdateItemDetails"/>
+    <preference for="Magento\Widget\Block\Adminhtml\Widget\Instance\Edit\Chooser\Layout"
+                type="Bss\OneStepCheckout\Block\Adminhtml\Widget\Instance\Edit\Chooser\Layout"/>
+    <preference for="Magento\Widget\Block\Adminhtml\Widget\Instance\Edit\Chooser\Container"
+                type="Bss\OneStepCheckout\Block\Adminhtml\Widget\Instance\Edit\Chooser\Container"/>
+    <type name="Magento\Sales\Model\Order\Invoice">
+        <plugin name="osc_before_capture" type="Bss\OneStepCheckout\Plugin\Model\Order\Invoice"/>
+    </type>
+    <type name="Magento\Paypal\Model\Cart">
+        <plugin name="update_paypal_fee_order" type="Bss\OneStepCheckout\Plugin\UpdateFeeForOrder"/>
+    </type>
+    <type name="Magento\Sales\Model\Order\Pdf\Total\DefaultTotal">
+        <plugin name="bss_osc_invoice_pdf_gift_card"
+                type="Bss\OneStepCheckout\Plugin\Model\Order\Pdf\Total\DefaultTotal"/>
+    </type>
+    <virtualType name="BssOscGiftWrapOrderlines" type="Bss\OneStepCheckout\Model\Checkout\Orderlines\GiftWrapper"/>
+    <type name="Magento\Email\Model\Template">
+        <plugin name="bss_osc_template_var" type="Bss\OneStepCheckout\Plugin\Email\BackendTemplate" sortOrder="15"/>
+    </type>
+    <type name="Magento\Framework\Console\CommandList">
+        <arguments>
+            <argument name="commands" xsi:type="array">
+                <item name="renameFileGiftWrapper" xsi:type="object">Bss\OneStepCheckout\Console\RenameGiftWrapper</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Klarna\Base\Model\Api\Collector">
+        <arguments>
+            <argument name="instances" xsi:type="array">
+                <item name="osc_gift_wrap" xsi:type="object">bss_osc_gift_wrap</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="bss_osc_gift_wrap" type="Bss\OneStepCheckout\Model\Checkout\Orderlines\GiftWrapperV244"/>
+</config>

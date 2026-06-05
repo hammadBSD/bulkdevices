@@ -1,0 +1,154 @@
+<div id="popup-modal" class="call-for-price-modal-popup-category" style="display:none;">
+    <div class="row">
+        <div class="col-md-6">
+            <img src="" class="product_image" />
+            <input type="text" name="sku" value="" readonly >
+        </div>
+        <div class="col-md-6">
+            <form name="call_for_price_listing" method="post" id="call_for_price_listing" class="form"
+                  action="<?php echo $this->getFormAction(); ?>"
+                  data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+                  data-mage-init='{"validation":{}}'>
+                <p class="responce_message_call_price_listing" style="padding: 5px 10px;text-align: center;"></p>
+                <fieldset class="fieldset">
+                    <legend class="legend"><span><?= $block->escapeHtmlAttr(__('Request For Free Quotation')) ?></span>
+                    </legend>
+                    <fieldset class="fieldset row">
+                        <div class="fields col-md-12">
+                            <div class="field name required">
+                                <div class="control">
+                                    <input placeholder="<?= $block->escapeHtmlAttr(__('Name')) ?>" name="name" id="name"
+                                           title="Name" value="" class="input-text" type="text"
+                                           data-validate="{required:true, 'validate-alphanum-with-spaces':true}">
+                                </div>
+                            </div>
+
+                            <div class="field phone required">
+                                <div class="control">
+                                    <input placeholder="<?= $block->escapeHtmlAttr(__('Telephone')) ?>" name="telephone"
+                                           id="telephone" title="Telephone" value="" class="input-text"
+                                           type="text" data-validate="{required:true}">
+                                </div>
+                            </div>
+
+                            <div class="field email required">
+                                <div class="control">
+                                    <input placeholder="<?= $block->escapeHtmlAttr(__('Email')) ?>" name="email"
+                                           id="email" title="Email" value="" class="input-text" type="text"
+                                           data-validate="{required:true, 'validate-email':true}">
+                                </div>
+                            </div>
+
+                            <?php /*<div class="field price required">
+                                <div class="control">
+                                    <input placeholder="<?= $block->escapeHtmlAttr(__('Price')) ?>" name="price"
+                                           id="price" title="price" value="" class="input-text"
+                                           type="text" data-validate="{required:true}">
+                                </div>
+                            </div>
+
+                            <div class="field qty required">
+                                <input name="sku" id="sku" title="sku" value="" class="input-text"
+                                       type="hidden" data-validate="{required:true}">
+                                <div class="control">
+                                    <input placeholder="<?= $block->escapeHtmlAttr(__('Quantity')) ?>" name="quantity"
+                                           id="quantity" title="quantity" value="" class="input-text"
+                                           type="text" data-validate="{required:true}">
+                                </div>
+                            </div>*/ ?>
+                        </div>
+                    </fieldset>
+                </fieldset>
+                <div class="actions-toolbar">
+                    <div class="primary">
+                        <button type="submit" class="action submit_call_for_price_listing primary" title="Save">
+                            <span><?= $block->escapeHtmlAttr(__('Send')) ?></span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    require([
+    'jquery',
+    'Magento_Ui/js/modal/modal'
+], function ($, modal) {
+    var options = {
+        type: 'popup',
+        responsive: true,
+        innerScroll: true,
+        buttons: [],
+        modalClass: "call-for-price-modal-plp-popup"
+    };
+    var base_url = window.location.origin;
+
+    $(document).on('click', '.calltoprice', function (event) {
+        event.preventDefault();
+        var sku = $(this).data('sku');
+        var imag = $(this).data('imag');
+        openModal(sku, imag);
+    });
+
+    $(".calltoprice").on('click',function(){
+        $('#popup-modal').modal(options).modal('openModal');
+    });
+
+    function openModal(sku, imag) {
+    
+        $.ajax({
+            type: "POST",
+            showLoader: true,
+            url: base_url + '/getaquote/index/getimagepath',
+            data: { product_sku: sku },
+            dataType: "json",
+            success: function (response) {
+                console.log("Response received:", response);
+                if (response && response.json_data) {
+                    $('.product_image').attr("src", response.json_data);
+                } else {
+                    console.log('Invalid response format');
+                }
+            },
+            error: function (xhr, status, error) {
+                console.error('AJAX request failed:', status, error);
+            }
+        });
+        $("input[name=sku]").val(sku);
+        //var popup = modal(options, $('#popup-modal'));
+        //$("#popup-modal").modal("openModal");
+    }
+
+    $(document).ready(function () {       
+
+        var dataForm = $('#call_for_price_listing');
+        var AjaxUrl = base_url + '/getaquote/Index/formpost/';
+
+        $(".submit_call_for_price_listing").on('click', function (e) {
+            e.preventDefault();
+            var param = dataForm.serialize();
+            $.ajax({
+                showLoader: true,
+                url: AjaxUrl,
+                data: param,
+                type: "POST"
+            }).done(function (data) {
+                $('.responce_message_call_price_listing').html(data).css('color', 'red');
+                dataForm[0].reset();
+                setTimeout(function () {
+                    $('.responce_message_call_price_listing').empty();
+                    $("#popup-modal").modal("closeModal");
+                }, 3000);
+            }).fail(function (xhr, status, error) {
+            });
+        });
+    });
+});
+</script>
+<style type="text/css">
+    .modal-popup .modal-inner-wrap {
+        width: 40%;
+    }
+</style>

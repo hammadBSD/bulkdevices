@@ -1,0 +1,69 @@
+<?php declare(strict_types=1);
+
+/**
+ * GoogleTagManager2 plugin for Magento
+ *
+ * @author      Yireo (http://www.yireo.com/)
+ * @copyright   Copyright (c) 2019 Yireo (http://www.yireo.com/)
+ * @license     Open Software License
+ */
+
+use Magento\Framework\View\Element\Template;
+use Yireo\GoogleTagManager2\ViewModel\Commons;
+
+/** @var Template $block */
+/** @var Commons $commons */
+$commons = $block->getCommonsViewModel();
+?>
+<script>
+    window.addEventListener('private-content-loaded', function(event) {
+        var isEmpty = function (variable) {
+            if (typeof variable === 'undefined') {
+                return true;
+            }
+
+            if (Array.isArray(variable) && variable.length === 0) {
+                return true;
+            }
+
+            return typeof variable === 'object' && Object.keys(variable).length === 0;
+        }
+
+        var getSectionNames = function () {
+            return ['cart', 'customer'];
+        }
+
+        let attributes = {};
+        getSectionNames().forEach(function (sectionName) {
+            if (!event.detail.data[sectionName].gtm_events) {
+                return;
+            }
+
+            const gtmEvents = event.detail.data[sectionName].gtm_events;
+            for (const [eventId, eventData] of Object.entries(gtmEvents)) {
+                if (eventData.triggered === true) {
+                    continue;
+                }
+
+                logger('customerData section "' + sectionName + '" contains event "' + eventId + '"', eventData);
+                window.dataLayer.push({ ecommerce: null });
+                window.dataLayer.push(eventData);
+
+                if (eventData.meta && eventData.meta.cacheable !== true) {
+                    //delete sectionData['gtm_events'][eventId]; // @todo: Is this still needed?
+                    logger('invalidating sections "' + sectionName + '"', eventData)
+                }
+
+                eventData.triggered = true;
+            }
+        });
+
+        logger('initial state (js)', attributes);
+        window.dataLayer = window.dataLayer || [];
+
+        if (false === isEmpty(attributes)) {
+            window.dataLayer.push({ ecommerce: null });
+            window.dataLayer.push(attributes);
+        }
+    });
+</script>

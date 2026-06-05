@@ -1,0 +1,45 @@
+<?php
+/**
+ * MagePrince
+ * Copyright (C) 2020 BSD <info@quickbuy.com>
+ *
+ * @package BSD_QuickBuy
+ * @copyright Copyright (c) 2020 BSD (http://www.quickbuy.com/)
+ * @license http://opensource.org/licenses/gpl-3.0.html GNU General Public License,version 3 (GPL-3.0)
+ * @author MagePrince <info@quickbuy.com>
+ */
+?>
+<?php
+/** @var \BSD\QuickBuy\Block\Product\ListProduct $block */
+$product = $block->getProduct();
+?>
+<?php $helper = $this->helper(\BSD\QuickBuy\Helper\Data::class); ?>
+<?php $buttonTitle = $helper->getButtonTitle() ?>
+<?php if ($product->isSaleable()): ?>
+    <?php $postParams = $block->getAddToCartPostParams($product); ?>
+    <div class="quickbuy-btn">
+        <form action="<?= /* @noEscape */ $postParams['action']; ?>"
+              id="product_addtocart_form_<?= /* @noEscape */ $postParams['data']['product']; ?>"
+              method="post">
+            <input type="hidden"
+                   name="product"
+                   value="<?= /* @noEscape */ $postParams['data']['product']; ?>">
+            <input type="hidden"
+                   name="<?= /* @noEscape */ 'uenc'; ?>"
+                   value="<?= /* @noEscape */ $postParams['data']['uenc']; ?>">
+            <?= $block->getBlockHtml('formkey') ?>
+            <button type="submit"
+                    title="<?= $block->escapeHtml(__($buttonTitle)) ?>"
+                    class="action tocart quickbuy primary"
+                    data-mage-init='
+                    {
+                        "BSD_QuickBuy/js/quick-buy": {
+                            "form": "#product_addtocart_form_<?= /* @noEscape */ $postParams['data']['product'] ?>"
+                        }
+                    }
+                '>
+                <span><?= /* @noEscape */ __($buttonTitle) ?></span>
+            </button>
+        </form>
+    </div>
+<?php endif; ?>

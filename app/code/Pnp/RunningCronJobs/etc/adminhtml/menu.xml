@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Backend/etc/menu.xsd">
+    <menu>
+        <add id="Pnp_RunningCronJobs::parent" title="PikNPak" module="Pnp_RunningCronJobs" sortOrder="55" resource="Pnp_RunningCronJobs::parent"/>
+		<add id="Pnp_RunningCronJobs::cronschedule" title="Running Cron Jobs" module="Pnp_RunningCronJobs" sortOrder="20" parent="Pnp_RunningCronJobs::parent" action="runningcronjobs/cronschedule" resource="Pnp_RunningCronJobs::cronschedule"/>
+
+    </menu>
+</config>

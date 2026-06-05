@@ -1,0 +1,110 @@
+<!--
+
+ /**
+ * Quickrfq extension
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Open Software License (OSL 3.0)
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/osl-3.0.php
+ *
+ * @category   FME
+ * @package    FME_Quickrfq
+ * @author     Malik Tahir Mehmood<malik.tahir786@gmail.com>
+ * @copyright  Copyright 2010 © free-magentoextensions.com All right reserved
+ */
+
+-->
+
+<!--@subject A New Request For Quote@-->
+<!--@vars
+{"store url=\"\"":"Store Url",
+"skin url=\"images/logo_email.gif\" _area='frontend'":"Email Logo Image",
+"var data.name":"Sender Name",
+"var data.email":"Sender Email",
+"var data.phone":"Sender Telephone",
+"var data.overview":"Overview"}
+@-->
+<!--@styles
+body,td { color:#2f2f2f; font:11px/1.35em Verdana, Arial, Helvetica, sans-serif; }
+@-->
+
+
+<body>
+{{inlinecss file="css/email-inline.css"}}
+
+<!-- Begin wrapper table -->
+<table class="wrapper" width="100%">
+    <tr>
+        <td class="wrapper-inner" align="center">
+            <table class="main" align="center">
+                <tr>
+                    <td class="header">
+                        <a class="logo" href="#">
+
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="main-content">
+                        <!-- Begin Content -->
+
+                        <table>
+                            <tr class="email-intro">
+                                <td>
+                                    <p>
+                                  The Details are as follows.
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr class="email-summary">
+                                <td>
+                                    <h1>Quick RFQ</h1>
+                                </td>
+                            </tr>
+                            <tr class="email-information">
+                                <td>
+                                    <table class="message-info">
+                                        <tr>
+                                            <td align="center" style="text-align:left;width:30%;font-weight:bold;">Name:</td>
+                                            <td align="center" style="padding-left:5px;text-align:left;width:70%;">{{var data.name}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="text-align:left;width:30%;font-weight:bold;">SKU:</td>
+                                            <td align="center" style="padding-left:5px;text-align:left;width:70%;">{{var data.sku}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="text-align:left;width:30%;font-weight:bold;">Phone:</td>
+                                            <td align="center" style="padding-left:5px;text-align:left;width:70%;">{{var data.phone}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="text-align:left;width:30%;font-weight:bold;">E-mail: </td>
+                                            <td align="center" style="padding-left:5px;text-align:left;width:70%;">{{var data.email}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="text-align:left;width:30%;font-weight:bold;">Target Price: </td>
+                                            <td align="center" style="padding-left:5px;text-align:left;width:70%;"> {{var data.price}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="text-align:left;width:30%;font-weight:bold;">Quantity:</td>
+                                            <td align="center" style="padding-left:5px;text-align:left;width:70%;"> {{var data.quantity}}</td>
+                                        </tr>
+
+                                        <tr>
+                                            <td align="center" style="text-align:left;width:30%;">&nbsp;</td>
+                                            <td align="center" style="padding-left:5px;text-align:left;width:70%;">&nbsp;</td>
+                                        </tr>
+                                        <tr>
+                                            <td align="center" style="text-align:left;width:30%;font-weight:bold;">Regards,</td>
+                                            <td align="center" style="padding-left:5px;text-align:left;width:70%;">&nbsp; </td>
+                                        </tr>
+                                    </table>
+
+
+                                </td>
+                            </tr>
+                        </table>
+
+                        {{template config_path="design/email/footer_template"}}

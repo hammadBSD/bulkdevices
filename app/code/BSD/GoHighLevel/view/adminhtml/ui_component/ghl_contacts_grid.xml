@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<listing xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Ui:etc/ui_configuration.xsd">
+    <argument name="data" xsi:type="array">
+        <item name="js_config" xsi:type="array">
+            <item name="provider" xsi:type="string">ghl_contacts_grid.ghl_contacts_grid_data_source</item>
+        </item>
+    </argument>
+    <settings>
+        <spinner>ghl_contacts_columns</spinner>
+        <deps>
+            <dep>ghl_contacts_grid.ghl_contacts_grid_data_source</dep>
+        </deps>
+    </settings>
+    <dataSource name="ghl_contacts_grid_data_source" component="Magento_Ui/js/grid/provider">
+        <settings>
+            <storageConfig>
+                <param name="indexField" xsi:type="string">id</param>
+            </storageConfig>
+            <updateUrl path="mui/index/render"/>
+        </settings>
+        <aclResource>BSD_GoHighLevel::contacts</aclResource>
+        <dataProvider class="Magento\Framework\View\Element\UiComponent\DataProvider\DataProvider" name="ghl_contacts_grid_data_source">
+            <settings>
+                <requestFieldName>id</requestFieldName>
+                <primaryFieldName>id</primaryFieldName>
+            </settings>
+        </dataProvider>
+    </dataSource>
+    <listingToolbar name="listing_top">
+        <settings>
+            <sticky>true</sticky>
+        </settings>
+        <bookmark name="bookmarks"/>
+        <columnsControls name="columns_controls"/>
+        <filterSearch name="fulltext"/>
+        <filters name="listing_filters">
+            <settings>
+                <templates>
+                    <filters>
+                        <select>
+                            <param name="template" xsi:type="string">ui/grid/filters/elements/ui-select</param>
+                            <param name="component" xsi:type="string">Magento_Ui/js/form/element/ui-select</param>
+                        </select>
+                    </filters>
+                </templates>
+            </settings>
+        </filters>
+        <paging name="listing_paging"/>
+    </listingToolbar>
+    <columns name="ghl_contacts_columns">
+        <settings>
+            <childDefaults>
+                <param name="fieldAction" xsi:type="array">
+                    <item name="provider" xsi:type="string">ghl_contacts_grid.ghl_contacts_grid.ghl_contacts_columns_editor</item>
+                    <item name="target" xsi:type="string">startEdit</item>
+                    <item name="params" xsi:type="array">
+                        <item name="0" xsi:type="string">${ $.$data.rowIndex }</item>
+                    </item>
+                </param>
+                <param name="storageConfig" xsi:type="array">
+                    <item name="provider" xsi:type="string">ghl_contacts_grid.ghl_contacts_grid_data_source</item>
+                    <item name="namespace" xsi:type="string">current</item>
+                </param>
+            </childDefaults>
+        </settings>
+        <selectionsColumn name="ids">
+            <settings>
+                <indexField>id</indexField>
+            </settings>
+        </selectionsColumn>
+        <column name="id">
+            <settings>
+                <filter>textRange</filter>
+                <label translate="true">ID</label>
+                <sorting>asc</sorting>
+            </settings>
+        </column>
+        <column name="email">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Email</label>
+            </settings>
+        </column>
+        <column name="firstname">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">First Name</label>
+            </settings>
+        </column>
+        <column name="lastname">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Last Name</label>
+            </settings>
+        </column>
+        <column name="phone">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Phone</label>
+            </settings>
+        </column>
+        <column name="city">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">City</label>
+            </settings>
+        </column>
+        <column name="state">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">State</label>
+            </settings>
+        </column>
+        <column name="country">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">Country</label>
+            </settings>
+        </column>
+        <column name="ghl_contact_id">
+            <settings>
+                <filter>text</filter>
+                <label translate="true">GHL Contact ID</label>
+            </settings>
+        </column>
+        <column name="synced_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Synced At</label>
+            </settings>
+        </column>
+        <column name="created_at" class="Magento\Ui\Component\Listing\Columns\Date" component="Magento_Ui/js/grid/columns/date">
+            <settings>
+                <filter>dateRange</filter>
+                <dataType>date</dataType>
+                <label translate="true">Created At</label>
+            </settings>
+        </column>
+    </columns>
+</listing>

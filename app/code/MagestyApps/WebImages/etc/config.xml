@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © MagestyApps. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+ -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <magestyapps_webimages>
+            <extensions>
+                <vector>
+                    <svg>svg</svg>
+                    <svg_xml>svg+xml</svg_xml>
+                </vector>
+                <web_image>
+                    <webp>webp</webp>
+                </web_image>
+            </extensions>
+        </magestyapps_webimages>
+        <dev>
+            <image>
+                <adapters>
+                    <GD2>
+                        <class>MagestyApps\WebImages\Model\Image\Adapter\Gd2</class>
+                    </GD2>
+                </adapters>
+            </image>
+        </dev>
+    </default>
+</config>

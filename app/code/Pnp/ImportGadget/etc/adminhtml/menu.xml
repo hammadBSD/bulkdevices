@@ -1,0 +1,6 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Backend/etc/menu.xsd">
+    <menu>
+        <add id="Pnp_ImportGadget::index" title="Import Gadget" module="Pnp_ImportGadget" sortOrder="10" action="importgadget/index" resource="Pnp_ImportGadget::index" parent="Pnp_RunningCronJobs::parent"/>
+    </menu>
+</config>

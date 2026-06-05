@@ -1,0 +1,99 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="bsd_ghl" translate="label" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>GoHighLevel Integration</label>
+            <tab>general</tab>
+            <resource>BSD_GoHighLevel::config</resource>
+            <group id="general" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Settings</label>
+                <field id="enabled" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable or disable GoHighLevel integration</comment>
+                </field>
+                <field id="access_token" translate="label comment" type="obscure" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Access Token</label>
+                    <comment>Enter your GoHighLevel API Access Token (Private Integration Token)</comment>
+                    <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="location_id" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Location ID</label>
+                    <comment>Enter your GoHighLevel Location ID</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="create_opportunities" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Create Opportunities</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <comment>Enable to automatically create opportunities in GoHighLevel</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                    </depends>
+                </field>
+                <field id="pipeline_mode" translate="label comment" type="select" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Pipeline Configuration</label>
+                    <source_model>BSD\GoHighLevel\Model\Config\Source\PipelineMode</source_model>
+                    <comment>Choose whether to use a single default pipeline for all requests or separate pipelines for each request type</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="create_opportunities">1</field>
+                    </depends>
+                </field>
+                <field id="pipeline_id" translate="label comment" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Default Pipeline ID</label>
+                    <comment>Enter your GoHighLevel Pipeline ID (optional, will use first available if not set)</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="create_opportunities">1</field>
+                        <field id="pipeline_mode">default</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="pipeline_settings" translate="label" type="text" sortOrder="15" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Separate Pipeline Settings</label>
+                <comment>Configure separate pipeline IDs for different request types. These fields appear when "Separate Pipelines" is selected.</comment>
+                <field id="pipeline_id_order" translate="label comment" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Order/Checkout Pipeline ID</label>
+                    <comment>Pipeline ID for orders placed through checkout</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="create_opportunities">1</field>
+                        <field id="pipeline_mode">separate</field>
+                    </depends>
+                </field>
+                <field id="pipeline_id_contact_form" translate="label comment" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Contact Form Pipeline ID</label>
+                    <comment>Pipeline ID for contact form submissions</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="create_opportunities">1</field>
+                        <field id="pipeline_mode">separate</field>
+                    </depends>
+                </field>
+                <field id="pipeline_id_bulk_quote" translate="label comment" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Bulk Quote Pipeline ID</label>
+                    <comment>Pipeline ID for bulk quote/getaquote form submissions</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="create_opportunities">1</field>
+                        <field id="pipeline_mode">separate</field>
+                    </depends>
+                </field>
+                <field id="pipeline_id_abandoned_checkout" translate="label comment" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Abandoned Checkout Pipeline ID</label>
+                    <comment>Pipeline ID for abandoned checkouts synced via cron</comment>
+                    <depends>
+                        <field id="enabled">1</field>
+                        <field id="create_opportunities">1</field>
+                        <field id="pipeline_mode">separate</field>
+                    </depends>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

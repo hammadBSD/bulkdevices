@@ -1,0 +1,277 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Hyva\Theme\ViewModel\LucideIcons;
+use Hyva\Theme\ViewModel\Navigation;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\Escaper;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var HyvaCsp $hyvaCsp */
+
+/** @var Navigation $viewModelNavigation */
+$viewModelNavigation = $viewModels->require(Navigation::class, $block);
+
+/** @var LucideIcons $lucideIcons */
+$lucideIcons = $viewModels->require(LucideIcons::class);
+
+$menuItems = $viewModelNavigation->getNavigation(4);
+$block->setData('cache_tags', $viewModelNavigation->getIdentities());
+
+$quickLinks = [
+    ['label' => __('Hard Drive'), 'path' => 'storage-devices/internal-storage'],
+    ['label' => __('Memory'), 'path' => 'memory'],
+    ['label' => __('CPU'), 'path' => 'cpus'],
+    ['label' => __('Power Supply'), 'path' => 'power/power-classification/power-supplies'],
+    ['label' => __('Motherboards'), 'path' => 'motherboards'],
+    ['label' => __('Switches'), 'path' => 'networking-devices/switches'],
+];
+
+/** @param array<string, mixed> $item */
+$menuChildren = static function (array $item): array {
+    $children = $item['childData'] ?? $item['children'] ?? [];
+    return is_array($children) ? $children : [];
+};
+
+/** Sequential nav index (0, 1, 2…) — independent of category array keys */
+$categoryMenuList = [];
+foreach ($menuItems as $menuItem) {
+    $categoryMenuList[] = [
+        'navIndex' => count($categoryMenuList),
+        'item' => $menuItem,
+        'children' => $menuChildren($menuItem),
+    ];
+}
+
+$firstCategoryWithChildren = null;
+foreach ($categoryMenuList as $categoryEntry) {
+    if (!empty($categoryEntry['children'])) {
+        $firstCategoryWithChildren = $categoryEntry['navIndex'];
+        break;
+    }
+}
+
+$columnClass = static function (array $children): string {
+    $count = count($children);
+    if ($count <= 1) {
+        return 'columns1';
+    }
+    if ($count === 2) {
+        return 'columns2';
+    }
+    if ($count === 3) {
+        return 'columns3';
+    }
+    return 'columns4';
+};
+?>
+<div
+    x-data="initMenuDesktop"
+    class="menu-container z-9 navigation hidden lg:block"
+    @keydown.escape.window="closeCategories"
+>
+    <div class="menu-wrapper flex items-center justify-between gap-4 py-1">
+        <div class="drop-menu shrink-0">
+            <button
+                type="button"
+                class="shop-by-categories flex items-center gap-1 py-2 font-semibold whitespace-nowrap"
+                @click="toggleCategories"
+                :aria-expanded="categoriesOpen"
+                aria-controls="bb-categories-panel"
+                aria-haspopup="true"
+            >
+                <?= $escaper->escapeHtml(__('Shop By Categories')) ?>
+                <?= $lucideIcons->chevronDownHtml('arrow-down-ol', 16, 16, ['aria-hidden' => 'true']) ?>
+            </button>
+
+            <div
+                id="bb-categories-panel"
+                class="bb-categories-panel"
+                x-show="categoriesOpen"
+                x-transition
+                x-cloak
+                @click.outside="closeCategories"
+            >
+                <div class="bb-categories-panel-layout">
+                    <nav
+                        class="bb-categories-nav-vertical"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Shop by category')) ?>"
+                    >
+                        <ul>
+                            <?php foreach ($categoryMenuList as $categoryEntry): ?>
+                                <?php
+                                $navIndex = (int) $categoryEntry['navIndex'];
+                                $menuItem = $categoryEntry['item'];
+                                $hasChildren = !empty($categoryEntry['children']);
+                                ?>
+                                <li
+                                    class="ui-menu-item level0 <?= $hasChildren ? 'parent' : '' ?>"
+                                    data-category-index="<?= $navIndex ?>"
+                                    @mouseenter="setActiveCategory(<?= $navIndex ?>)"
+                                    @focusin="setActiveCategory(<?= $navIndex ?>)"
+                                >
+                                    <a
+                                        href="<?= $escaper->escapeUrl($menuItem['url']) ?>"
+                                        class="level-top"
+                                        :class="{ 'is-active': activeCategory === <?= $navIndex ?> }"
+                                        title="<?= $escaper->escapeHtmlAttr($menuItem['name']) ?>"
+                                        <?php if ($hasChildren): ?>
+                                            @click.prevent="setActiveCategory(<?= $navIndex ?>)"
+                                        <?php endif; ?>
+                                    >
+                                        <span><?= $escaper->escapeHtml($menuItem['name']) ?></span>
+                                        <?php if ($hasChildren): ?>
+                                            <?= $lucideIcons->chevronRightHtml('level-top-chevron', 18, 18, ['aria-hidden' => 'true']) ?>
+                                        <?php endif; ?>
+                                    </a>
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </nav>
+
+                    <div class="bb-categories-megamenu">
+                        <?php foreach ($categoryMenuList as $categoryEntry): ?>
+                            <?php
+                            $navIndex = (int) $categoryEntry['navIndex'];
+                            $menuItem = $categoryEntry['item'];
+                            $level1Items = $categoryEntry['children'];
+                            if (empty($level1Items)) {
+                                continue;
+                            }
+                            ?>
+                            <div
+                                class="bb-megamenu-panel level0 submenu"
+                                data-category-index="<?= $navIndex ?>"
+                                x-show="categoriesOpen && activeCategory === <?= $navIndex ?>"
+                                x-transition
+                            >
+                                <div class="bb-megamenu-content">
+                                    <p class="bb-megamenu-title">
+                                        <a href="<?= $escaper->escapeUrl($menuItem['url']) ?>">
+                                            <?= $escaper->escapeHtml(__('View all %1', $menuItem['name'])) ?>
+                                        </a>
+                                    </p>
+                                    <ul class="bb-megamenu-columns mega-columns <?= $escaper->escapeHtmlAttr($columnClass($level1Items)) ?>">
+                                        <?php foreach ($level1Items as $level1Item): ?>
+                                            <?php $level2Items = $menuChildren($level1Item); ?>
+                                            <li class="bb-menu-level-1 ui-menu-item level1 <?= !empty($level2Items) ? 'parent' : '' ?>">
+                                                <a
+                                                    class="bb-menu-level-1-link"
+                                                    href="<?= $escaper->escapeUrl($level1Item['url']) ?>"
+                                                    title="<?= $escaper->escapeHtmlAttr($level1Item['name']) ?>"
+                                                >
+                                                    <span><?= $escaper->escapeHtml($level1Item['name']) ?></span>
+                                                </a>
+                                                <?php if (!empty($level2Items)): ?>
+                                                    <ul class="bb-menu-level-2-list subchildmenu">
+                                                        <?php foreach ($level2Items as $level2Item): ?>
+                                                            <?php $level3Items = $menuChildren($level2Item); ?>
+                                                            <li class="bb-menu-level-2 ui-menu-item level2 <?= !empty($level3Items) ? 'parent' : '' ?>">
+                                                                <a
+                                                                    class="bb-menu-level-2-link"
+                                                                    href="<?= $escaper->escapeUrl($level2Item['url']) ?>"
+                                                                    title="<?= $escaper->escapeHtmlAttr($level2Item['name']) ?>"
+                                                                >
+                                                                    <span><?= $escaper->escapeHtml($level2Item['name']) ?></span>
+                                                                </a>
+                                                                <?php if (!empty($level3Items)): ?>
+                                                                    <ul class="bb-menu-level-3-list subchildmenu">
+                                                                        <?php foreach ($level3Items as $level3Item): ?>
+                                                                            <li class="bb-menu-level-3 ui-menu-item level3">
+                                                                                <a
+                                                                                    class="bb-menu-level-3-link"
+                                                                                    href="<?= $escaper->escapeUrl($level3Item['url']) ?>"
+                                                                                    title="<?= $escaper->escapeHtmlAttr($level3Item['name']) ?>"
+                                                                                >
+                                                                                    <span><?= $escaper->escapeHtml($level3Item['name']) ?></span>
+                                                                                </a>
+                                                                            </li>
+                                                                        <?php endforeach; ?>
+                                                                    </ul>
+                                                                <?php endif; ?>
+                                                            </li>
+                                                        <?php endforeach; ?>
+                                                    </ul>
+                                                <?php endif; ?>
+                                            </li>
+                                        <?php endforeach; ?>
+                                    </ul>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="custom-menu-block flex-1 min-w-0">
+            <ul class="second-menu flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-sm">
+                <?php foreach ($quickLinks as $quickLink): ?>
+                    <li>
+                        <a
+                            href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => $quickLink['path']])) ?>"
+                            class="whitespace-nowrap hover:text-primary"
+                        >
+                            <?= $escaper->escapeHtml($quickLink['label']) ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+
+        <div class="actions-toolbar shrink-0">
+            <div class="primary">
+                <a
+                    href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => 'promotional-products'])) ?>"
+                    class="action promotion primary btn btn-primary text-sm whitespace-nowrap"
+                >
+                    <span><?= $escaper->escapeHtml(__('Promotion')) ?></span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function initMenuDesktop() {
+        return {
+            categoriesOpen: false,
+            activeCategory: null,
+            init() {
+                this.setActiveMenu();
+            },
+            setActiveMenu() {
+                Array.from(this.$root.querySelectorAll('a')).forEach(link => {
+                    if (link.href === `${window.location.origin}${window.location.pathname}`) {
+                        link.setAttribute('aria-current', 'page');
+                    }
+                });
+            },
+            toggleCategories() {
+                this.categoriesOpen = !this.categoriesOpen;
+                if (this.categoriesOpen && this.activeCategory === null) {
+                    this.activeCategory = <?= (int) ($firstCategoryWithChildren ?? 0) ?>;
+                }
+            },
+            closeCategories() {
+                this.categoriesOpen = false;
+            },
+            setActiveCategory(index) {
+                this.activeCategory = Number(index);
+            }
+        }
+    }
+
+    window.addEventListener('alpine:init', () => {
+        Alpine.data('initMenuDesktop', initMenuDesktop);
+    }, { once: true });
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>

@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <bsd_banner>
+            <general>
+                <enable>1</enable>
+            </general>
+            <advance>
+                <auto_rotation>0</auto_rotation>
+                <auto_rotation_speed>5000</auto_rotation_speed>
+            </advance>
+        </bsd_banner>
+    </default>
+</config>

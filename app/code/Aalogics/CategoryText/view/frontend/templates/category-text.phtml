@@ -1,0 +1,8 @@
+<?php
+$category = $block->getCurrentCategory();
+if ($category) {
+    $categoryTextBottom = $category->getData('category_text_bottom');
+    if (!empty($categoryTextBottom)) {
+        echo $block->getFilterProvider()->getPageFilter()->filter($categoryTextBottom);
+    }
+}

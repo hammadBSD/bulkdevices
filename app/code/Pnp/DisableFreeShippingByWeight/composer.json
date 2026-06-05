@@ -1,0 +1,15 @@
+{
+    "name": "pnp/disablefreeshippingbyweight",
+    "description": "Disable Free Shipping if weight is less than configured limit",
+    "type": "magento2-module",
+    "autoload": {
+        "files": [
+            "registration.php"
+        ],
+        "psr-4": {
+            "Pnp\\DisableFreeShippingByWeight\\": ""
+        }
+    },
+    "version": "1.0.0",
+    "license": "MIT"
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../lib/internal/Magento/Framework/View/Layout/etc/page_configuration.xsd">
+	<head>
+        <title>Var/Import/Images Gadget</title>
+        <!--
+		demo
+		<css src="Pnp_ImportGadget::css/css.css"/>
+		<script src="Pnp_ImportGadget::js/js.js"/>
+		<css src="jquery/fileUploader/css/jquery.fileupload-ui.css"/>
+		<script src="path/file.js" defer="defer"/>
+		<link src="http://url.com" src_type="url"/>
+		<remove src="path/remove/file.css"/>
+		-->
+    </head>
+	<body>
+        <referenceContainer name="content">
+            <block class="Pnp\ImportGadget\Block\Adminhtml\Index\Index" name="importgadget_block_adminhtml_index_index"  template="Pnp_ImportGadget::importgadget_index_index.phtml" />
+        </referenceContainer>
+    </body>
+</page>

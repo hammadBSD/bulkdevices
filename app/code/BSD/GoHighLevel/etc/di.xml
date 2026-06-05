@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <!-- Data providers for admin grids -->
+    <virtualType name="BSD\GoHighLevel\Model\ResourceModel\GhlContact\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">bsd_ghl_contacts</argument>
+            <argument name="resourceModel" xsi:type="string">BSD\GoHighLevel\Model\ResourceModel\GhlContact</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="BSD\GoHighLevel\Model\ResourceModel\GhlOpportunity\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">bsd_ghl_opportunities</argument>
+            <argument name="resourceModel" xsi:type="string">BSD\GoHighLevel\Model\ResourceModel\GhlOpportunity</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="BSD\GoHighLevel\Model\ResourceModel\GhlSyncLog\Grid\Collection" type="Magento\Framework\View\Element\UiComponent\DataProvider\SearchResult">
+        <arguments>
+            <argument name="mainTable" xsi:type="string">bsd_ghl_sync_log</argument>
+            <argument name="resourceModel" xsi:type="string">BSD\GoHighLevel\Model\ResourceModel\GhlSyncLog</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <arguments>
+            <argument name="collections" xsi:type="array">
+                <item name="ghl_contacts_grid_data_source" xsi:type="string">BSD\GoHighLevel\Model\ResourceModel\GhlContact\Grid\Collection</item>
+                <item name="ghl_opportunities_grid_data_source" xsi:type="string">BSD\GoHighLevel\Model\ResourceModel\GhlOpportunity\Grid\Collection</item>
+                <item name="ghl_synclog_grid_data_source" xsi:type="string">BSD\GoHighLevel\Model\ResourceModel\GhlSyncLog\Grid\Collection</item>
+            </argument>
+        </arguments>
+    </type>
+    
+    <!-- Plugin for Contact Form -->
+    <type name="Magento\Contact\Controller\Index\Post">
+        <plugin name="bsd_ghl_contact_form_plugin" type="BSD\GoHighLevel\Plugin\Contact\PostPlugin" sortOrder="100"/>
+    </type>
+    
+    <!-- Plugin for Bulk Quote Form -->
+    <type name="BSD\Getaquote\Controller\Index\Formpost">
+        <plugin name="bsd_ghl_bulk_quote_plugin" type="BSD\GoHighLevel\Plugin\Getaquote\FormpostPlugin" sortOrder="100"/>
+    </type>
+</config>

@@ -1,0 +1,10 @@
+<?php 
+echo $block->getOrderGrandTotal();
+$asif = $block->escapeHtml($block->getOrderGrandTotal());
+echo $asif;
+
+?>
+<script>
+    window.uetq = window.uetq || [];
+    window.uetq.push("event", "", {"revenue_value": "<?php echo $block->escapeHtml($block->getOrderGrandTotal()); ?>", "currency":"USD"});
+</script>

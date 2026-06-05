@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Backend:etc/menu.xsd">
+    <menu>
+        <add id="BSD_GoHighLevel::ghl" 
+             title="GoHighLevel" 
+             module="BSD_GoHighLevel" 
+             sortOrder="50" 
+             resource="BSD_GoHighLevel::ghl"/>
+        <add id="BSD_GoHighLevel::config" 
+             title="Configuration" 
+             module="BSD_GoHighLevel" 
+             parent="BSD_GoHighLevel::ghl"
+             sortOrder="5" 
+             resource="BSD_GoHighLevel::config"
+             action="adminhtml/system_config/edit/section/bsd_ghl"/>
+        <add id="BSD_GoHighLevel::contacts" 
+             title="Contacts" 
+             module="BSD_GoHighLevel" 
+             parent="BSD_GoHighLevel::ghl"
+             sortOrder="10" 
+             resource="BSD_GoHighLevel::contacts"
+             action="ghl/contacts/index"/>
+        <add id="BSD_GoHighLevel::opportunities" 
+             title="Opportunities" 
+             module="BSD_GoHighLevel" 
+             parent="BSD_GoHighLevel::ghl"
+             sortOrder="20" 
+             resource="BSD_GoHighLevel::opportunities"
+             action="ghl/opportunities/index"/>
+        <add id="BSD_GoHighLevel::sync_logs" 
+             title="Sync Logs" 
+             module="BSD_GoHighLevel" 
+             parent="BSD_GoHighLevel::ghl"
+             sortOrder="30" 
+             resource="BSD_GoHighLevel::sync_logs"
+             action="ghl/synclog/index"/>
+    </menu>
+</config>

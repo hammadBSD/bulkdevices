@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Porto. All rights reserved.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+
+        <referenceContainer name="tab-right-panel">
+            <block class="BSD\Getaquote\Block\Index\Sidebar" name="getaquote_index_sidebar" before="product_view_custom_block" template="BSD_Getaquote::getaquote_index_sidebar.phtml"/>
+        </referenceContainer>
+
+        <referenceContainer name="product.info.price">
+            <block class="BSD\Getaquote\Block\Index\ModalOverlay" name="custom.text" template="BSD_Getaquote::getaquote_index_modal_overlay.phtml" after="product.info.price"/>
+        </referenceContainer>
+
+    </body>
+</page>

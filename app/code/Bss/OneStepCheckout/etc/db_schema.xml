@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_OneStepCheckout
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2017-2022 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+-->
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+  <table name="quote" resource="default">
+    <column xsi:type="varchar" name="bss_order_comment" nullable="true" length="255" comment="Bss Order Comment"/>
+    <column xsi:type="datetime" name="shipping_arrival_date" on_update="false" nullable="true" comment="Delivery Date"/>
+    <column xsi:type="text" name="shipping_arrival_comments" nullable="true" comment="Delivery Comment"/>
+    <column xsi:type="decimal" name="base_osc_gift_wrap" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap"/>
+    <column xsi:type="decimal" name="osc_gift_wrap" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap"/>
+    <column xsi:type="smallint" name="osc_gift_wrap_type" padding="6" unsigned="false" nullable="true" identity="false" comment="Osc Gift Wrap Type"/>
+    <column xsi:type="decimal" name="base_osc_gift_wrap_fee_config" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap Fee Config"/>
+    <column xsi:type="decimal" name="osc_gift_wrap_fee_config" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap Fee Config"/>
+  </table>
+  <table name="sales_order" resource="default">
+    <column xsi:type="datetime" name="shipping_arrival_date" on_update="false" nullable="true" comment="Delivery Date"/>
+    <column xsi:type="text" name="shipping_arrival_comments" nullable="true" comment="Delivery Comment"/>
+    <column xsi:type="decimal" name="base_osc_gift_wrap" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap"/>
+    <column xsi:type="decimal" name="osc_gift_wrap" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap"/>
+    <column xsi:type="smallint" name="osc_gift_wrap_type" padding="6" unsigned="false" nullable="true" identity="false" comment="Osc Gift Wrap Type"/>
+    <column xsi:type="decimal" name="base_osc_gift_wrap_fee_config" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap Fee Config"/>
+    <column xsi:type="decimal" name="osc_gift_wrap_fee_config" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap Fee Config"/>
+  </table>
+  <table name="sales_order_grid" resource="default">
+    <column xsi:type="datetime" name="shipping_arrival_date" on_update="false" nullable="true" comment="Delivery Date"/>
+  </table>
+  <table name="sales_invoice" resource="default">
+    <column xsi:type="decimal" name="base_osc_gift_wrap" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap"/>
+    <column xsi:type="decimal" name="osc_gift_wrap" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap"/>
+  </table>
+  <table name="sales_creditmemo" resource="default">
+    <column xsi:type="decimal" name="base_osc_gift_wrap" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap"/>
+    <column xsi:type="decimal" name="osc_gift_wrap" scale="4" precision="12" unsigned="false" nullable="true" comment="Osc Gift Wrap"/>
+  </table>
+</schema>

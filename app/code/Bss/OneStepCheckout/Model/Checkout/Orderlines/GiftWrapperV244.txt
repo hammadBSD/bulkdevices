@@ -1,0 +1,148 @@
+<?php
+/**
+ * BSS Commerce Co.
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the EULA
+ * that is bundled with this package in the file LICENSE.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://bsscommerce.com/Bss-Commerce-License.txt
+ *
+ * @category   BSS
+ * @package    Bss_OneStepCheckout
+ * @author     Extension Team
+ * @copyright  Copyright (c) 2017-2018 BSS Commerce Co. ( http://bsscommerce.com )
+ * @license    http://bsscommerce.com/Bss-Commerce-License.txt
+ */
+namespace Bss\OneStepCheckout\Model\Checkout\Orderlines;
+
+use Klarna\Base\Helper\DataConverter;
+use Klarna\Base\Model\Api\DataHolder;
+use Klarna\Base\Model\Api\Parameter;
+use Klarna\Orderlines\Api\OrderLineInterface;
+use Klarna\Orderlines\Model\ItemGenerator;
+use Magento\Framework\App\ObjectManager;
+use Magento\Framework\DataObjectFactory;
+use Magento\Quote\Api\Data\CartInterface;
+use Magento\Sales\Api\Data\OrderInterface;
+
+class GiftWrapperV244 implements OrderLineInterface
+{
+    protected $bssGiftWrapper;
+
+    /**
+     * Checkout item type
+     */
+    const ITEM_TYPE_GIFT_WRAP = 'physical';
+
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
+    protected $checkoutSession;
+
+    /**
+     * @param DataConverter $helper
+     * @param DataObjectFactory $dataObjectFactory
+     * @param ItemGenerator|null $itemGenerator
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @codeCoverageIgnore
+     */
+    public function __construct(
+        DataConverter $helper,
+        DataObjectFactory $dataObjectFactory,
+        ItemGenerator $itemGenerator = null,
+        \Magento\Checkout\Model\SessionFactory $checkoutSession
+    ) {
+        $this->helper = $helper;
+        $this->dataObjectFactory = $dataObjectFactory;
+        $this->itemGenerator = $itemGenerator ?? ObjectManager::getInstance()->get(
+                ItemGenerator::class
+            );
+        $this->checkoutSession = $checkoutSession;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function collectPrePurchase(Parameter $parameter, DataHolder $dataHolder, CartInterface $quote)
+    {
+        return $this->collect($parameter, $dataHolder);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function collectPostPurchase(Parameter $parameter, DataHolder $dataHolder, OrderInterface $order)
+    {
+        return $this->collect($parameter, $dataHolder);
+    }
+
+    /**
+     * Add Bss OSC gift wrapper Collecting the values
+     *
+     * @param Parameter $parameter
+     * @param DataHolder $dataHolder
+     * @return $this
+     */
+    private function collect(Parameter $parameter, DataHolder $dataHolder)
+    {
+        /** @var \Magento\Quote\Model\Quote $quote */
+        $quote =  $this->checkoutSession->create()->getQuote();
+        $totals = $dataHolder->getTotals();
+        $this->checkoutSession->create()->setIssetWrap(false);
+        if (!is_array($totals) || !isset($totals['osc_gift_wrap'])) {
+            $this->checkoutSession->create()->setIssetWrap(true);
+            return $this;
+        }
+
+        $giftWrap = $quote->getOscGiftWrap();
+        if (!isset($totals['osc_gift_wrap'])) {
+            $totals['osc_gift_wrap'] = $this->dataObjectFactory->create([
+                'data' => [
+                    'value' => $giftWrap,
+                    'title' => 'Osc Gift Wrap',
+                    'code'  => 'oscgiftwrap',
+                ]
+            ]);
+        }
+
+        if (isset($totals['osc_gift_wrap'])) {
+            $total = $totals['osc_gift_wrap'];
+            $value = $this->helper->toApiFloat($total->getValue());
+            $data = [
+                'value' => $value,
+                'title' => $total->getTitle(),
+                'code' => $total->getCode()
+            ];
+            $this->checkoutSession->create()->setBssGiftWrapper($data);
+        }
+        return $this;
+    }
+
+    /**
+     * Add order line item
+     *
+     * @param Parameter $parameter
+     *
+     * @return $this
+     */
+    public function fetch(Parameter $parameter)
+    {
+        $data  = $this->checkoutSession->create()->getBssGiftWrapper();
+        $issetWrap = $this->checkoutSession->create()->getIssetWrap();
+        if (isset($data['value']) && !$issetWrap) {
+            $parameter->addOrderLine([
+                'type'             => self::ITEM_TYPE_GIFT_WRAP,
+                'reference'        => $data['code'],
+                'name'             => $data['title'],
+                'quantity'         => 1,
+                'unit_price'       => $data['value'],
+                'tax_rate'         => 0,
+                'total_amount'     => $data['value'],
+                'total_tax_amount' => 0,
+            ]);
+        }
+        return $this;
+    }
+}
