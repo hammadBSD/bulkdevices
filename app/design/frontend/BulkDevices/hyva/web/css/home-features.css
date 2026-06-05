@@ -1,0 +1,120 @@
+/**
+ * Homepage feature bar — overlaps hero banner by 40px
+ */
+
+.home-features {
+    --bb-features-accent: #eb7d1e;
+    --bb-features-overlap: 40px;
+    --bb-features-container-max: 96rem;
+
+    position: relative;
+    z-index: 2;
+    margin-top: calc(-1 * var(--bb-features-overlap));
+    padding-bottom: 3.5rem;
+}
+
+.home-features__container {
+    width: 100%;
+    max-width: var(--bb-features-container-max);
+    margin-inline: auto;
+    padding-inline: 0;
+    box-sizing: border-box;
+}
+
+.home-features__grid {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.home-features__item {
+    margin: 0;
+    padding: 0;
+}
+
+.home-features__card {
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+    height: 100%;
+    padding: 1rem 1.125rem;
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgb(15 23 42 / 0.1);
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.home-features__card:hover {
+    border-color: rgb(235 125 30 / 0.35);
+    box-shadow: 0 12px 28px rgb(15 23 42 / 0.14);
+    transform: translateY(-2px);
+}
+
+.home-features__icon {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 3rem;
+    height: 3rem;
+}
+
+.home-features__icon img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: 3rem;
+    object-fit: contain;
+}
+
+.home-features__body {
+    min-width: 0;
+}
+
+.home-features__title {
+    margin: 0 0 0.25rem;
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #1f2937;
+}
+
+.home-features__text {
+    margin: 0;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: #6b7280;
+}
+
+@media (max-width: 991px) {
+    .home-features__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 576px) {
+    .home-features {
+        --bb-features-overlap: 24px;
+    }
+
+    .home-features__grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .home-features__card {
+        padding: 0.875rem 1rem;
+    }
+
+    .home-features__title {
+        font-size: 0.875rem;
+    }
+
+    .home-features__text {
+        font-size: 0.75rem;
+    }
+}

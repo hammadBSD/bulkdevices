@@ -97,7 +97,7 @@ $renderMobileMenuBranch = static function (array $items, int $depth) use (
                 </button>
                 <ul
                     id="<?= $escaper->escapeHtmlAttr($itemId) ?>-mobile-menu-panel"
-                    class="absolute inset-0 bg-white py-0.5 overflow-y-auto overscroll-y-contain transition motion-reduce:duration-0"
+                    class="mobile-menu-panel absolute inset-0 bg-white py-0.5 transition motion-reduce:duration-0"
                     style="z-index: <?= (int) $panelZIndex ?>"
                     x-show="isOpen"
                     x-transition:enter-start="opacity-0 translate-x-8"
@@ -147,6 +147,14 @@ $renderMobileMenuBranch = static function (array $items, int $depth) use (
     .mobile-menu-branch--hidden {
         display: none !important;
     }
+
+    /*
+     * Do not put overflow-y-auto on slide-in panel uls — it clips nested absolute
+     * child panels. Scrolling is handled by the outer .mobile-menu-scroll wrapper.
+     */
+    .mobile-menu-panel {
+        overflow: visible;
+    }
 </style>
 <div x-data="initMobileMenu" x-bind="eventListeners" class="lg:hidden mobile-menu">
     <button
@@ -182,7 +190,7 @@ $renderMobileMenuBranch = static function (array $items, int $depth) use (
                 </button>
             </div>
         </div>
-        <div class="grow relative overflow-y-auto overflow-x-clip py-0.5" :style="lockWrapperScroll">
+        <div class="mobile-menu-scroll grow relative overflow-y-auto overflow-x-clip py-0.5" :style="lockWrapperScroll">
             <nav aria-label="<?= $escaper->escapeHtmlAttr(__('Mobile Main Menu')) ?>">
                 <ul>
                     <?php foreach ($menuItems as $menuItem): ?>
@@ -212,7 +220,7 @@ $renderMobileMenuBranch = static function (array $items, int $depth) use (
                                 </button>
                                 <ul
                                     id="<?= $escaper->escapeHtmlAttr($menuItemId($menuItem)) ?>-mobile-menu-panel"
-                                    class="absolute inset-0 bg-white py-0.5 overflow-y-auto overscroll-y-contain transition motion-reduce:duration-0"
+                                    class="mobile-menu-panel absolute inset-0 bg-white py-0.5 transition motion-reduce:duration-0"
                                     style="z-index: 100"
                                     x-show="isOpen"
                                     x-transition:enter-start="opacity-0 translate-x-8"
