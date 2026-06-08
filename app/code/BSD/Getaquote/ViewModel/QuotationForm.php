@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BSD\Theme\ViewModel;
+namespace BSD\Getaquote\ViewModel;
 
 use Hyva\Theme\ViewModel\CurrentProduct;
 use Magento\Framework\App\Config\ScopeConfigInterface;

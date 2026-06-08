@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BSD\Theme\ViewModel;
+namespace BSD\Storefront\ViewModel;
 
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 

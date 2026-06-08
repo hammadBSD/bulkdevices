@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace BSD\Theme\Controller\Menu;
+namespace BSD\Storefront\Controller\Menu;
 
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\Controller\Result\Raw;

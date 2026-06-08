@@ -2,15 +2,15 @@
 
 declare(strict_types=1);
 
-namespace BSD\Theme\Controller\Promotional;
+namespace BSD\Storefront\Controller\Promotional;
 
-use BSD\Theme\ViewModel\PromotionalProducts;
+use BSD\Storefront\ViewModel\PromotionalProducts;
 use Magento\Framework\App\Action\HttpGetActionInterface;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Raw;
 use Magento\Framework\Controller\Result\RawFactory;
-use Magento\Framework\View\LayoutInterface;
 use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\LayoutInterface;
 
 class Grid implements HttpGetActionInterface
 {
