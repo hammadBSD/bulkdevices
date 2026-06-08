@@ -71,8 +71,14 @@ $columnClass = static function (array $children): string {
 };
 ?>
 <div
+    x-data="{ menuReady: false }"
+    x-intersect.once="menuReady = true"
+    class="hidden lg:block"
+>
+<template x-if="menuReady">
+<div
     x-data="initMenuDesktop"
-    class="menu-container z-9 navigation hidden lg:block"
+    class="menu-container z-9 navigation"
     @keydown.escape.window="closeCategories"
 >
     <div class="menu-wrapper flex items-center justify-between gap-4 py-1">
@@ -235,6 +241,8 @@ $columnClass = static function (array $children): string {
             </div>
         </div>
     </div>
+</div>
+</template>
 </div>
 
 <script>

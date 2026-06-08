@@ -1,14 +1,20 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <update handle="hyva_quotation_modal"/>
     <head>
         <css src="css/home.css"/>
+        <link src="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-m.webp"
+              src_type="url"
+              rel="preload"
+              as="image"
+              fetchpriority="high"
+              media="(max-width: 576px)"/>
         <link src="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-d.webp"
               src_type="url"
               rel="preload"
               as="image"
-              fetchpriority="high"/>
+              fetchpriority="high"
+              media="(min-width: 577px)"/>
         <remove src="Mageplaza_Blog::css/mpBlogIcon.css"/>
     </head>
     <body>

@@ -20,7 +20,11 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             <img
                 src="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-d.webp"
                 alt="Refurbished and new IT hardware components"
+                width="1920"
+                height="520"
+                loading="eager"
                 fetchpriority="high"
+                decoding="async"
             >
         </picture>
         <div class="home-banner-slider__content">
@@ -179,7 +183,13 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
     </template>
 </div>
 
+<div x-data="{ visible: false }" x-intersect.once="visible = true">
+    <template x-if="visible">
+        <div>
 <?= $block->getChildHtml('home_featured_products') ?>
+        </div>
+    </template>
+</div>
 
 <div x-data="{ visible: false }" x-intersect.once="visible = true">
     <template x-if="visible">

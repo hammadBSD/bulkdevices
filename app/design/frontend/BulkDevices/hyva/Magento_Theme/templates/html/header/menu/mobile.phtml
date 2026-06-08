@@ -1,16 +1,15 @@
 <?php
 /**
- * Hyvä Themes - https://hyva.io
- * Copyright © Hyvä Themes. All rights reserved.
- * See COPYING.txt for license details.
+ * Mobile menu shell — panel HTML loads on first open via AJAX to keep homepage payload small.
  */
+
+declare(strict_types=1);
 
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\HyvaCsp;
 use Hyva\Theme\ViewModel\LucideIcons;
-use Hyva\Theme\ViewModel\Navigation;
-use Magento\Framework\View\Element\Template;
 use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
 
 /** @var Template $block */
 /** @var Escaper $escaper */
@@ -20,259 +19,66 @@ use Magento\Framework\Escaper;
 /** @var LucideIcons $lucideIcons */
 $lucideIcons = $viewModels->require(LucideIcons::class);
 
-/** @var Navigation $viewModelNavigation */
-$viewModelNavigation = $viewModels->require(Navigation::class, $block);
-
-$uniqueId = '_' . uniqid();
-
-// Order is important here: 1. build the menu data, 2. then set the cache tags from the view model identities
-$menuItems = $viewModelNavigation->getNavigation(4);
-$block->setData('cache_tags', $viewModelNavigation->getIdentities());
-
-$itemClasses = (string) $block->getItemClasses() ?: "flex items-center gap-2 py-3 px-6 border-b border-slate-200 outline-offset-0";
-
-/** @param array<string, mixed> $item */
-$menuChildren = static function (array $item): array {
-    $children = $item['childData'] ?? $item['children'] ?? [];
-    return is_array($children) ? $children : [];
-};
-
-/** @param array<string, mixed> $item */
-$menuItemId = static function (array $item): string {
-    if (!empty($item['id'])) {
-        return (string) $item['id'];
-    }
-    return 'nav-' . md5((string) ($item['url'] ?? $item['name'] ?? ''));
-};
-
-/**
- * Renders level-1+ items inside a slide-in panel (same depth as desktop megamenu children).
- *
- * @param array<int, array<string, mixed>> $items
- */
-$renderMobileMenuBranch = static function (array $items, int $depth) use (
-    &$renderMobileMenuBranch,
-    $escaper,
-    $itemClasses,
-    $lucideIcons,
-    $menuChildren,
-    $menuItemId
-): void {
-    $indentClass = match ($depth) {
-        1 => 'ms-7',
-        2 => 'ms-10',
-        3 => 'ms-14',
-        default => 'ms-16',
-    };
-    $panelZIndex = 100 + $depth * 10;
-
-    foreach ($items as $item) {
-        $children = $menuChildren($item);
-        $itemId = $menuItemId($item);
-
-        if (!empty($children)) {
-            ?>
-            <li
-                data-level="<?= (int) $depth ?>"
-                data-panel-depth="<?= (int) $depth ?>"
-                class="mobile-menu-branch"
-                x-data="initMobileSubMenu"
-                :class="isOpen ? 'relative mobile-menu-branch--open' : ''"
-                :style="isOpen ? { zIndex: <?= (int) $panelZIndex ?> } : null"
-            >
-                <button
-                    type="button"
-                    class="w-full justify-between <?= $escaper->escapeHtmlAttr($itemClasses) ?>"
-                    aria-controls="<?= $escaper->escapeHtmlAttr($itemId) ?>-mobile-menu-panel"
-                    aria-expanded="false"
-                    x-ref="openSubMenuBtn"
-                    :aria-expanded="isOpen"
-                    :disabled="isOpen"
-                    @click="open"
-                >
-                    <span class="<?= $escaper->escapeHtmlAttr($indentClass) ?>"><?= $escaper->escapeHtml($item['name']) ?></span>
-                    <span class="btn p-1.5 border border-slate-300 bg-transparent text-current">
-                        <?= $lucideIcons->chevronRightHtml('', 20, 20, ['aria-hidden' => 'true']) ?>
-                    </span>
-                </button>
-                <ul
-                    id="<?= $escaper->escapeHtmlAttr($itemId) ?>-mobile-menu-panel"
-                    class="mobile-menu-panel absolute inset-0 bg-white py-0.5 transition motion-reduce:duration-0"
-                    style="z-index: <?= (int) $panelZIndex ?>"
-                    x-show="isOpen"
-                    x-transition:enter-start="opacity-0 translate-x-8"
-                    x-transition:enter-end="opacity-100 translate-x-0"
-                    x-transition:leave-start="opacity-100 translate-x-0"
-                    x-transition:leave-end="opacity-0 translate-x-8"
-                    @keydown.escape.stop.prevent="close"
-                >
-                    <li data-level="<?= (int) ($depth + 1) ?>">
-                        <button
-                            type="button"
-                            class="w-full bg-surface font-bold <?= $escaper->escapeHtmlAttr($itemClasses) ?>"
-                            @click="close"
-                            x-ref="closeSubMenuBtn"
-                        >
-                            <?= $lucideIcons->chevronLeftHtml('', 20, 20, ['aria-hidden' => 'true']) ?>
-                            <?= $escaper->escapeHtml($item['name']) ?>
-                        </button>
-                        <a
-                            href="<?= $escaper->escapeUrl($item['url']) ?>"
-                            class="<?= $escaper->escapeHtmlAttr($itemClasses) ?>"
-                        >
-                            <span class="<?= $escaper->escapeHtmlAttr($indentClass) ?>"><?= $escaper->escapeHtml(__('See all %1', $item['name'])) ?></span>
-                        </a>
-                    </li>
-                    <?php $renderMobileMenuBranch($children, $depth + 1); ?>
-                </ul>
-            </li>
-            <?php
-            continue;
-        }
-        ?>
-        <li data-level="<?= (int) $depth ?>">
-            <a
-                href="<?= $escaper->escapeUrl($item['url']) ?>"
-                class="<?= $escaper->escapeHtmlAttr($itemClasses) ?>"
-            >
-                <span class="<?= $escaper->escapeHtmlAttr($indentClass) ?>"><?= $escaper->escapeHtml($item['name']) ?></span>
-            </a>
-        </li>
-        <?php
-    }
-};
+$menuUrl = $block->getUrl('bsd/menu/mobile');
 ?>
-<style>
-    /* Nested slide panels: hide sibling rows so level-4+ links are not covered in the stack */
-    .mobile-menu-branch--hidden {
-        display: none !important;
-    }
-
-    /*
-     * Do not put overflow-y-auto on slide-in panel uls — it clips nested absolute
-     * child panels. Scrolling is handled by the outer .mobile-menu-scroll wrapper.
-     */
-    .mobile-menu-panel {
-        overflow: visible;
-    }
-</style>
 <div x-data="initMobileMenu" x-bind="eventListeners" class="lg:hidden mobile-menu">
     <button
         type="button"
         class="btn bg-transparent border-transparent p-2"
         aria-label="<?= $escaper->escapeHtmlAttr(__('Open menu')) ?>"
-        @click="open"
+        @click="loadAndOpen"
+        :aria-busy="loading"
     >
-        <?= $lucideIcons->menuHtml('', 24, 24, ["aria-hidden" => "true"]) ?>
+        <?= $lucideIcons->menuHtml('', 24, 24, ['aria-hidden' => 'true']) ?>
     </button>
-    <dialog
-        class="size-full max-h-full ms-0 p-0 open:flex flex-col transition ease-out duration-300 motion-reduce:duration-0 rounded-s-none"
-        x-show="isOpen"
-        x-htmldialog="close"
-        closeby="any"
-        x-transition:enter-start="-translate-x-full"
-        x-transition:enter-end="translate-x-0"
-        x-transition:leave-start="translate-x-0"
-        x-transition:leave-end="-translate-x-full"
-    >
-        <div class="border-b border-slate-200">
-            <div class="flex justify-between items-center gap-2 py-4 px-6">
-                <div class="text-lg font-bold">
-                    <?= $block->getChildHtml('logo') ?>
-                </div>
-                <button
-                    type="button"
-                    @click="close"
-                    class="btn bg-transparent border-transparent p-1"
-                    aria-label="<?= $escaper->escapeHtmlAttr(__('Close menu')) ?>"
-                >
-                    <?= $lucideIcons->xHtml('', 24, 24, ["aria-hidden" => "true"]) ?>
-                </button>
-            </div>
-        </div>
-        <div class="mobile-menu-scroll grow relative overflow-y-auto overflow-x-clip py-0.5" :style="lockWrapperScroll">
-            <nav aria-label="<?= $escaper->escapeHtmlAttr(__('Mobile Main Menu')) ?>">
-                <ul>
-                    <?php foreach ($menuItems as $menuItem): ?>
-                        <?php if (!empty($menuChildren($menuItem))): ?>
-                            <li
-                                data-level="0"
-                                data-panel-depth="0"
-                                class="mobile-menu-branch"
-                                x-data="initMobileSubMenu"
-                                :class="isOpen ? 'relative mobile-menu-branch--open' : ''"
-                                :style="isOpen ? { zIndex: 100 } : null"
-                            >
-                                <button
-                                    type="button"
-                                    class="w-full justify-between <?= $escaper->escapeHtmlAttr($itemClasses) ?>"
-                                    aria-controls="<?= $escaper->escapeHtmlAttr($menuItemId($menuItem)) ?>-mobile-menu-panel"
-                                    aria-expanded="false"
-                                    x-ref="openSubMenuBtn"
-                                    :aria-expanded="isOpen"
-                                    :disabled="isOpen"
-                                    @click="open"
-                                >
-                                    <span><?= $escaper->escapeHtml($menuItem['name']) ?></span>
-                                    <span class="btn p-1.5 border border-slate-300 bg-transparent text-current">
-                                        <?= $lucideIcons->chevronRightHtml('', 20, 20, ['aria-hidden' => 'true']) ?>
-                                    </span>
-                                </button>
-                                <ul
-                                    id="<?= $escaper->escapeHtmlAttr($menuItemId($menuItem)) ?>-mobile-menu-panel"
-                                    class="mobile-menu-panel absolute inset-0 bg-white py-0.5 transition motion-reduce:duration-0"
-                                    style="z-index: 100"
-                                    x-show="isOpen"
-                                    x-transition:enter-start="opacity-0 translate-x-8"
-                                    x-transition:enter-end="opacity-100 translate-x-0"
-                                    x-transition:leave-start="opacity-100 translate-x-0"
-                                    x-transition:leave-end="opacity-0 translate-x-8"
-                                    @keydown.escape.stop.prevent="close"
-                                >
-                                    <li data-level="1">
-                                        <button
-                                            type="button"
-                                            class="w-full bg-surface font-bold <?= $escaper->escapeHtmlAttr($itemClasses) ?>"
-                                            @click="close"
-                                            x-ref="closeSubMenuBtn"
-                                        >
-                                            <?= $lucideIcons->chevronLeftHtml('', 20, 20, ['aria-hidden' => 'true']) ?>
-                                            <?= $escaper->escapeHtml($menuItem['name']) ?>
-                                        </button>
-                                        <a
-                                            href="<?= $escaper->escapeUrl($menuItem['url']) ?>"
-                                            class="<?= $escaper->escapeHtmlAttr($itemClasses) ?>"
-                                        >
-                                            <span class="ms-7"><?= $escaper->escapeHtml(__('See all %1', $menuItem['name'])) ?></span>
-                                        </a>
-                                    </li>
-                                    <?php $renderMobileMenuBranch($menuChildren($menuItem), 1); ?>
-                                </ul>
-                            </li>
-                        <?php else: ?>
-                            <li data-level="0">
-                                <a
-                                    href="<?= $escaper->escapeUrl($menuItem['url']) ?>"
-                                    class="<?= $escaper->escapeHtmlAttr($itemClasses) ?>"
-                                >
-                                    <?= $escaper->escapeHtml($menuItem['name']) ?>
-                                </a>
-                            </li>
-                        <?php endif; ?>
-                    <?php endforeach; ?>
-                </ul>
-            </nav>
-        </div>
-    </dialog>
+    <div x-ref="menuRoot" class="contents"></div>
 </div>
 <script>
     const initMobileMenu = () => {
         return {
+            menuUrl: '<?= $escaper->escapeJs($menuUrl) ?>',
+            loading: false,
             isOpen: false,
             isSubMenuOpen: false,
-            isOverflowing: false,
-            init() {
-                Array.from(this.$root.querySelectorAll('a')).forEach(link => {
+            init() {},
+            loadAndOpen() {
+                if (this.loading) {
+                    return;
+                }
+                const root = this.$refs.menuRoot;
+                if (root.childElementCount > 0) {
+                    this.markCurrentPageLinks();
+                    this.open();
+                    return;
+                }
+                this.loading = true;
+                fetch(this.menuUrl, {
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                    credentials: 'same-origin'
+                })
+                    .then((response) => {
+                        if (!response.ok) {
+                            throw new Error('Failed to load menu');
+                        }
+                        return response.text();
+                    })
+                    .then((html) => {
+                        root.innerHTML = html;
+                        if (typeof Alpine !== 'undefined' && typeof Alpine.initTree === 'function') {
+                            Alpine.initTree(root);
+                        }
+                        this.markCurrentPageLinks();
+                        this.open();
+                    })
+                    .catch(() => {
+                        window.location.href = '<?= $escaper->escapeJs($block->getUrl('catalogsearch/result')) ?>';
+                    })
+                    .finally(() => {
+                        this.loading = false;
+                    });
+            },
+            markCurrentPageLinks() {
+                Array.from(this.$root.querySelectorAll('a')).forEach((link) => {
                     if (link.href === `${window.location.origin}${window.location.pathname}`) {
                         link.setAttribute('aria-current', 'page');
                     }
@@ -285,7 +91,7 @@ $renderMobileMenuBranch = static function (array $items, int $depth) use (
                 this.isOpen = false;
             },
             lockWrapperScroll() {
-                return this.isSubMenuOpen ? { overflow: 'hidden' } : {}
+                return this.isSubMenuOpen ? { overflow: 'hidden' } : {};
             },
             hasActiveSubMenu() {
                 this.isSubMenuOpen = !!this.$root.querySelector('[data-open]');
@@ -294,10 +100,13 @@ $renderMobileMenuBranch = static function (array $items, int $depth) use (
                 ['@pageshow.window'](event) {
                     if (event.persisted) {
                         this.close();
-                    };
+                    }
+                },
+                ['@sub-menu-state-change.window']() {
+                    this.hasActiveSubMenu();
                 }
             }
-        }
+        };
     };
 
     const initMobileSubMenu = () => {
@@ -310,16 +119,16 @@ $renderMobileMenuBranch = static function (array $items, int $depth) use (
                     this.$dispatch('sub-menu-state-change');
                     this.$refs.closeSubMenuBtn.focus();
                     this.toggleInert();
-                })
+                });
             },
             close() {
                 this.isOpen = false;
                 this.$root.removeAttribute('data-open');
                 this.toggleInert();
                 this.$nextTick(() => {
-                    this.$dispatch('sub-menu-state-change')
+                    this.$dispatch('sub-menu-state-change');
                     this.$refs.openSubMenuBtn.focus();
-                })
+                });
             },
             toggleInert() {
                 const parent = this.$root.parentElement;
@@ -335,8 +144,8 @@ $renderMobileMenuBranch = static function (array $items, int $depth) use (
                     item.toggleAttribute('inert', this.isOpen);
                 }
             }
-        }
-    }
+        };
+    };
 
     document.addEventListener('alpine:init', () => {
         Alpine.data('initMobileMenu', initMobileMenu);
