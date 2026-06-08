@@ -1,9 +1,4 @@
 <?php
-/**
- * Hyvä Themes - https://hyva.io
- * Copyright © Hyvä Themes. All rights reserved.
- * See COPYING.txt for license details.
- */
 
 declare(strict_types=1);
 
@@ -11,6 +6,7 @@ use Hyva\Theme\Model\ViewModelRegistry;
 use Magento\Catalog\Block\Product\View\Gallery;
 use Magento\Catalog\Helper\Image;
 use Magento\Framework\Escaper;
+use Magento\Framework\UrlInterface;
 
 /** @var Gallery $block */
 /** @var Escaper $escaper */
@@ -29,6 +25,23 @@ $helper = $block->getData('imageHelper') ?? $viewModels->require(Image::class);
 $mainImageData = $mainImage
     ? $mainImage->getData('medium_image_url')
     : $helper->getDefaultPlaceholderUrl('image');
+
+$store = $block->getProduct()->getStore();
+$storeHost = parse_url((string) $store->getBaseUrl(), PHP_URL_HOST);
+$mediaHost = parse_url((string) $store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA), PHP_URL_HOST);
+
+if (
+    $mainImage
+    && is_string($storeHost)
+    && is_string($mediaHost)
+    && strtolower($storeHost) !== strtolower($mediaHost)
+) {
+    $imageFile = (string) $block->getProduct()->getData('image');
+    if ($imageFile !== '' && $imageFile !== 'no_selection') {
+        $mediaBase = rtrim($store->getBaseUrl(UrlInterface::URL_TYPE_MEDIA), '/');
+        $mainImageData = $mediaBase . '/catalog/product/' . ltrim(str_replace('\\', '/', $imageFile), '/');
+    }
+}
 ?>
 
-<link rel="preload" href="<?= $escaper->escapeUrl($mainImageData) ?>" as="image">
+<link rel="preload" href="<?= $escaper->escapeUrl($mainImageData) ?>" as="image" fetchpriority="high">

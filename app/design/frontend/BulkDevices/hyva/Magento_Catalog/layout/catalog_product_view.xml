@@ -9,13 +9,19 @@
 <page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="catalog_product_opengraph"/>
-    <update handle="hyva_product_slider" />
     <update handle="hyva_quotation_modal"/>
     <head>
         <css src="css/pdp.css"/>
     </head>
     <body>
         <referenceBlock name="custom.text" remove="true"/>
+        <referenceBlock name="related" remove="true"/>
+        <referenceBlock name="upsell" remove="true"/>
+        <referenceBlock name="product.info.review" remove="true"/>
+        <referenceBlock name="review_list" remove="true"/>
+        <referenceBlock name="product.review.form" remove="true"/>
+        <referenceBlock name="recently_viewed_products.default_widget_pdp" remove="true"/>
+        <referenceBlock name="recently_viewed_products.register_view" remove="true"/>
 
         <attribute name="itemtype" value="https://schema.org/Product"/>
         <attribute name="itemscope" value="itemscope"/>
@@ -75,9 +81,6 @@
                                 <argument name="add_base_attribute" xsi:type="string">aria-hidden=true</argument>
                             </arguments>
                         </block>
-
-                        <block class="Magento\Catalog\Block\Product\View" name="product.info.review"
-                               template="Magento_Catalog::product/view/review.phtml" ifconfig="catalog/review/active"/>
 
                         <block class="Magento\Catalog\Pricing\Render" name="product.price.tier">
                             <arguments>
@@ -153,26 +156,6 @@
                            as="product_options_wrapper_bottom"
                            template="Magento_Catalog::product/view/options/wrapper/bottom.phtml"/>
 
-                    <block name="upsell" class="Magento\Catalog\Block\Product\View"
-                           template="Magento_Catalog::product/slider/product-slider.phtml">
-                        <arguments>
-                            <argument name="type" xsi:type="string">upsell</argument>
-                            <argument name="title" xsi:type="string"
-                                      translate="true">We found other products you might like!
-                            </argument>
-                            <argument name="heading_tag" xsi:type="string">h2</argument>
-                        </arguments>
-                    </block>
-
-                    <block name="related" class="Magento\Catalog\Block\Product\View"
-                           template="Magento_Catalog::product/slider/product-slider.phtml">
-                        <arguments>
-                            <argument name="type" xsi:type="string">related</argument>
-                            <argument name="title" xsi:type="string" translate="true">Related Products</argument>
-                            <argument name="heading_tag" xsi:type="string">h2</argument>
-                        </arguments>
-                    </block>
-
                     <block class="Magento\Catalog\Block\Product\View\Details"
                            name="product.info.details"
                            template="Magento_Catalog::product/view/sections/product-sections.phtml">
@@ -202,26 +185,9 @@
 
             </referenceContainer>
 
-            <block class="Magento\Catalog\Block\Widget\RecentlyViewed"
-                   name="recently_viewed_products.default_widget_pdp"
-                   ifconfig="catalog/recently_products/show_on_pdp"
-                   template="Magento_Catalog::product/widget/viewed/list.phtml">
-                <arguments>
-                    <argument name="title" xsi:type="string" translate="true">Recently Viewed Products</argument>
-                    <argument name="show_buttons" xsi:type="string">add_to_cart,add_to_compare,add_to_wishlist</argument>
-                    <argument name="show_attributes" xsi:type="string">name,image,price,learn_more</argument>
-                </arguments>
-            </block>
-
         </referenceContainer>
 
         <move element="alert.urls" destination="product.info" as="alert.urls"/>
-
-        <referenceContainer name="before.body.end">
-            <block name="recently_viewed_products.register_view"
-                   template="Magento_Catalog::product/widget/viewed/js/register-viewed-product.phtml"
-                   ifconfig="catalog/recently_products/recently_viewed_enabled"/>
-        </referenceContainer>
 
         <referenceBlock name="after.body.start">
             <block name="product_breadcrumbs" class="Hyva\Theme\Block\Catalog\Breadcrumbs">

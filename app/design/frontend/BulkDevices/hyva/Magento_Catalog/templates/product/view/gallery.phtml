@@ -86,10 +86,13 @@ $productName = $block->getProduct()->getName();
                     alt="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
                     title="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
                     class="object-contain object-center w-full h-auto"
-                    :class="fullscreen ? 'invisible max-h-[75vh]' : 'invisible'"
+                    :class="fullscreen ? (galleryReady ? 'invisible max-h-[75vh]' : 'max-h-[75vh]') : (galleryReady ? 'invisible' : '')"
                     src="<?= /* @noEscape */ $mainImageData ?>"
                     width="<?= /* @noEscape */ $mediumWidth ?>"
                     height="<?= /* @noEscape */ $mediumHeight ?>"
+                    fetchpriority="high"
+                    loading="eager"
+                    decoding="async"
                     itemprop="image"
                 >
                 <template x-for="(image, index) in images" :key="index">
@@ -231,6 +234,7 @@ $productName = $block->getProduct()->getName();
         let touchXDown, touchYDown;
 
         return {
+            "galleryReady": false,
             "active": 0,
             "videoData": {},
             "activeVideoType": false,
@@ -254,6 +258,7 @@ $productName = $block->getProduct()->getName();
             "focusTrapListener": null,
             init() {
                 this.initActive();
+                this.galleryReady = true;
                 this.$nextTick(() => {
                     this.calcPageSize();
                     this.calcScrollStartEnd();
