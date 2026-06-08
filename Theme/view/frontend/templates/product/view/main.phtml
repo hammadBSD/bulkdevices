@@ -1,0 +1,79 @@
+<?php
+/** @var \BSD\Theme\Block\Product\View $block */
+$_product = $block->getProduct();
+$prices = $block->getDisplayPrices();
+$isCallForPrice = $block->isCallForPrice();
+?>
+<div class="bd-pdp__info">
+    <h1 class="bd-pdp__title"><?= $block->escapeHtml($_product->getName()) ?></h1>
+
+    <table class="bd-pdp__meta">
+        <tbody>
+            <tr>
+                <th scope="row"><?= $block->escapeHtml(__('SKU')) ?></th>
+                <td><?= $block->escapeHtml($_product->getSku()) ?></td>
+            </tr>
+            <?php if ($block->getBrandName() !== ''): ?>
+                <tr>
+                    <th scope="row"><?= $block->escapeHtml(__('Brand')) ?></th>
+                    <td><?= $block->escapeHtml($block->getBrandName()) ?></td>
+                </tr>
+            <?php endif; ?>
+            <tr>
+                <th scope="row"><?= $block->escapeHtml(__('Availability')) ?></th>
+                <td class="<?= $block->isInStock() ? 'bd-pdp__stock--in' : 'bd-pdp__stock--out' ?>">
+                    <?= $block->escapeHtml($block->isInStock() ? __('In stock') : __('Out of stock')) ?>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <?php if (!$isCallForPrice): ?>
+        <div class="bd-pdp__pricing">
+            <p class="bd-pdp__price-now"><?= $block->escapeHtml($prices['excl']) ?></p>
+            <?php if (!empty($prices['show_compare'])): ?>
+                <p class="bd-pdp__price-offer">
+                    <span class="bd-pdp__price-save-label">
+                        <?= $block->escapeHtml(__('Your Save:')) ?>
+                        <span class="bd-pdp__price-save-amt"><?= $block->escapeHtml($prices['save']) ?></span>
+                    </span>
+                    <span class="bd-pdp__price-was-inline"><?= $block->escapeHtml($prices['was']) ?></span>
+                    <?php if ($prices['percent'] !== null): ?>
+                        <span class="bd-pdp__price-badge"><?= (int) $prices['percent'] ?>% <?= $block->escapeHtml(__('off')) ?></span>
+                    <?php endif; ?>
+                </p>
+            <?php endif; ?>
+        </div>
+        <div class="bd-pdp__price-render bd-sr-only" aria-hidden="true">
+            <?= $block->getChildHtml('product.price.final') ?>
+        </div>
+    <?php endif; ?>
+
+    <div class="bd-pdp__buybox" id="product-addtocart">
+        <?php if ($isCallForPrice): ?>
+            <div class="bd-pdp__call-price">
+                <?= $block->getChildHtml('custom.text') ?>
+            </div>
+        <?php else: ?>
+            <?= $block->getChildHtml('product.info') ?>
+        <?php endif; ?>
+    </div>
+
+    <div class="bd-pdp__trust">
+        <?php foreach ($block->getTrustBadges() as $badge): ?>
+            <div class="bd-pdp__trust-item">
+                <img class="bd-pdp__icon bd-pdp__icon--trust"
+                     src="<?= $block->escapeUrl($block->getPdpIconUrl($badge['image'])) ?>"
+                     alt=""
+                     width="40"
+                     height="36"
+                     loading="lazy"
+                     decoding="async"/>
+                <div class="bd-pdp__trust-text">
+                    <strong><?= $block->escapeHtml($badge['title']) ?></strong>
+                    <p><?= $block->escapeHtml($badge['text']) ?></p>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>

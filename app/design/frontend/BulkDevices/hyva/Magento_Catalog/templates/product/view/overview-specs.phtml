@@ -1,0 +1,84 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductAttributes;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+/** @var ProductAttributes $attributesViewModel */
+$attributesViewModel = $viewModels->require(ProductAttributes::class);
+
+$product = $productViewModel->getProduct();
+$warrantyDefault = (string) ($block->getData('warranty_default') ?: '30-days');
+
+$specRows = [
+    ['code' => 'manufacturer', 'label' => (string) __('Brand')],
+    ['code' => 'sku', 'label' => (string) __('Part No.')],
+    ['code' => 'condition', 'label' => (string) __('Condition')],
+];
+
+$rows = [];
+foreach ($specRows as $specRow) {
+    $attributeData = $attributesViewModel->getAttributeData($specRow['code'], $product);
+    $value = trim(strip_tags((string) ($attributeData['value'] ?? '')));
+
+    if ($value === '' || $value === 'No') {
+        continue;
+    }
+
+    $rows[] = [
+        'label' => $specRow['label'],
+        'value' => $value,
+        'code' => $specRow['code'],
+    ];
+}
+
+$rows[] = [
+    'label' => (string) __('Warranty'),
+    'value' => $warrantyDefault,
+    'code' => 'warranty',
+];
+
+if (!$rows) {
+    return;
+}
+
+$brand = trim(strip_tags($attributesViewModel->getValue($product, 'manufacturer')));
+$sku = $product->getSku();
+$overviewTitle = $brand && $sku
+    ? $brand . ' ' . $sku
+    : $product->getName();
+?>
+
+<div class="bb-pdp-overview">
+    <p class="bb-pdp-overview__lead">
+        <?= $escaper->escapeHtml(
+            __(
+                'The %1 is available at BulkDevices. Contact our customer service team for more information.',
+                $overviewTitle
+            )
+        ) ?>
+    </p>
+    <div class="table-wrapper max-w-prose overflow-x-auto" id="product-attributes">
+        <table class="additional-attributes bb-pdp-overview__table w-full">
+            <?php foreach ($rows as $row): ?>
+                <tr class="border-b border-gray-300 last:border-b-0 bb-pdp-overview__row attribute-<?= $escaper->escapeHtmlAttr($row['code']) ?>">
+                    <th class="col label w-1/2 py-2 text-left text-fg-secondary font-normal product-attribute-label"
+                        scope="row"><?= $escaper->escapeHtml($row['label']) ?></th>
+                    <td class="col data w-1/2 py-2 pl-2 text-left product-attribute-value"
+                        data-th="<?= $escaper->escapeHtmlAttr($row['label']) ?>"><?= $escaper->escapeHtml($row['value']) ?></td>
+                </tr>
+            <?php endforeach; ?>
+        </table>
+    </div>
+</div>

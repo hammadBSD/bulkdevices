@@ -1,0 +1,42 @@
+<?php
+/** @var \Smartwave\Filterproducts\Block\Home\FeaturedList $block */
+/** @var \Magento\Framework\Escaper $escaper */
+/** @var \BSD\Theme\ViewModel\Plp|null $plpViewModel */
+$plpViewModel = $block->getData('plp_view_model');
+$collection = $block->getProducts();
+if (!$collection || !$collection->getSize()) {
+    return;
+}
+?>
+<div class="bd-plp-featured">
+    <h2 class="bd-plp-featured__title"><?= $escaper->escapeHtml(__('Featured Products')) ?></h2>
+    <ul class="bd-plp-featured__list">
+        <?php foreach ($collection as $_product): ?>
+            <?php
+            $imageUrl = $plpViewModel
+                ? $plpViewModel->getListingImageUrl($_product)
+                : $block->getImage($_product, 'product_thumbnail_image')->getImageUrl();
+            $price = $plpViewModel
+                ? $plpViewModel->getDisplayPrice($_product)
+                : '';
+            ?>
+            <li class="bd-plp-featured__item">
+                <a class="bd-plp-featured__thumb" href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>">
+                    <img src="<?= $escaper->escapeUrl($imageUrl) ?>"
+                         width="80"
+                         height="80"
+                         alt="<?= $escaper->escapeHtmlAttr($_product->getName()) ?>"
+                         loading="lazy"/>
+                </a>
+                <div class="bd-plp-featured__info">
+                    <a class="bd-plp-featured__name" href="<?= $escaper->escapeUrl($_product->getProductUrl()) ?>">
+                        <?= $escaper->escapeHtml($_product->getName()) ?>
+                    </a>
+                    <?php if ($price !== '' && (!$plpViewModel || !$plpViewModel->isCallForPrice($_product))): ?>
+                        <span class="bd-plp-featured__price"><?= $escaper->escapeHtml($price) ?></span>
+                    <?php endif; ?>
+                </div>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>

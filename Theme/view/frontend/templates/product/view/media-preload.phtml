@@ -1,0 +1,11 @@
+<?php
+/** @var \BSD\Theme\Block\Product\MediaPreload $block */
+$lcpUrl = $block->getLcpImageUrl();
+$mediaOrigin = $block->getMediaOrigin();
+?>
+<?php if ($mediaOrigin !== ''): ?>
+<link rel="preconnect" href="<?= $block->escapeUrl($mediaOrigin) ?>" crossorigin="anonymous"/>
+<?php endif; ?>
+<?php if ($lcpUrl !== ''): ?>
+<link rel="preload" as="image" href="<?= $block->escapeUrl($lcpUrl) ?>" fetchpriority="high"/>
+<?php endif; ?>

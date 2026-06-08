@@ -1,0 +1,327 @@
+<?php
+/** @var \BSD\Theme\Block\Home\Sections $block */
+$heroUrl = $block->getHeroBannerUrl();
+$heroMobileUrl = $block->getHeroMobileBannerUrl();
+$products = $block->getPromoProducts();
+$promoFilters = $block->getPromoFilters();
+$industries = $block->getIndustries();
+$industriesBg = $block->getIndustriesBackgroundUrl();
+$featuredProducts = $block->getFeaturedProducts();
+$topCategories = $block->getTopCategoryBlocks();
+$hpContactBg = $block->getHpContactBackgroundUrl();
+?>
+<div class="bd-home">
+    <section class="bd-hero">
+        <div class="bd-hero__media" aria-hidden="true">
+            <picture>
+                <source media="(min-width: 1024px)"
+                        type="image/webp"
+                        srcset="<?= $block->escapeUrl($heroUrl) ?>"/>
+                <img class="bd-hero__img"
+                     src="<?= $block->escapeUrl($heroMobileUrl) ?>"
+                     alt=""
+                     width="1280"
+                     height="480"
+                     fetchpriority="high"
+                     decoding="sync"/>
+            </picture>
+        </div>
+        <div class="bd-hero__overlay"></div>
+        <div class="bd-container bd-hero__inner">
+            <div class="bd-hero__content">
+                <h1 class="bd-hero__title bd-hero__title--mobile">
+                    <?= $block->escapeHtml(__('Refurbished & New IT Hardware Components')) ?>
+                </h1>
+                <h1 class="bd-hero__title bd-hero__title--desktop">
+                    <?= $block->escapeHtml(__('Top-Quality Refurbished & New IT Hardware Components')) ?>
+                </h1>
+                <p><?= $block->escapeHtml(__('Elevate your tech game with our extensive range of IT hardware. Whether for work or play, find the perfect tech solutions that blend innovation with reliability.')) ?></p>
+                <a class="bd-btn bd-btn--shop" href="<?= $block->escapeUrl($block->getUrl('storage-devices')) ?>">
+                    <?= $block->escapeHtml(__('SHOP NOW')) ?>
+                </a>
+            </div>
+        </div>
+        <div class="bd-trust-bar">
+            <div class="bd-container bd-trust-bar__grid">
+                <div class="bd-trust-bar__item">
+                    <span class="bd-trust-bar__icon bd-trust-bar__icon--price" aria-hidden="true"></span>
+                    <div class="bd-trust-bar__text">
+                        <strong><?= $block->escapeHtml(__('Price Match Guarantee')) ?></strong>
+                        <p><?= $block->escapeHtml(__('Get the best price with our price match guarantee.')) ?></p>
+                    </div>
+                </div>
+                <div class="bd-trust-bar__item">
+                    <span class="bd-trust-bar__icon bd-trust-bar__icon--return" aria-hidden="true"></span>
+                    <div class="bd-trust-bar__text">
+                        <strong><?= $block->escapeHtml(__('Easy Return')) ?></strong>
+                        <p><?= $block->escapeHtml(__('Enjoy hassle-free returns on all purchases.')) ?></p>
+                    </div>
+                </div>
+                <div class="bd-trust-bar__item">
+                    <span class="bd-trust-bar__icon bd-trust-bar__icon--secure" aria-hidden="true"></span>
+                    <div class="bd-trust-bar__text">
+                        <strong><?= $block->escapeHtml(__('Secure Payment')) ?></strong>
+                        <p><?= $block->escapeHtml(__('Shop confidently with our secure payment options.')) ?></p>
+                    </div>
+                </div>
+                <div class="bd-trust-bar__item bd-trust-bar__item--ship">
+                    <span class="bd-trust-bar__icon bd-trust-bar__icon--ship" aria-hidden="true"></span>
+                    <div class="bd-trust-bar__text">
+                        <strong><?= $block->escapeHtml(__('Free Shipping')) ?></strong>
+                        <p><?= $block->escapeHtml(__('Free shipping on all orders*.')) ?></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="bd-promo-section" id="promotional-products">
+        <div class="bd-container">
+            <h2 class="bd-promo-section__title"><?= $block->escapeHtml(__('Promotional Products')) ?></h2>
+
+            <nav class="bd-promo-filters" aria-label="<?= $block->escapeHtmlAttr(__('Filter promotional products by brand')) ?>">
+                <?php foreach ($promoFilters as $index => $filter): ?>
+                    <?php if ($index > 0): ?>
+                        <span class="bd-promo-filters__sep" aria-hidden="true">|</span>
+                    <?php endif; ?>
+                    <a href="<?= $block->escapeUrl($filter['url']) ?>"
+                       class="bd-promo-filters__link<?= $filter['active'] ? ' is-active' : '' ?>">
+                        <?= $block->escapeHtml($filter['label']) ?>
+                    </a>
+                <?php endforeach; ?>
+            </nav>
+
+            <div class="bd-promo-grid">
+                <?php foreach ($products as $product): ?>
+                    <?php
+                    $isQuote = $block->isQuoteProduct($product);
+                    $price = $block->getFormattedPrice($product);
+                    $productImageUrl = $block->getProductImageUrl($product);
+                    $productImageIsPlaceholder = $block->isPlaceholderImageUrl($productImageUrl);
+                    ?>
+                    <article class="bd-promo-card">
+                        <a class="bd-promo-card__image"
+                           href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                            <img src="<?= $block->escapeUrl($productImageUrl) ?>"
+                                 alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
+                                 loading="lazy"
+                                 fetchpriority="low"
+                                 decoding="async"
+                                 <?php if (!$productImageIsPlaceholder): ?>
+                                 sizes="<?= $block->escapeHtmlAttr($block->getHomeProductImageSizes()) ?>"
+                                 <?php endif; ?>
+                                 width="200"
+                                 height="200"/>
+                        </a>
+                        <h3 class="bd-promo-card__name">
+                            <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                                <?= $block->escapeHtml($product->getName()) ?>
+                            </a>
+                        </h3>
+                        <?php if ($price !== ''): ?>
+                            <div class="bd-promo-card__price"><?= $block->escapeHtml($price) ?></div>
+                        <?php endif; ?>
+                        <?php if ($isQuote): ?>
+                            <a class="bd-promo-card__btn bd-promo-card__btn--quote"
+                               href="<?= $block->escapeUrl($block->getUrl('contact')) ?>">
+                                <?= $block->escapeHtml(__('QUOTE NOW')) ?>
+                            </a>
+                        <?php else: ?>
+                            <form class="bd-promo-card__form"
+                                  action="<?= $block->escapeUrl($block->getAddToCartUrl($product)) ?>"
+                                  method="post">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <input type="hidden" name="product" value="<?= (int) $product->getId() ?>"/>
+                                <input type="hidden" name="qty" value="1"/>
+                                <button type="submit" class="bd-promo-card__btn">
+                                    <?= $block->escapeHtml(__('ADD TO CART')) ?>
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="bd-industries-section" id="industries-we-serve">
+        <div class="bd-section-bg" aria-hidden="true">
+            <img class="bd-section-bg__img"
+                 src="<?= $block->escapeUrl($industriesBg) ?>"
+                 alt=""
+                 width="1920"
+                 height="1080"
+                 loading="lazy"
+                 fetchpriority="low"
+                 decoding="async"/>
+        </div>
+        <div class="bd-container">
+            <header class="bd-industries-section__header">
+                <h2 class="bd-industries-section__title"><?= $block->escapeHtml(__('Industries We Serve')) ?></h2>
+                <p class="bd-industries-section__subtitle"><?= $block->escapeHtml(__('Power any industry with our versatile IT hardware solutions, from processors to servers and peripherals.')) ?></p>
+            </header>
+            <div class="bd-industries-grid">
+                <?php foreach ($industries as $industry): ?>
+                    <article class="bd-industries-card">
+                        <div class="bd-industries-card__icon-wrap">
+                            <img class="bd-industries-card__icon-img"
+                                 src="<?= $block->escapeUrl($block->getIndustryIconUrl($industry['key'])) ?>"
+                                 alt=""
+                                 width="72"
+                                 height="72"
+                                 loading="lazy"
+                                 fetchpriority="low"
+                                 decoding="async"/>
+                        </div>
+                        <h3 class="bd-industries-card__title"><?= $block->escapeHtml($industry['title']) ?></h3>
+                        <p class="bd-industries-card__text"><?= $block->escapeHtml($industry['description']) ?></p>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="bd-featured-section" id="featured-products">
+        <div class="bd-container">
+            <h2 class="bd-featured-section__title"><?= $block->escapeHtml(__('Featured Product')) ?></h2>
+            <div class="bd-promo-grid">
+                <?php foreach ($featuredProducts as $product): ?>
+                    <?php
+                    $isQuote = $block->isQuoteProduct($product);
+                    $price = $block->getFormattedPrice($product);
+                    $productImageUrl = $block->getProductImageUrl($product);
+                    $productImageIsPlaceholder = $block->isPlaceholderImageUrl($productImageUrl);
+                    ?>
+                    <article class="bd-promo-card">
+                        <a class="bd-promo-card__image"
+                           href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                            <img src="<?= $block->escapeUrl($productImageUrl) ?>"
+                                 alt="<?= $block->escapeHtmlAttr($product->getName()) ?>"
+                                 loading="lazy"
+                                 fetchpriority="low"
+                                 decoding="async"
+                                 <?php if (!$productImageIsPlaceholder): ?>
+                                 sizes="<?= $block->escapeHtmlAttr($block->getHomeProductImageSizes()) ?>"
+                                 <?php endif; ?>
+                                 width="200"
+                                 height="200"/>
+                        </a>
+                        <h3 class="bd-promo-card__name">
+                            <a href="<?= $block->escapeUrl($product->getProductUrl()) ?>">
+                                <?= $block->escapeHtml($product->getName()) ?>
+                            </a>
+                        </h3>
+                        <?php if ($price !== ''): ?>
+                            <div class="bd-promo-card__price"><?= $block->escapeHtml($price) ?></div>
+                        <?php endif; ?>
+                        <?php if ($isQuote): ?>
+                            <a class="bd-promo-card__btn bd-promo-card__btn--quote"
+                               href="<?= $block->escapeUrl($block->getUrl('contact')) ?>">
+                                <?= $block->escapeHtml(__('Quote Now')) ?>
+                            </a>
+                        <?php else: ?>
+                            <form class="bd-promo-card__form"
+                                  action="<?= $block->escapeUrl($block->getAddToCartUrl($product)) ?>"
+                                  method="post">
+                                <?= $block->getBlockHtml('formkey') ?>
+                                <input type="hidden" name="product" value="<?= (int) $product->getId() ?>"/>
+                                <input type="hidden" name="qty" value="1"/>
+                                <button type="submit" class="bd-promo-card__btn bd-promo-card__btn--titlecase">
+                                    <?= $block->escapeHtml(__('Add To Cart')) ?>
+                                </button>
+                            </form>
+                        <?php endif; ?>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="bd-top-categories" id="top-categories">
+        <div class="bd-container">
+            <h2 class="bd-top-categories__title"><?= $block->escapeHtml(__('Top Categories')) ?></h2>
+            <div class="bd-top-categories__grid">
+                <?php foreach ($topCategories as $category): ?>
+                    <article class="bd-top-categories__card">
+                        <figure class="bd-top-categories__figure">
+                            <img src="<?= $block->escapeUrl($block->getTopCategoryImageUrl($category['image'])) ?>"
+                                 alt="<?= $block->escapeHtmlAttr($category['title']) ?>"
+                                 width="100"
+                                 height="100"
+                                 loading="lazy"
+                                 fetchpriority="low"
+                                 decoding="async"/>
+                        </figure>
+                        <div class="bd-top-categories__body">
+                            <h3 class="bd-top-categories__name"><?= $block->escapeHtml($category['title']) ?></h3>
+                            <ul class="bd-top-categories__links">
+                                <?php foreach ($category['links'] as $link): ?>
+                                    <li>
+                                        <a href="<?= $block->escapeUrl($block->getUrl($link['url'])) ?>">
+                                            <?= $block->escapeHtml($link['label']) ?>
+                                        </a>
+                                    </li>
+                                <?php endforeach; ?>
+                                <li>
+                                    <a class="bd-top-categories__see-all"
+                                       href="<?= $block->escapeUrl($block->getUrl($category['see_all_url'])) ?>">
+                                        <?= $block->escapeHtml(__('See All')) ?>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+        </div>
+    </section>
+
+    <section class="bd-why-us" id="why-bulk-devices">
+        <div class="bd-container bd-why-us__inner">
+            <div class="bd-why-us__content">
+                <h2 class="bd-why-us__title"><?= $block->escapeHtml(__('Why Bulk Devices')) ?></h2>
+                <p class="bd-why-us__text"><?= $block->escapeHtml(__('BulkDevices is top quality retailer and supplier of computer and IT hardware. You can acquire hardware of trustworthy brands at your place of entrance. Our professional team members are always ready to help out our customers in every best way possible. We offer 24/7 services with exceptional efficiency and accountability.')) ?></p>
+                <p class="bd-why-us__text"><?= $block->escapeHtml(__('We are the best sellers of modern technology in the IT arcade. We have a vast catalog of storage devices, computer memory, motherboards, printers, scanners, power supplies, CPUs, Servers, and Network devices. Our foremost priority is to satisfy our customer\'s demands with full authenticity. Whether you\'re looking to enhance your gaming PC or desire to have rapid business productivity, don\'t worry until we are here to fulfill your requirements.')) ?></p>
+                <ul class="bd-why-us__list">
+                    <?php foreach ($block->getWhyUsBullets() as $bullet): ?>
+                        <li><?= $block->escapeHtml($bullet) ?></li>
+                    <?php endforeach; ?>
+                </ul>
+                <a class="bd-btn bd-why-us__btn" href="<?= $block->escapeUrl($block->getUrl('about')) ?>">
+                    <?= $block->escapeHtml(__('About Us')) ?>
+                </a>
+            </div>
+            <figure class="bd-why-us__media">
+                <img src="<?= $block->escapeUrl($block->getWhyUsImageUrl()) ?>"
+                     alt="<?= $block->escapeHtmlAttr(__('Why Bulk Devices')) ?>"
+                     width="560"
+                     height="520"
+                     loading="lazy"
+                     decoding="async"
+                     fetchpriority="low"/>
+            </figure>
+        </div>
+    </section>
+
+    <section class="bd-hp-contact" id="get-started-today">
+        <div class="bd-section-bg" aria-hidden="true">
+            <img class="bd-section-bg__img"
+                 src="<?= $block->escapeUrl($hpContactBg) ?>"
+                 alt=""
+                 width="1920"
+                 height="720"
+                 loading="lazy"
+                 fetchpriority="low"
+                 decoding="async"/>
+        </div>
+        <div class="bd-container">
+            <header class="bd-hp-contact__header">
+                <h2 class="bd-hp-contact__title"><?= $block->escapeHtml(__('Get Started Today')) ?></h2>
+                <p class="bd-hp-contact__subtitle"><?= $block->escapeHtml(__('Contact us today for stock availability and special discounts.')) ?></p>
+            </header>
+            <?= $block->getChildHtml('bd.home.contact.form') ?>
+        </div>
+    </section>
+
+    <?= $block->getChildHtml('bd.home.seo.content') ?>
+</div>

@@ -1,0 +1,79 @@
+<?php
+/** @var \BSD\Theme\Block\Home\Sections $block */
+?>
+<form class="bd-hp-contact__form"
+      action="<?= $block->escapeUrl($block->getContactFormAction()) ?>"
+      id="bd-hp-contact-form"
+      method="post"
+      data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+      data-mage-init='{"validation":{}}'>
+    <input name="form_key" type="hidden" value="<?= $block->escapeHtmlAttr($block->getFormKey()) ?>"/>
+    <input name="hideit" type="hidden" value=""/>
+
+    <div class="bd-hp-contact__row bd-hp-contact__row--3">
+        <div class="field required">
+            <input type="text"
+                   name="name"
+                   class="bd-hp-contact__input"
+                   placeholder="<?= $block->escapeHtmlAttr(__('Full Name')) ?>"
+                   title="<?= $block->escapeHtmlAttr(__('Full Name')) ?>"
+                   data-validate="{required:true}"/>
+        </div>
+        <div class="field required">
+            <input type="email"
+                   name="email"
+                   class="bd-hp-contact__input"
+                   placeholder="<?= $block->escapeHtmlAttr(__('Email Address')) ?>"
+                   title="<?= $block->escapeHtmlAttr(__('Email Address')) ?>"
+                   data-validate="{required:true, 'validate-email':true}"/>
+        </div>
+        <div class="field">
+            <input type="text"
+                   name="telephone"
+                   class="bd-hp-contact__input"
+                   placeholder="<?= $block->escapeHtmlAttr(__('Phone Number')) ?>"
+                   title="<?= $block->escapeHtmlAttr(__('Phone Number')) ?>"/>
+        </div>
+    </div>
+
+    <div class="bd-hp-contact__row bd-hp-contact__row--3">
+        <div class="field">
+            <input type="text"
+                   name="company"
+                   class="bd-hp-contact__input"
+                   placeholder="<?= $block->escapeHtmlAttr(__('Company')) ?>"
+                   title="<?= $block->escapeHtmlAttr(__('Company')) ?>"/>
+        </div>
+        <div class="field">
+            <input type="text"
+                   name="requiredqty"
+                   class="bd-hp-contact__input"
+                   placeholder="<?= $block->escapeHtmlAttr(__('Required Quantity')) ?>"
+                   title="<?= $block->escapeHtmlAttr(__('Required Quantity')) ?>"/>
+        </div>
+        <div class="field">
+            <input type="text"
+                   name="partnum"
+                   class="bd-hp-contact__input"
+                   placeholder="<?= $block->escapeHtmlAttr(__('Part Number')) ?>"
+                   title="<?= $block->escapeHtmlAttr(__('Part Number')) ?>"/>
+        </div>
+    </div>
+
+    <div class="bd-hp-contact__row">
+        <div class="field required">
+            <textarea name="comment"
+                      class="bd-hp-contact__input bd-hp-contact__textarea"
+                      placeholder="<?= $block->escapeHtmlAttr(__('Message')) ?>"
+                      title="<?= $block->escapeHtmlAttr(__('Message')) ?>"
+                      rows="5"
+                      data-validate="{required:true}"></textarea>
+        </div>
+    </div>
+
+    <div class="bd-hp-contact__actions">
+        <button type="submit" class="bd-hp-contact__submit" title="<?= $block->escapeHtmlAttr(__('Submit Now')) ?>">
+            <?= $block->escapeHtml(__('Submit Now')) ?>
+        </button>
+    </div>
+</form>

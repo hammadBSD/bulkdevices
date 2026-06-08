@@ -1,0 +1,40 @@
+<?php
+/** @var \BSD\Theme\Block\Home\Sections $block */
+?>
+<section class="bd-seo-content" id="homepage-seo-content">
+    <div class="bd-container">
+        <div class="bd-seo-content__inner">
+            <h2 class="bd-seo-content__title">
+                <?= $block->escapeHtml(__('BulkDevices US, the Best Place to Buy PC components.')) ?>
+            </h2>
+            <p class="bd-seo-content__text">
+                <?= $block->escapeHtml(__('BulkDevices US is an online dealer of IT hardware that provides IT accessories to its clients. We are sufficient with a vast range of information processing products that are used in homes or business organizations. You can get the chance of buying top-quality laptops or pc for your home or any other dwelling place. Moreover, we also build a monster piece of gaming machine that can run any game with high graphics. Our expert team also contributes by helping our clients in the process of buying. Our qualified experts will suggest to you the finest products within the range that meet your budget. It is a fact that every business runs through IT setup and BulkDevices US have the privilege to provide reliable products to our valuable clients.')) ?>
+            </p>
+
+            <div class="bd-seo-content__more" id="bd-seo-content-more" hidden>
+                <h3 class="bd-seo-content__title">
+                    <?= $block->escapeHtml(__('BulkDevices US, Get Economical PC Parts in Amazing Prices.')) ?>
+                </h3>
+                <p class="bd-seo-content__text">
+                    <?= $block->escapeHtml(__('This is a fact that every business either smaller or large requires IT infrastructure in order to run the organization. Any industry or firm is incomplete without hardware and software because with their absence no system can run perfectly. Need economical pc components with great reliability so don\'t worry, BulkDevices US is here to figure out your worries by offering various PC parts of any shape and size. These pc parts include switches, routers, storage, SSDs, power supplies, and network modules. We are sufficient with the treasure of computer hardware and software products that can adorn your professional place. US customers can easily take the benefit of these cost-effective devices from BulkDevices US. We also provide the service of guiding our clients to get the best suitable product according to their requirements. Our professional will help you to get what you need the most for your system within a limited budget. Moreover, our wide hardware collection ensures, a fast delivery service with good condition of the product. With this, we also offer an easy return policy as well. We have a team of great professionals who also provide the amenity of assembling the parts by keeping your choice. Our priority is always our clients as we do everything possible for their happiness. Because whatever we are is because of our valuable clients. We also have a vast collection of integral computer parts such as CPU, motherboards, and memory-related products to enhance the life of your system.')) ?>
+                </p>
+                <h3 class="bd-seo-content__title">
+                    <?= $block->escapeHtml(__('BulkDevices US, A Dynamic Marketplace for Superior Computer Parts')) ?>
+                </h3>
+                <p class="bd-seo-content__text">
+                    <?= $block->escapeHtml(__('You can find every type of IT hardware from computer components and to software products. We have the capacity to lubricate your business atmosphere with modern technologies. You don\'t need to worry about how I can get my accessories because we also provide the top delivery speed without any menace. You can avail the opportunity of getting original software that will rapid up your data and work. BulkDevices US provide a high-quality brand product that is durable and trustworthy as well. But we also take care of our customers with reasonable prices as we keep our consumers at high priority. Last but not least we as IT retailers also compromise with integral computer components such as CPU, motherboards, and memory-related products.')) ?>
+                </p>
+            </div>
+
+            <button type="button"
+                    class="bd-seo-content__toggle"
+                    id="bd-seo-content-toggle"
+                    aria-expanded="false"
+                    aria-controls="bd-seo-content-more">
+                <span class="bd-seo-content__toggle-label" data-more="<?= $block->escapeHtmlAttr(__('Show more')) ?>" data-less="<?= $block->escapeHtmlAttr(__('Show less')) ?>">
+                    <?= $block->escapeHtml(__('Show more')) ?>
+                </span>
+            </button>
+        </div>
+    </div>
+</section>

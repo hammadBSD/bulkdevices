@@ -1,0 +1,59 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/plp.css"/>
+        <remove src="Smartwave_Filterproducts::css/owl.carousel/assets/owl.carousel.css"/>
+        <remove src="mage/calendar.css"/>
+    </head>
+    <body>
+        <attribute name="class" value="bd-plp"/>
+        <referenceBlock name="page.main.title" remove="true"/>
+        <referenceBlock name="catalog.compare.sidebar" remove="true"/>
+        <referenceContainer name="category.view.container" remove="true"/>
+        <referenceContainer name="columns.top">
+            <container name="bd.category.intro" htmlTag="div" htmlClass="bd-category-intro" before="-"/>
+        </referenceContainer>
+        <referenceContainer name="bd.category.intro">
+            <block class="Magento\Theme\Block\Html\Breadcrumbs" name="breadcrumbs"/>
+            <block class="Magento\Catalog\Block\Category\View" name="bd.category.header"
+                   template="BSD_Theme::category/header.phtml"/>
+        </referenceContainer>
+        <referenceBlock name="catalog.leftnav">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">BSD_Theme::category/layered.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceContainer name="sidebar.main">
+            <block class="Smartwave\Filterproducts\Block\Home\FeaturedList"
+                   name="bd.plp.featured"
+                   template="BSD_Theme::category/featured-sidebar.phtml">
+                <arguments>
+                    <argument name="product_count" xsi:type="number">9</argument>
+                    <argument name="plp_view_model" xsi:type="object">BSD\Theme\ViewModel\Plp</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <move element="catalog.leftnav" destination="sidebar.main" before="-"/>
+        <move element="bd.plp.featured" destination="sidebar.main" after="catalog.leftnav"/>
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Block\Category\View"
+                   name="bd.plp.title.bar"
+                   template="BSD_Theme::category/title-bar.phtml"
+                   before="category.products"/>
+            <block class="Magento\Catalog\Block\Category\View"
+                   name="bd.category.seo"
+                   template="BSD_Theme::category/seo.phtml"
+                   after="category.products">
+                <arguments>
+                    <argument name="plp_view_model" xsi:type="object">BSD\Theme\ViewModel\Plp</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="category.products.list">
+            <arguments>
+                <argument name="plp_view_model" xsi:type="object">BSD\Theme\ViewModel\Plp</argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,23 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\AbstractBlock;
+
+/** @var AbstractBlock $sectionBlock */
+/** @var Escaper $escaper */
+
+?>
+
+<?php if ($title = $sectionBlock->getTitle()): ?>
+    <h2 class="mb-6 text-2xl text-center md:text-left">
+        <?= $escaper->escapeHtml($title) ?>
+    </h2>
+<?php endif; ?>
+

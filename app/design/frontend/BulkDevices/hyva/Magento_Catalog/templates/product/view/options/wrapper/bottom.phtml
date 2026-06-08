@@ -1,0 +1,16 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+?>
+<?php if ($block->getChildHtml()): ?>
+    <div class="product-options-bottom flex flex-col md:flex-row gap-4 md:gap-8 pb-8">
+        <?= $block->getChildHtml() ?>
+    </div>
+<?php endif; ?>

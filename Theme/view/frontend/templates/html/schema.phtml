@@ -1,0 +1,30 @@
+<?php
+/** @var \Magento\Framework\View\Element\Template $block */
+$baseUrl = $block->getBaseUrl();
+?>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Bulk Devices",
+  "url": <?= /* @noEscape */ json_encode($baseUrl) ?>,
+  "contactPoint": {
+    "@type": "ContactPoint",
+    "telephone": "+1-800-577-4333",
+    "contactType": "customer service"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Bulk Devices",
+  "url": <?= /* @noEscape */ json_encode($baseUrl) ?>,
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": <?= /* @noEscape */ json_encode($baseUrl . 'catalogsearch/result/?q={search_term_string}') ?>,
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>

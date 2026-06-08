@@ -1,0 +1,52 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Pricing\Price\FinalPrice;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+/** @var Product $product */
+$product = $productViewModel->getProduct();
+
+$finalPriceAmount = $product->getPriceInfo()->getPrice(FinalPrice::PRICE_CODE)->getAmount();
+$priceWithTax = (float) $finalPriceAmount->getValue();
+$priceWithoutTax = (float) $finalPriceAmount->getBaseAmount();
+$originalPrice = (float) $product->getPrice();
+
+$cutPrice = $priceWithTax * 1.25;
+$savingsAmount = $priceWithoutTax * 0.25;
+
+if ($priceWithTax <= 0 && $originalPrice <= 0) {
+    return;
+}
+?>
+
+<div class="bb-pdp-savings old_prices">
+    <span class="bb-pdp-savings__save saving-price">
+        <span><?= $escaper->escapeHtml(__('Your Save:')) ?></span>
+        <span class="bb-pdp-savings__save-value"><?= /** @noEscape */ $productViewModel->format($savingsAmount) ?></span>
+    </span>
+    <span class="bb-pdp-savings__was old-price">
+        <span class="cut-price"><?= /** @noEscape */ $productViewModel->format($cutPrice) ?></span>
+    </span>
+</div>
+
+<?php if ($originalPrice != 0): ?>
+    <?php $percentOff = (int) round(($savingsAmount / $originalPrice) * 100); ?>
+    <span class="bb-pdp-savings__percent percent">
+        <strong><?= $escaper->escapeHtml(__('%1% off', $percentOff)) ?></strong>
+    </span>
+<?php else: ?>
+    <span class="bb-pdp-savings__quote">(<?= $escaper->escapeHtml(__('Get a Quote')) ?>)</span>
+<?php endif; ?>

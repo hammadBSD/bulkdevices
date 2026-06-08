@@ -1,0 +1,117 @@
+<?php
+/** @var \BSD\Theme\Block\Html\Footer $block */
+?>
+<footer class="bd-footer" id="bd-footer">
+    <div class="bd-container bd-footer__grid">
+        <div class="bd-footer__col">
+            <h3 class="bd-footer__title"><?= $block->escapeHtml(__('About Bulk Devices')) ?></h3>
+            <ul class="bd-footer__links">
+                <?php foreach ($block->getAboutLinks() as $link): ?>
+                    <li>
+                        <a href="<?= $block->escapeUrl($block->getUrl($link['url'])) ?>">
+                            <?= $block->escapeHtml($link['label']) ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <h4 class="bd-footer__subtitle"><?= $block->escapeHtml(__('Follow us')) ?></h4>
+            <div class="bd-footer__social">
+                <a href="https://www.facebook.com/bulkdevices"
+                   class="bd-footer__social-link"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="<?= $block->escapeHtmlAttr(__('Facebook')) ?>">
+                    <span aria-hidden="true">f</span>
+                </a>
+                <a href="https://www.linkedin.com/company/bulkdevices"
+                   class="bd-footer__social-link"
+                   target="_blank"
+                   rel="noopener noreferrer"
+                   aria-label="<?= $block->escapeHtmlAttr(__('LinkedIn')) ?>">
+                    <span aria-hidden="true">in</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="bd-footer__col">
+            <h3 class="bd-footer__title"><?= $block->escapeHtml(__('Featured Categories')) ?></h3>
+            <ul class="bd-footer__links">
+                <?php foreach ($block->getFeaturedCategoryLinks() as $link): ?>
+                    <li>
+                        <a href="<?= $block->escapeUrl($block->getUrl($link['url'])) ?>">
+                            <?= $block->escapeHtml($link['label']) ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <h4 class="bd-footer__subtitle"><?= $block->escapeHtml(__('Shipping Partners')) ?></h4>
+            <?php if ($block->getShippingPartnersImageUrl() !== ''): ?>
+                <img class="bd-footer__badge"
+                     src="<?= $block->escapeUrl($block->getShippingPartnersImageUrl()) ?>"
+                     alt="<?= $block->escapeHtmlAttr(__('Shipping Partners')) ?>"
+                     width="220"
+                     height="40"
+                     loading="lazy"/>
+            <?php endif; ?>
+        </div>
+
+        <div class="bd-footer__col">
+            <h3 class="bd-footer__title"><?= $block->escapeHtml(__('Account')) ?></h3>
+            <ul class="bd-footer__links">
+                <?php foreach ($block->getAccountLinks() as $link): ?>
+                    <li>
+                        <a href="<?= $block->escapeUrl($block->getUrl($link['url'])) ?>">
+                            <?= $block->escapeHtml($link['label']) ?>
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+            <h4 class="bd-footer__subtitle"><?= $block->escapeHtml(__('Secure Payment')) ?></h4>
+            <?php if ($block->getSecurePaymentImageUrl() !== ''): ?>
+                <img class="bd-footer__badge bd-footer__badge--payment"
+                     src="<?= $block->escapeUrl($block->getSecurePaymentImageUrl()) ?>"
+                     alt="<?= $block->escapeHtmlAttr(__('Secure Payment')) ?>"
+                     width="280"
+                     height="36"
+                     loading="lazy"/>
+            <?php endif; ?>
+        </div>
+
+        <div class="bd-footer__col bd-footer__col--contact">
+            <div class="bd-footer__contact-panel">
+            <h3 class="bd-footer__title"><?= $block->escapeHtml(__('Contact info')) ?></h3>
+            <ul class="bd-footer__contact">
+                <li>
+                    <span class="bd-footer__contact-icon bd-footer__contact-icon--phone" aria-hidden="true"></span>
+                    <a href="tel:+19036774333"><?= $block->escapeHtml($block->getPhone()) ?></a>
+                </li>
+                <li>
+                    <span class="bd-footer__contact-icon bd-footer__contact-icon--email" aria-hidden="true"></span>
+                    <a href="mailto:<?= $block->escapeUrl($block->getEmail()) ?>"><?= $block->escapeHtml($block->getEmail()) ?></a>
+                </li>
+                <li>
+                    <span class="bd-footer__contact-icon bd-footer__contact-icon--location" aria-hidden="true"></span>
+                    <span><?= $block->escapeHtml($block->getAddress()) ?></span>
+                </li>
+            </ul>
+            <h4 class="bd-footer__subtitle"><?= $block->escapeHtml(__('Working Hours:')) ?></h4>
+            <p class="bd-footer__hours"><?= $block->escapeHtml($block->getWorkingHours()) ?></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="bd-footer__bottom">
+        <div class="bd-container bd-footer__bottom-inner">
+            <p class="bd-footer__copyright">
+                <?= $block->escapeHtml(__('© Cube Devices Corp working as Bulk Devices , trademarks and tradenames are acknowledged.')) ?><br class="bd-footer__copyright-br"/>
+                <?= $block->escapeHtml(__('Bulk Devices hold no affiliation to any of the Trademark owners.')) ?>
+            </p>
+            <button type="button"
+                    class="bd-footer__top"
+                    id="bd-back-to-top"
+                    aria-label="<?= $block->escapeHtmlAttr(__('Back to top')) ?>">
+                <span aria-hidden="true"></span>
+            </button>
+        </div>
+    </div>
+</footer>
