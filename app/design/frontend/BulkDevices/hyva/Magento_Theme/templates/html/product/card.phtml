@@ -1,0 +1,63 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Catalog\Model\Product;
+use Magento\Framework\Escaper;
+use Magento\Framework\Pricing\Helper\Data as PricingHelper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var Product|null $product */
+$product = $block->getData('product');
+if (!$product instanceof Product) {
+    return;
+}
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+/** @var PricingHelper $pricingHelper */
+$pricingHelper = $this->helper(PricingHelper::class);
+
+$productUrl = parse_url($product->getProductUrl(), PHP_URL_PATH) ?: $product->getProductUrl();
+$productName = (string) $product->getName();
+$sku = (string) $product->getSku();
+$image = $productViewModel->getImage($product, 'category_page_grid');
+$imageUrl = $image->getImageUrl();
+$imageLabel = $image->getLabel() ?: $productName;
+$showFromLabel = in_array($product->getTypeId(), ['configurable', 'bundle', 'grouped'], true);
+$formattedPrice = $pricingHelper->currency($product->getFinalPrice(), true, false);
+?>
+
+<article class="bb-product-card home-product-tabs__card">
+    <a class="bb-product-card__media home-product-tabs__media" href="<?= $escaper->escapeUrl($productUrl) ?>">
+        <img class="bb-product-card__img home-product-tabs__img"
+             src="<?= $escaper->escapeUrl($imageUrl) ?>"
+             width="250"
+             height="250"
+             alt="<?= $escaper->escapeHtmlAttr($imageLabel) ?>"
+             loading="lazy"
+             decoding="async">
+    </a>
+    <div class="bb-product-card__body home-product-tabs__body">
+        <h3 class="bb-product-card__name home-product-tabs__name">
+            <a href="<?= $escaper->escapeUrl($productUrl) ?>"><?= $escaper->escapeHtml($sku) ?></a>
+        </h3>
+        <p class="bb-product-card__desc home-product-tabs__desc"><?= $escaper->escapeHtml($productName) ?></p>
+        <p class="bb-product-card__price home-product-tabs__price">
+            <?php if ($showFromLabel): ?>
+                <span class="bb-product-card__price-label home-product-tabs__price-label"><?= $escaper->escapeHtml(__('From')) ?></span>
+            <?php endif; ?>
+            <?= $escaper->escapeHtml($formattedPrice) ?>
+        </p>
+        <a class="bb-product-card__cta home-product-tabs__cta" href="<?= $escaper->escapeUrl($productUrl) ?>">
+            <?= $escaper->escapeHtml(__('View product')) ?>
+        </a>
+    </div>
+</article>

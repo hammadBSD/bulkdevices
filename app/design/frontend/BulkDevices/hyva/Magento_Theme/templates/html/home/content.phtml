@@ -2,9 +2,13 @@
 
 declare(strict_types=1);
 
+use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
 /** @var Template $block */
+/** @var Escaper $escaper */
+
+$contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
 ?>
 <section class="home-banner-slider" aria-label="Homepage hero banner">
     <div class="home-banner-slider__slide">
@@ -91,7 +95,7 @@ use Magento\Framework\View\Element\Template;
 <section class="home-product-tabs" aria-labelledby="home-product-tabs-heading" x-data="{ activeTab: 'all' }">
     <div class="container home-product-tabs__container">
         <header class="home-product-tabs__header">
-            <h2 id="home-product-tabs-heading" class="home-product-tabs__title">Featured Products</h2>
+            <h2 id="home-product-tabs-heading" class="home-product-tabs__title">Promotional Products</h2>
             <p class="home-product-tabs__intro">Shop top picks across our hottest categories and brands.</p>
         </header>
         <div class="home-product-tabs__nav" role="tablist" aria-label="Product categories">
@@ -1055,6 +1059,8 @@ use Magento\Framework\View\Element\Template;
     </div>
 </section>
 
+<?= $block->getChildHtml('home_featured_products') ?>
+
 <section class="home-top-categories" aria-labelledby="home-top-categories-heading">
     <div class="container home-top-categories__container">
         <h2 id="home-top-categories-heading" class="home-top-categories__title">Top Categories</h2>
@@ -1159,6 +1165,117 @@ use Magento\Framework\View\Element\Template;
                 >
             </div>
         </div>
+    </div>
+</section>
+
+<section class="home-get-started" aria-labelledby="home-get-started-heading">
+    <div class="home-get-started__container">
+        <header class="home-get-started__header">
+            <h2 id="home-get-started-heading" class="home-get-started__title">Get Started Today</h2>
+            <p class="home-get-started__intro">
+                Contact us today for stock availability and special discounts.
+            </p>
+        </header>
+        <form
+            class="home-get-started__form form contact"
+            action="<?= $escaper->escapeUrl($contactFormAction) ?>"
+            id="home-contact-form"
+            method="post"
+            data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>"
+        >
+            <?= $block->getBlockHtml('formkey') ?>
+            <fieldset class="home-get-started__fieldset">
+                <legend class="sr-only"><?= $escaper->escapeHtml(__('Write Us')) ?></legend>
+                <div class="home-get-started__grid">
+                    <div class="field name required">
+                        <label class="sr-only" for="home-contact-name"><?= $escaper->escapeHtml(__('Full Name')) ?></label>
+                        <input
+                            name="name"
+                            id="home-contact-name"
+                            class="home-get-started__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Full Name')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Full Name')) ?>"
+                            required
+                        >
+                    </div>
+                    <div class="field email required">
+                        <label class="sr-only" for="home-contact-email"><?= $escaper->escapeHtml(__('Email Address')) ?></label>
+                        <input
+                            name="email"
+                            id="home-contact-email"
+                            class="home-get-started__input"
+                            type="email"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Email Address')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Email Address')) ?>"
+                            required
+                        >
+                    </div>
+                    <div class="field telephone">
+                        <label class="sr-only" for="home-contact-telephone"><?= $escaper->escapeHtml(__('Phone Number')) ?></label>
+                        <input
+                            name="telephone"
+                            id="home-contact-telephone"
+                            class="home-get-started__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+                        >
+                    </div>
+                    <div class="field company">
+                        <label class="sr-only" for="home-contact-company"><?= $escaper->escapeHtml(__('Company')) ?></label>
+                        <input
+                            name="company"
+                            id="home-contact-company"
+                            class="home-get-started__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Company')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Company')) ?>"
+                        >
+                    </div>
+                    <div class="field requiredqty">
+                        <label class="sr-only" for="home-contact-requiredqty"><?= $escaper->escapeHtml(__('Required Quantity')) ?></label>
+                        <input
+                            name="requiredqty"
+                            id="home-contact-requiredqty"
+                            class="home-get-started__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Required Quantity')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Required Quantity')) ?>"
+                        >
+                    </div>
+                    <div class="field partnum">
+                        <label class="sr-only" for="home-contact-partnum"><?= $escaper->escapeHtml(__('Part Number')) ?></label>
+                        <input
+                            name="partnum"
+                            id="home-contact-partnum"
+                            class="home-get-started__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Part Number')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Part Number')) ?>"
+                        >
+                    </div>
+                    <div class="field comment required home-get-started__field--full">
+                        <label class="sr-only" for="home-contact-comment"><?= $escaper->escapeHtml(__('Message')) ?></label>
+                        <textarea
+                            name="comment"
+                            id="home-contact-comment"
+                            class="home-get-started__textarea"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Message')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Message')) ?>"
+                            rows="6"
+                            required
+                        ></textarea>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="home-get-started__actions">
+                <input type="hidden" name="hideit" value="">
+                <button type="submit" class="home-get-started__submit" title="<?= $escaper->escapeHtmlAttr(__('Submit')) ?>">
+                    <span><?= $escaper->escapeHtml(__('Submit Now')) ?></span>
+                </button>
+            </div>
+        </form>
     </div>
 </section>
 

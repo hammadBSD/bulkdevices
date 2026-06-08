@@ -6,9 +6,12 @@
         <css src="css/home-banner.css"/>
         <css src="css/home-features.css"/>
         <css src="css/home-industries.css"/>
+        <css src="css/product-card.css"/>
         <css src="css/home-product-tabs.css"/>
+        <css src="css/home-featured-products.css"/>
         <css src="css/home-top-categories.css"/>
         <css src="css/home-whyus.css"/>
+        <css src="css/home-get-started.css"/>
         <css src="css/home-seo-content.css"/>
         <css src="css/frontendff.css"/>
     </head>
@@ -16,7 +19,20 @@
         <referenceContainer name="content">
             <block name="home-content"
                    template="Magento_Theme::html/home/content.phtml"
-                   before="-"/>
+                   before="-">
+                <block name="home-featured-products"
+                       as="home_featured_products"
+                       template="Magento_Theme::html/home/featured-products.phtml">
+                    <arguments>
+                        <argument name="category_id" xsi:type="number">253</argument>
+                        <argument name="product_count" xsi:type="number">5</argument>
+                        <argument name="title" xsi:type="string" translate="true">Featured Product</argument>
+                    </arguments>
+                    <block name="home.product.card"
+                           as="product.card"
+                           template="Magento_Theme::html/product/card.phtml"/>
+                </block>
+            </block>
         </referenceContainer>
 
         <referenceBlock name="hero" remove="true"/>

@@ -1,0 +1,59 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductList;
+use Hyva\Theme\ViewModel\Store;
+use Magento\Catalog\Model\Product\Visibility as ProductVisibility;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductList $productListViewModel */
+$productListViewModel = $viewModels->require(ProductList::class);
+
+/** @var Store $storeViewModel */
+$storeViewModel = $viewModels->require(Store::class);
+
+$categoryId = (string) ($block->getData('category_id') ?: 253);
+$pageSize = (int) ($block->getData('product_count') ?: 5);
+$title = (string) ($block->getData('title') ?: __('Featured Products'));
+
+$productListViewModel->addFilter('category_id', $categoryId);
+$productListViewModel->addFilter('website_id', $storeViewModel->getWebsiteId());
+$productListViewModel->addFilter(
+    'visibility',
+    [ProductVisibility::VISIBILITY_IN_CATALOG, ProductVisibility::VISIBILITY_BOTH],
+    'in'
+);
+$productListViewModel->setPageSize($pageSize);
+$productListViewModel->addDescendingSortOrder('created_at');
+
+$products = $productListViewModel->getItems();
+if (!$products) {
+    return;
+}
+
+$cardBlock = $block->getChildBlock('product.card');
+?>
+
+<section class="home-featured-products" aria-labelledby="home-featured-products-heading">
+    <div class="home-featured-products__container">
+        <h2 id="home-featured-products-heading" class="home-featured-products__title">
+            <?= $escaper->escapeHtml($title) ?>
+        </h2>
+        <ul class="home-featured-products__grid">
+            <?php foreach ($products as $product): ?>
+                <li class="bb-product-grid__item home-product-tabs__item">
+                    <?= $cardBlock
+                        ?->setData('product', $product)
+                        ->toHtml() ?>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</section>
