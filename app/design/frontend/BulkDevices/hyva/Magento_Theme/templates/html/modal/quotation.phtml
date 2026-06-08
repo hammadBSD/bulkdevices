@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
+use BSD\Theme\ViewModel\QuotationForm;
 use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
 use Hyva\Theme\ViewModel\Modal;
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
@@ -10,21 +12,220 @@ use Magento\Framework\View\Element\Template;
 /** @var Template $block */
 /** @var Escaper $escaper */
 /** @var ViewModelRegistry $viewModels */
+/** @var HyvaCsp $hyvaCsp */
 
 $modalViewModel = $viewModels->require(Modal::class);
+/** @var QuotationForm $quotationForm */
+$quotationForm = $viewModels->require(QuotationForm::class);
+$hyvaCsp = $viewModels->require(HyvaCsp::class);
 
 $modal = $modalViewModel->createModal()
     ->withTemplate('Magento_Theme::html/modal/quotation-content.phtml')
-    ->withAriaLabelledby('quotation-modal-title');
+    ->withAriaLabelledby('quotation-modal-title')
+    ->addDialogClass('w-full', 'max-w-lg');
+
+$config = [
+    'saveUrl' => $quotationForm->getSaveUrl(),
+    'imageUrl' => $quotationForm->getImageUrl(),
+    'recaptchaSiteKey' => $quotationForm->getRecaptchaSiteKey(),
+    'recaptchaScriptUrl' => $quotationForm->getRecaptchaScriptUrl(),
+    'recaptchaEnabled' => $quotationForm->isRecaptchaEnabled(),
+    'defaultSku' => $quotationForm->getDefaultProductSku(),
+    'successMessage' => (string) __('Thanks for contacting us with your comments and questions. We\'ll respond to you very soon.'),
+    'errorMessage' => (string) __('We can\'t process your request right now. Sorry, that\'s all we know.'),
+];
 ?>
-<div x-data="hyva.modal()" class="fixed bottom-4 right-4 z-40">
+<script type="application/json" id="bdus-quotation-modal-config"><?= /* @noEscape */ json_encode($config) ?></script>
+<div
+    x-data="Object.assign(hyva.modal(), initBdusQuotationModal())"
+    class="fixed bottom-4 right-4 z-40"
+>
     <button
         type="button"
         class="btn btn-primary shadow-lg"
         aria-haspopup="dialog"
-        @click="<?= $escaper->escapeHtmlAttr($modal->getShowJs()) ?>"
+        @click="openQuotation({ requestType: 'Request For Quotation' }, $event.currentTarget)"
     >
         <?= $escaper->escapeHtml(__('Request For Quotation')) ?>
     </button>
     <?= /** @noEscape */ $modal ?>
 </div>
+<script>
+    function initBdusQuotationModal() {
+        const config = (() => {
+            const configElement = document.getElementById('bdus-quotation-modal-config');
+            if (!configElement || !configElement.textContent) {
+                return {};
+            }
+            try {
+                return JSON.parse(configElement.textContent);
+            } catch (error) {
+                console.error('Unable to parse quotation modal config', error);
+                return {};
+            }
+        })();
+
+        return {
+            saveUrl: config.saveUrl || '',
+            imageUrl: config.imageUrl || '',
+            recaptchaSiteKey: config.recaptchaSiteKey || '',
+            recaptchaScriptUrl: config.recaptchaScriptUrl || '',
+            recaptchaEnabled: Boolean(config.recaptchaEnabled),
+            successMessage: config.successMessage || '',
+            errorMessage: config.errorMessage || '',
+            defaultSku: config.defaultSku || '',
+            name: '',
+            phone: '',
+            email: '',
+            sku: config.defaultSku || '',
+            requestType: 'Request For Quotation',
+            productImage: '',
+            message: '',
+            messageType: '',
+            isSubmitting: false,
+            init() {
+                document.addEventListener('click', (event) => {
+                    const trigger = event.target.closest('.calltoprice');
+                    if (!trigger) {
+                        return;
+                    }
+                    event.preventDefault();
+                    this.openQuotation({
+                        sku: trigger.dataset.sku || '',
+                        requestType: trigger.dataset.requestType || 'Call For Price',
+                    }, trigger);
+                });
+            },
+            openQuotation(options = {}, focusTarget = null) {
+                this.resetForm();
+                this.sku = options.sku || this.defaultSku || '';
+                this.requestType = options.requestType || 'Request For Quotation';
+                this.productImage = '';
+                if (this.sku) {
+                    this.loadProductImage(this.sku);
+                }
+                this.show('dialog', focusTarget);
+            },
+            resetForm() {
+                this.name = '';
+                this.phone = '';
+                this.email = '';
+                this.message = '';
+                this.messageType = '';
+                this.isSubmitting = false;
+            },
+            loadProductImage(sku) {
+                const body = new URLSearchParams({ product_sku: sku });
+                fetch(this.imageUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: body.toString(),
+                    credentials: 'same-origin',
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data && data.json_data) {
+                            this.productImage = data.json_data;
+                        }
+                    })
+                    .catch(() => {});
+            },
+            submitQuotation() {
+                if (this.isSubmitting) {
+                    return;
+                }
+                this.message = '';
+                if (this.recaptchaEnabled) {
+                    this.executeRecaptcha((token) => this.postQuotation(token));
+                } else {
+                    this.postQuotation('');
+                }
+            },
+            executeRecaptcha(callback) {
+                const run = () => {
+                    grecaptcha.ready(() => {
+                        grecaptcha.execute(this.recaptchaSiteKey, { action: 'quotation_form' })
+                            .then((token) => callback(token))
+                            .catch(() => this.showError('<?= $escaper->escapeJs(__('reCAPTCHA validation failed, please try again')) ?>'));
+                    });
+                };
+
+                if (window.grecaptcha) {
+                    run();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.src = this.recaptchaScriptUrl;
+                script.async = true;
+                script.onload = run;
+                script.onerror = () => this.showError('<?= $escaper->escapeJs(__('Unable to load reCAPTCHA. Please try again.')) ?>');
+                document.head.appendChild(script);
+            },
+            postQuotation(recaptchaToken = '') {
+                this.isSubmitting = true;
+
+                const body = new URLSearchParams({
+                    form_key: hyva.getFormKey(),
+                    name: this.name.trim(),
+                    phone: this.phone.trim(),
+                    email: this.email.trim(),
+                    request_type: this.requestType,
+                    recaptchaToken: recaptchaToken,
+                });
+
+                if (this.sku) {
+                    body.append('sku', this.sku);
+                    body.append('product_sku', this.sku);
+                }
+
+                fetch(this.saveUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                        'X-Requested-With': 'XMLHttpRequest',
+                    },
+                    body: body.toString(),
+                    credentials: 'same-origin',
+                })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        if (data && data.success) {
+                            this.showSuccess(this.successMessage);
+                            if (window.dispatchMessages) {
+                                window.dispatchMessages([{ type: 'success', text: this.successMessage }], 5000);
+                            }
+                            setTimeout(() => {
+                                this.hide();
+                                this.resetForm();
+                                this.sku = this.defaultSku;
+                                this.requestType = 'Request For Quotation';
+                                this.productImage = '';
+                            }, 2500);
+                            return;
+                        }
+                        this.showError(data.message || this.errorMessage);
+                    })
+                    .catch(() => this.showError(this.errorMessage))
+                    .finally(() => {
+                        this.isSubmitting = false;
+                    });
+            },
+            showSuccess(text) {
+                this.messageType = 'success';
+                this.message = text;
+            },
+            showError(text) {
+                this.messageType = 'error';
+                this.message = text;
+                if (window.dispatchMessages) {
+                    window.dispatchMessages([{ type: 'error', text }], 5000);
+                }
+            },
+        };
+    }
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>

@@ -11,6 +11,9 @@
         <css src="css/frontendff.css"/>
     </head>
     <body>
+        <!-- Legacy BSD_Getaquote listing modal uses RequireJS; Hyvä uses bdus.hyva.quotation.modal instead -->
+        <referenceBlock name="getaquote_index_index" remove="true"/>
+
         <referenceContainer name="after.body.start">
             <block class="Magento\Framework\View\Element\FormKey" name="formkey" />
             <block class="Magento\Theme\Block\Html\Notices" name="global_notices" template="Magento_Theme::html/notices.phtml"/>

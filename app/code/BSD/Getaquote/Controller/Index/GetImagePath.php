@@ -49,9 +49,16 @@ class GetImagePath implements ActionInterface
     public function execute()
     {
         $resultJson = $this->jsonFactory->create();
-        $sku = $this->request->getParams('data');
+        $params = $this->request->getParams();
+        $productSku = $params['product_sku']
+            ?? ($params['data']['product_sku'] ?? null);
+
+        if (!$productSku) {
+            return $resultJson->setData(['json_data' => '']);
+        }
+
         $baseUrl = $this->storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA) . 'catalog';
-        $product = $this->productRepositoryInterface->get($sku['product_sku']);
+        $product = $this->productRepositoryInterface->get($productSku);
         if ($product->getData('image')) {
             $image = $product->getData('image');
             $productUlr = $baseUrl . $image;
