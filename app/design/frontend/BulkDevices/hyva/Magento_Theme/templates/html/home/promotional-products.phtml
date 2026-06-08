@@ -18,7 +18,7 @@ $tabs = $promotionalProducts->getTabs();
 $productCount = (int) ($block->getData('product_count') ?: $promotionalProducts->getDefaultProductCount());
 $gridUrl = $block->getUrl('bsd/promotional/grid');
 $defaultTab = $tabs['all'];
-$gridBlock = $block->getChildBlock('promotional_grid');
+$staticAllTabHtml = $block->getChildHtml('promotional_all_static');
 ?>
 
 <section
@@ -62,8 +62,11 @@ $gridBlock = $block->getChildBlock('promotional_grid');
                 <div class="home-product-tabs__loading" x-show="loading" x-cloak>
                     <?= $escaper->escapeHtml(__('Loading products…')) ?>
                 </div>
-                <div x-show="!loading && activeTab === '<?= $escaper->escapeHtmlAttr($defaultTab['id']) ?>'">
-                    <?= /* @noEscape */ $gridBlock?->toHtml() ?>
+                <div
+                    x-show="!loading && activeTab === '<?= $escaper->escapeHtmlAttr($defaultTab['id']) ?>'"
+                    style="display: block"
+                >
+                    <?= /* @noEscape */ $staticAllTabHtml ?>
                 </div>
                 <div
                     x-show="!loading && activeTab !== '<?= $escaper->escapeHtmlAttr($defaultTab['id']) ?>'"

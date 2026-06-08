@@ -22,17 +22,9 @@
                     <arguments>
                         <argument name="product_count" xsi:type="number">8</argument>
                     </arguments>
-                    <block name="home-promotional-grid"
-                           as="promotional_grid"
-                           template="Magento_Theme::html/home/promotional-products-grid.phtml">
-                        <arguments>
-                            <argument name="category_id" xsi:type="number">9969</argument>
-                            <argument name="product_count" xsi:type="number">8</argument>
-                        </arguments>
-                        <block name="home-promotional.product.card"
-                               as="product.card"
-                               template="Magento_Theme::html/product/card.phtml"/>
-                    </block>
+                    <block name="home-promotional-all-static"
+                           as="promotional_all_static"
+                           template="Magento_Theme::html/home/promotional-products-all-static.phtml"/>
                 </block>
                 <block name="home-featured-products"
                        as="home_featured_products"
