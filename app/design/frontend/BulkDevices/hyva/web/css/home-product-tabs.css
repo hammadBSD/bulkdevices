@@ -79,6 +79,15 @@
     min-height: 12rem;
 }
 
+.home-product-tabs__loading,
+.home-product-tabs__empty {
+    margin: 0;
+    padding: 2rem 1rem;
+    text-align: center;
+    font-size: 0.9375rem;
+    color: #6b7280;
+}
+
 .home-product-tabs__panel[aria-hidden="true"] {
     display: none;
 }

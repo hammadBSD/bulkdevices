@@ -1,0 +1,119 @@
+<?php
+
+declare(strict_types=1);
+
+use BSD\Theme\ViewModel\PromotionalProducts;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var PromotionalProducts $promotionalProducts */
+$promotionalProducts = $viewModels->require(PromotionalProducts::class);
+
+$tabs = $promotionalProducts->getTabs();
+$productCount = (int) ($block->getData('product_count') ?: $promotionalProducts->getDefaultProductCount());
+$gridUrl = $block->getUrl('bsd/promotional/grid');
+$defaultTab = $tabs['all'];
+$gridBlock = $block->getChildBlock('promotional_grid');
+?>
+
+<section
+    class="home-product-tabs"
+    aria-labelledby="home-product-tabs-heading"
+    x-data="initHomePromotionalTabs()"
+    x-init="init()"
+>
+    <div class="container home-product-tabs__container">
+        <header class="home-product-tabs__header">
+            <h2 id="home-product-tabs-heading" class="home-product-tabs__title">
+                <?= $escaper->escapeHtml(__('Promotional Products')) ?>
+            </h2>
+            <p class="home-product-tabs__intro">
+                <?= $escaper->escapeHtml(__('Shop top picks across our hottest categories and brands.')) ?>
+            </p>
+        </header>
+        <div class="home-product-tabs__nav" role="tablist" aria-label="<?= $escaper->escapeHtmlAttr(__('Product categories')) ?>">
+            <?php foreach ($tabs as $tab): ?>
+                <button
+                    type="button"
+                    class="home-product-tabs__tab"
+                    role="tab"
+                    id="home-product-tabs-tab-<?= $escaper->escapeHtmlAttr($tab['id']) ?>"
+                    :aria-selected="activeTab === '<?= $escaper->escapeHtmlAttr($tab['id']) ?>'"
+                    :tabindex="activeTab === '<?= $escaper->escapeHtmlAttr($tab['id']) ?>' ? 0 : -1"
+                    @click="selectTab('<?= $escaper->escapeHtmlAttr($tab['id']) ?>', <?= (int) $tab['category_id'] ?>)"
+                    :class="{ 'is-active': activeTab === '<?= $escaper->escapeHtmlAttr($tab['id']) ?>' }"
+                >
+                    <?= $escaper->escapeHtml($tab['label']) ?>
+                </button>
+            <?php endforeach; ?>
+        </div>
+        <div class="home-product-tabs__panels">
+            <div
+                class="home-product-tabs__panel"
+                role="tabpanel"
+                :id="'home-product-tabs-panel-' + activeTab"
+                :aria-labelledby="'home-product-tabs-tab-' + activeTab"
+            >
+                <div class="home-product-tabs__loading" x-show="loading" x-cloak>
+                    <?= $escaper->escapeHtml(__('Loading products…')) ?>
+                </div>
+                <div x-show="!loading && activeTab === '<?= $escaper->escapeHtmlAttr($defaultTab['id']) ?>'">
+                    <?= /* @noEscape */ $gridBlock?->toHtml() ?>
+                </div>
+                <div
+                    x-show="!loading && activeTab !== '<?= $escaper->escapeHtmlAttr($defaultTab['id']) ?>'"
+                    x-html="panels[activeTab]"
+                ></div>
+            </div>
+        </div>
+    </div>
+    <script>
+        function initHomePromotionalTabs() {
+            return {
+                activeTab: '<?= $escaper->escapeJs($defaultTab['id']) ?>',
+                loading: false,
+                panels: {},
+                gridUrl: '<?= $escaper->escapeJs($gridUrl) ?>',
+                productCount: <?= (int) $productCount ?>,
+                init() {},
+                selectTab(tabId, categoryId) {
+                    if (this.activeTab === tabId) {
+                        return;
+                    }
+                    this.activeTab = tabId;
+                    if (tabId === '<?= $escaper->escapeJs($defaultTab['id']) ?>' || this.panels[tabId]) {
+                        return;
+                    }
+                    this.loading = true;
+                    const url = new URL(this.gridUrl, window.location.origin);
+                    url.searchParams.set('category_id', String(categoryId));
+                    url.searchParams.set('product_count', String(this.productCount));
+                    fetch(url.toString(), {
+                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
+                        credentials: 'same-origin'
+                    })
+                        .then((response) => {
+                            if (!response.ok) {
+                                throw new Error('Failed to load products');
+                            }
+                            return response.text();
+                        })
+                        .then((html) => {
+                            this.panels[tabId] = html;
+                        })
+                        .catch(() => {
+                            this.panels[tabId] = '<p class="home-product-tabs__empty"><?= $escaper->escapeJs(__('Unable to load products. Please try again.')) ?></p>';
+                        })
+                        .finally(() => {
+                            this.loading = false;
+                        });
+                }
+            };
+        }
+    </script>
+</section>

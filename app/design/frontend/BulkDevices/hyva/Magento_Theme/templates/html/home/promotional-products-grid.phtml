@@ -1,0 +1,51 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductList;
+use Hyva\Theme\ViewModel\Store;
+use Magento\Catalog\Model\Product\Visibility as ProductVisibility;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductList $productListViewModel */
+$productListViewModel = $viewModels->require(ProductList::class);
+
+/** @var Store $storeViewModel */
+$storeViewModel = $viewModels->require(Store::class);
+
+$categoryId = (string) ($block->getData('category_id') ?: 9969);
+$pageSize = (int) ($block->getData('product_count') ?: 8);
+
+$productListViewModel->addFilter('category_id', $categoryId);
+$productListViewModel->addFilter('website_id', $storeViewModel->getWebsiteId());
+$productListViewModel->addFilter(
+    'visibility',
+    [ProductVisibility::VISIBILITY_IN_CATALOG, ProductVisibility::VISIBILITY_BOTH],
+    'in'
+);
+$productListViewModel->setPageSize($pageSize);
+$productListViewModel->addDescendingSortOrder('created_at');
+
+$products = $productListViewModel->getItems();
+$cardBlock = $block->getChildBlock('product.card');
+?>
+
+<?php if (!$products): ?>
+    <p class="home-product-tabs__empty"><?= $escaper->escapeHtml(__('We can\'t find products matching the selection.')) ?></p>
+<?php else: ?>
+    <ul class="home-product-tabs__grid">
+        <?php foreach ($products as $product): ?>
+            <li class="bb-product-grid__item home-product-tabs__item">
+                <?= $cardBlock
+                    ?->setData('product', $product)
+                    ->toHtml() ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php endif; ?>

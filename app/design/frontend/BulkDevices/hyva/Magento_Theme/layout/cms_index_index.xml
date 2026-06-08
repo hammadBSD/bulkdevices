@@ -3,23 +3,37 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="hyva_quotation_modal"/>
     <head>
-        <css src="css/home-banner.css"/>
-        <css src="css/home-features.css"/>
-        <css src="css/home-industries.css"/>
-        <css src="css/product-card.css"/>
-        <css src="css/home-product-tabs.css"/>
-        <css src="css/home-featured-products.css"/>
-        <css src="css/home-top-categories.css"/>
-        <css src="css/home-whyus.css"/>
-        <css src="css/home-get-started.css"/>
-        <css src="css/home-seo-content.css"/>
-        <css src="css/frontendff.css"/>
+        <css src="css/home.css"/>
+        <link src="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-d.webp"
+              src_type="url"
+              rel="preload"
+              as="image"
+              fetchpriority="high"/>
+        <remove src="Mageplaza_Blog::css/mpBlogIcon.css"/>
     </head>
     <body>
         <referenceContainer name="content">
             <block name="home-content"
                    template="Magento_Theme::html/home/content.phtml"
                    before="-">
+                <block name="home-promotional-products"
+                       as="home_promotional_products"
+                       template="Magento_Theme::html/home/promotional-products.phtml">
+                    <arguments>
+                        <argument name="product_count" xsi:type="number">8</argument>
+                    </arguments>
+                    <block name="home-promotional-grid"
+                           as="promotional_grid"
+                           template="Magento_Theme::html/home/promotional-products-grid.phtml">
+                        <arguments>
+                            <argument name="category_id" xsi:type="number">9969</argument>
+                            <argument name="product_count" xsi:type="number">8</argument>
+                        </arguments>
+                        <block name="home-promotional.product.card"
+                               as="product.card"
+                               template="Magento_Theme::html/product/card.phtml"/>
+                    </block>
+                </block>
                 <block name="home-featured-products"
                        as="home_featured_products"
                        template="Magento_Theme::html/home/featured-products.phtml">
