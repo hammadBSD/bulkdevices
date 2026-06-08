@@ -1,0 +1,55 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+?>
+<div id="quotation-modal-title" class="text-xl font-semibold tracking-wide uppercase mb-4">
+    <?= $escaper->escapeHtml(__('Request For Quotation')) ?>
+</div>
+
+<div class="space-y-3">
+    <div class="field">
+        <label class="sr-only" for="quotation-name"><?= $escaper->escapeHtml(__('Name')) ?></label>
+        <input
+            id="quotation-name"
+            type="text"
+            name="name"
+            class="form-input w-full"
+            placeholder="<?= $escaper->escapeHtmlAttr(__('Name')) ?>"
+        >
+    </div>
+    <div class="field">
+        <label class="sr-only" for="quotation-telephone"><?= $escaper->escapeHtml(__('Telephone')) ?></label>
+        <input
+            id="quotation-telephone"
+            type="tel"
+            name="telephone"
+            class="form-input w-full"
+            placeholder="<?= $escaper->escapeHtmlAttr(__('Telephone')) ?>"
+        >
+    </div>
+    <div class="field">
+        <label class="sr-only" for="quotation-email"><?= $escaper->escapeHtml(__('Email')) ?></label>
+        <input
+            id="quotation-email"
+            type="email"
+            name="email"
+            class="form-input w-full"
+            placeholder="<?= $escaper->escapeHtmlAttr(__('Email')) ?>"
+        >
+    </div>
+</div>
+
+<div class="mt-6 flex flex-wrap justify-end gap-2">
+    <button type="button" class="btn" @click="hide()">
+        <?= $escaper->escapeHtml(__('Cancel')) ?>
+    </button>
+    <button type="button" class="btn btn-primary" @click="hide()">
+        <?= $escaper->escapeHtml(__('Send')) ?>
+    </button>
+</div>

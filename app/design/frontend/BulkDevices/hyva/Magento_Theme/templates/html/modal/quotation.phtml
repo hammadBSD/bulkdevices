@@ -1,0 +1,30 @@
+<?php
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Modal;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$modalViewModel = $viewModels->require(Modal::class);
+
+$modal = $modalViewModel->createModal()
+    ->withTemplate('Magento_Theme::html/modal/quotation-content.phtml')
+    ->withAriaLabelledby('quotation-modal-title');
+?>
+<div x-data="hyva.modal()" class="fixed bottom-4 right-4 z-40">
+    <button
+        type="button"
+        class="btn btn-primary shadow-lg"
+        aria-haspopup="dialog"
+        @click="<?= $escaper->escapeHtmlAttr($modal->getShowJs()) ?>"
+    >
+        <?= $escaper->escapeHtml(__('Request For Quotation')) ?>
+    </button>
+    <?= /** @noEscape */ $modal ?>
+</div>
