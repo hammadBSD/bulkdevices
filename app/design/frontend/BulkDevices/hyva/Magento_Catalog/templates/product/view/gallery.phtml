@@ -150,16 +150,24 @@ $productName = $block->getProduct()->getName();
                     <div id="vimeo-player" class="w-full h-full"></div>
                 </div>
             </div>
+            <p class="bb-pdp-gallery__image-note">
+                <?= $escaper->escapeHtml(__('* NOTE: Image may not exactly match the product')) ?>
+            </p>
         </div>
 
-        <div @resize.window.debounce="calcPageSize(); $nextTick(() => calcActive())">
+        <div
+            class="bb-pdp-gallery-thumbs"
+            x-show="showThumbnails"
+            x-cloak
+            @resize.window.debounce="showThumbnails && calcPageSize(); $nextTick(() => calcActive())"
+        >
             <nav
                 id="thumbs"
                 aria-label="<?= $escaper->escapeHtmlAttr(__('Gallery Thumbnails')) ?>"
                 class="flex items-center gap-4"
                 :class="{ 'fixed justify-center bottom-0 left-0 right-0': fullscreen, 'mx-6' : fullscreen && !isSlider}"
                 style="min-height: 100px;"
-                x-show="images.length > 1"
+                x-show="showThumbnails && images.length > 1"
                 x-cloak
             >
                 <button
@@ -234,6 +242,7 @@ $productName = $block->getProduct()->getName();
         let touchXDown, touchYDown;
 
         return {
+            "showThumbnails": false,
             "galleryReady": false,
             "active": 0,
             "videoData": {},
