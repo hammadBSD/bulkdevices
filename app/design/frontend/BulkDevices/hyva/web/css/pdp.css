@@ -14,3 +14,13 @@
 #gallery .bb-pdp-gallery-thumbs {
     display: none !important;
 }
+
+.bb-pdp-info__actions .bb-pdp-quotation-trigger {
+    min-width: 12rem;
+    padding: 0.625rem 1.5rem;
+    white-space: nowrap;
+}
+
+.bb-pdp-info__purchase:has(.bb-pdp-info__actions--call-for-price) {
+    justify-content: flex-end;
+}

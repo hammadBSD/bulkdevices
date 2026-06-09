@@ -10,7 +10,9 @@ declare(strict_types=1);
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\ProductAttributes;
 use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\ViewModel\ProductPrice;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
@@ -27,6 +29,11 @@ $attributesViewModel = $viewModels->require(ProductAttributes::class);
 /** @var Product $product */
 $product = $productViewModel->getProduct();
 $productType = $product->getTypeId();
+
+/** @var ProductPrice $productPriceViewModel */
+$productPriceViewModel = $viewModels->require(ProductPrice::class);
+$finalPrice = (float) $productPriceViewModel->getPriceValue(FinalPrice::PRICE_CODE, $product);
+$isCallForPrice = $finalPrice <= 0;
 
 ?>
 <div class="card mb-6 bb-pdp-info">
@@ -71,20 +78,32 @@ $productType = $product->getTypeId();
             </span>
         <?php endif; ?>
 
-        <div class="bb-pdp-info__pricing" role="group" aria-label="<?= $escaper->escapeHtmlAttr(__('Price')) ?>">
-            <?= $block->getChildHtml('product.info.price') ?>
-            <?= $block->getChildHtml('product.info.savings') ?>
-        </div>
+        <?php if (!$isCallForPrice): ?>
+            <div class="bb-pdp-info__pricing" role="group" aria-label="<?= $escaper->escapeHtmlAttr(__('Price')) ?>">
+                <?= $block->getChildHtml('product.info.price') ?>
+                <?= $block->getChildHtml('product.info.savings') ?>
+            </div>
+        <?php endif; ?>
 
-        <div class="flex gap-2 mt-4 ml-auto sm:mt-0">
-            <?php if ($product->isSaleable()): ?>
+        <div class="flex gap-2 mt-4 <?= $isCallForPrice ? '' : 'ml-auto' ?> sm:mt-0 bb-pdp-info__actions<?= $isCallForPrice ? ' bb-pdp-info__actions--call-for-price' : '' ?>">
+            <?php if ($isCallForPrice): ?>
+                <button
+                    type="button"
+                    class="btn btn-primary bb-pdp-quotation-trigger"
+                    aria-haspopup="dialog"
+                    data-sku="<?= $escaper->escapeHtmlAttr($product->getSku()) ?>"
+                    data-request-type="<?= $escaper->escapeHtmlAttr(__('Request For Quotation')) ?>"
+                >
+                    <?= $escaper->escapeHtml(__('Request For Quotation')) ?>
+                </button>
+            <?php elseif ($product->isSaleable()): ?>
                 <?= $block->getChildHtml('product.info.quantity') ?>
                 <?= $block->getChildHtml('product.info.addtocart') ?>
             <?php endif; ?>
         </div>
     </div>
 
-    <?php if ($product->isSaleable() && $block->getChildHtml('addtocart.shortcut.buttons')): ?>
+    <?php if ($product->isSaleable() && !$isCallForPrice && $block->getChildHtml('addtocart.shortcut.buttons')): ?>
         <div class="flex mt-4 justify-end">
             <?= $block->getChildHtml('addtocart.shortcut.buttons') ?>
         </div>

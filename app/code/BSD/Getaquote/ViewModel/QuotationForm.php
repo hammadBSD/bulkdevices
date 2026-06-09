@@ -5,6 +5,9 @@ declare(strict_types=1);
 namespace BSD\Getaquote\ViewModel;
 
 use Hyva\Theme\ViewModel\CurrentProduct;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
@@ -19,6 +22,7 @@ class QuotationForm implements ArgumentInterface
         private readonly ScopeConfigInterface $scopeConfig,
         private readonly UrlInterface $urlBuilder,
         private readonly CurrentProduct $currentProduct,
+        private readonly ProductPage $productPage,
     ) {
     }
 
@@ -63,5 +67,44 @@ class QuotationForm implements ArgumentInterface
         }
 
         return (string) $product->getSku();
+    }
+
+    /**
+     * PDP gallery thumbnail — same image id as hidden gallery thumbs.
+     */
+    public function getDefaultProductImageUrl(): string
+    {
+        $product = $this->currentProduct->get();
+        if (!$product || !$product->getId()) {
+            return '';
+        }
+
+        return $this->productPage
+            ->getImage($product, 'product_page_image_small')
+            ->getImageUrl();
+    }
+
+    public function isCallForPriceProduct(): bool
+    {
+        $product = $this->currentProduct->get();
+        if (!$product instanceof Product || !$product->getId()) {
+            return false;
+        }
+
+        $finalPrice = (float) $product->getPriceInfo()
+            ->getPrice(FinalPrice::PRICE_CODE)
+            ->getValue();
+
+        return $finalPrice <= 0;
+    }
+
+    /**
+     * Floating RFQ trigger — category and other pages only, never on PDP.
+     */
+    public function shouldShowFloatingTrigger(): bool
+    {
+        $product = $this->currentProduct->get();
+
+        return !($product instanceof Product && $product->getId());
     }
 }

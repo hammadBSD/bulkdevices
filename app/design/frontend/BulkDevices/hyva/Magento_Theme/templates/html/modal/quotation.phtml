@@ -31,23 +31,25 @@ $config = [
     'recaptchaScriptUrl' => $quotationForm->getRecaptchaScriptUrl(),
     'recaptchaEnabled' => $quotationForm->isRecaptchaEnabled(),
     'defaultSku' => $quotationForm->getDefaultProductSku(),
+    'defaultProductImage' => $quotationForm->getDefaultProductImageUrl(),
     'successMessage' => (string) __('Thanks for contacting us with your comments and questions. We\'ll respond to you very soon.'),
     'errorMessage' => (string) __('We can\'t process your request right now. Sorry, that\'s all we know.'),
 ];
 ?>
 <script type="application/json" id="bdus-quotation-modal-config"><?= /* @noEscape */ json_encode($config) ?></script>
-<div
-    x-data="Object.assign(hyva.modal(), initBdusQuotationModal())"
-    class="fixed bottom-4 right-4 z-40"
->
-    <button
-        type="button"
-        class="btn btn-primary shadow-lg"
-        aria-haspopup="dialog"
-        @click="openQuotation({ requestType: 'Request For Quotation' }, $event.currentTarget)"
-    >
-        <?= $escaper->escapeHtml(__('Request For Quotation')) ?>
-    </button>
+<div x-data="Object.assign(hyva.modal(), initBdusQuotationModal())">
+    <?php if ($quotationForm->shouldShowFloatingTrigger()): ?>
+        <div class="fixed bottom-4 right-4 z-40">
+            <button
+                type="button"
+                class="btn btn-primary shadow-lg"
+                aria-haspopup="dialog"
+                @click="openQuotation({ requestType: 'Request For Quotation' }, $event.currentTarget)"
+            >
+                <?= $escaper->escapeHtml(__('Request For Quotation')) ?>
+            </button>
+        </div>
+    <?php endif; ?>
     <?= /** @noEscape */ $modal ?>
 </div>
 <script>
@@ -74,6 +76,7 @@ $config = [
             successMessage: config.successMessage || '',
             errorMessage: config.errorMessage || '',
             defaultSku: config.defaultSku || '',
+            defaultProductImage: config.defaultProductImage || '',
             name: '',
             phone: '',
             email: '',
@@ -85,14 +88,14 @@ $config = [
             isSubmitting: false,
             init() {
                 document.addEventListener('click', (event) => {
-                    const trigger = event.target.closest('.calltoprice');
+                    const trigger = event.target.closest('.calltoprice, .bb-pdp-quotation-trigger');
                     if (!trigger) {
                         return;
                     }
                     event.preventDefault();
                     this.openQuotation({
                         sku: trigger.dataset.sku || '',
-                        requestType: trigger.dataset.requestType || 'Call For Price',
+                        requestType: trigger.dataset.requestType || 'Request For Quotation',
                     }, trigger);
                 });
             },
@@ -100,8 +103,8 @@ $config = [
                 this.resetForm();
                 this.sku = options.sku || this.defaultSku || '';
                 this.requestType = options.requestType || 'Request For Quotation';
-                this.productImage = '';
-                if (this.sku) {
+                this.productImage = this.resolveProductImage(this.sku);
+                if (this.sku && !this.productImage) {
                     this.loadProductImage(this.sku);
                 }
                 this.show('dialog', focusTarget);
@@ -113,6 +116,21 @@ $config = [
                 this.message = '';
                 this.messageType = '';
                 this.isSubmitting = false;
+            },
+            resolveProductImage(sku) {
+                if (sku && sku === this.defaultSku && this.defaultProductImage) {
+                    return this.defaultProductImage;
+                }
+                return '';
+            },
+            normalizeProductImageUrl(url) {
+                if (!url || typeof url !== 'string') {
+                    return '';
+                }
+                if (url.includes('/media/catalog/') && !url.includes('/media/catalog/product/')) {
+                    return url.replace('/media/catalog/', '/media/catalog/product/');
+                }
+                return url;
             },
             loadProductImage(sku) {
                 const body = new URLSearchParams({ product_sku: sku });
@@ -128,7 +146,7 @@ $config = [
                     .then((response) => response.json())
                     .then((data) => {
                         if (data && data.json_data) {
-                            this.productImage = data.json_data;
+                            this.productImage = this.normalizeProductImageUrl(data.json_data);
                         }
                     })
                     .catch(() => {});
