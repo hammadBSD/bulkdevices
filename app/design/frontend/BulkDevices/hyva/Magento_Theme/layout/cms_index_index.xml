@@ -57,5 +57,10 @@
         <referenceBlock name="slider-2" remove="true"/>
         <referenceBlock name="cms_page" remove="true"/>
         <referenceBlock name="page.main.title" remove="true"/>
+
+        <referenceContainer name="before.body.end">
+            <block name="product.card.qty.script"
+                   template="Magento_Theme::html/product/card-qty-script.phtml"/>
+        </referenceContainer>
     </body>
 </page>

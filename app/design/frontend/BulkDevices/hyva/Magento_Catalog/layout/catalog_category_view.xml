@@ -17,6 +17,8 @@
         </referenceBlock>
 
         <referenceContainer name="before.body.end">
+            <block name="product.card.qty.script"
+                   template="Magento_Theme::html/product/card-qty-script.phtml"/>
             <block name="plp.ajax.layer"
                    template="Magento_Catalog::product/list/ajax-layer.phtml"
                    ifconfig="layered_navigation/general/ajax_enable"/>

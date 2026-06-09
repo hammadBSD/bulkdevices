@@ -26,14 +26,85 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
 
 <aside class="bb-pdp-sidebar" aria-labelledby="bb-pdp-sidebar-heading">
     <div class="bb-pdp-sidebar__inner">
-        <header class="bb-pdp-sidebar__header">
-            <h2 id="bb-pdp-sidebar-heading" class="bb-pdp-sidebar__title">
-                <?= $escaper->escapeHtml(__('Get Started Today')) ?>
-            </h2>
-            <p class="bb-pdp-sidebar__intro">
-                <?= $escaper->escapeHtml(__('Contact us today for stock availability and special discounts.')) ?>
-            </p>
-        </header>
+        
+        <div class="pdp-noticebox bb-pdp-sidebar__notice">
+            <div class="item">
+                <div class="figure">
+                    <img src="https://bulkdevices.com/media/wysiwyg/dollar-icon.webp" alt="" width="32" height="32" loading="lazy">
+                </div>
+                <div class="detail">
+                    <p><?= $escaper->escapeHtml(__('Pay with MasterCard, Visa, AMEX & Discover Cards')) ?></p>
+                </div>
+            </div>
+            <div class="item">
+                <div class="figure">
+                    <img src="https://bulkdevices.com/media/wysiwyg/tick-icon.webp" alt="" width="32" height="32" loading="lazy">
+                </div>
+                <div class="detail">
+                    <p><?= $escaper->escapeHtml(__('PO Accepted from Government Agencies & SMBs')) ?></p>
+                </div>
+            </div>
+            <div class="item">
+                <div class="figure">
+                    <img src="https://bulkdevices.com/media/wysiwyg/delivery-icon.webp" alt="" width="32" height="32" loading="lazy">
+                </div>
+                <div class="detail">
+                    <h3><?= $escaper->escapeHtml(__('Delivery options:')) ?></h3>
+                    <p><?= $escaper->escapeHtml(__('Free ground shipping')) ?></p>
+                    <p><?= $escaper->escapeHtml(__('Overnight shipping - Cutoff time 1 PM PST')) ?></p>
+                    <p><?= $escaper->escapeHtml(__('2-day expedite shipping')) ?></p>
+                </div>
+            </div>
+            <div class="item">
+                <div class="figure">
+                    <img src="https://bulkdevices.com/media/wysiwyg/return-icon.webp" alt="" width="32" height="32" loading="lazy">
+                </div>
+                <div class="detail">
+                    <h3><?= $escaper->escapeHtml(__('Return & Warranty:')) ?></h3>
+                    <p><?= $escaper->escapeHtml(__('As per policy')) ?></p>
+                    <p><?= $escaper->escapeHtml(__('Please refer our policies page')) ?></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bb-pdp-sidebar__support">
+            <img
+                class="bb-pdp-sidebar__support-avatar"
+                src="https://bulkdevices.com/static/frontend/BulkDevices/BSD/en_US/Magento_Catalog/images/support-men.webp"
+                width="85"
+                height="85"
+                alt="<?= $escaper->escapeHtmlAttr(__('Expert Team Support')) ?>"
+                loading="lazy"
+            >
+            <div class="bb-pdp-sidebar__support-body">
+                <p class="bb-pdp-sidebar__support-heading"><?= $escaper->escapeHtml(__('Expert Team Support')) ?></p>
+                <div class="bb-pdp-sidebar__support-links">
+                    <a
+                        class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--chat"
+                        href="javascript:$zopim.livechat.window.show();"
+                    ><?= $escaper->escapeHtml(__('Chat')) ?></a>
+                    <a
+                        class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--whatsapp bb-pdp-sidebar__support-link--desktop"
+                        href="https://web.whatsapp.com/send?phone=+921xxxxxxxxx&amp;text=Enter Default Message for general Whatsapp Chat"
+                        onclick="gtag('event', 'WhatsApp', {'event_action': 'whatsapp_chat', 'event_category': 'Chat', 'event_label': 'Chat_WhatsApp'});"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    ><?= $escaper->escapeHtml(__('Whatsapp')) ?></a>
+                    <a
+                        class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--whatsapp bb-pdp-sidebar__support-link--mobile"
+                        href="https://wa.me/+921xxxxxxxxx&amp;text=Enter Default Message for general Whatsapp Chat"
+                        onclick="gtag('event', 'WhatsApp', {'event_action': 'whatsapp_chat', 'event_category': 'Chat', 'event_label': 'Chat_WhatsApp'});"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    ><?= $escaper->escapeHtml(__('Whatsapp')) ?></a>
+                    <a
+                        class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--email"
+                        href="mailto:support@bulkdevices.com"
+                    ><?= $escaper->escapeHtml(__('Email')) ?></a>
+                </div>
+                <p class="bb-pdp-sidebar__support-note"><?= $escaper->escapeHtml(__('Looking for a quote for special price or bulk quantity')) ?></p>
+            </div>
+        </div>
 
         <form
             class="bb-pdp-sidebar__form form contact"

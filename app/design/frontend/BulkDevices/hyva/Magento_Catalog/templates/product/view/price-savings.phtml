@@ -30,23 +30,26 @@ $savingsAmount = $priceWithoutTax * 0.25;
 if ($priceWithTax <= 0 && $originalPrice <= 0) {
     return;
 }
+
+$percentOff = $originalPrice != 0 ? (int) round(($savingsAmount / $originalPrice) * 100) : 0;
 ?>
 
-<div class="bb-pdp-savings old_prices">
-    <span class="bb-pdp-savings__save saving-price">
-        <span><?= $escaper->escapeHtml(__('Your Save:')) ?></span>
-        <span class="bb-pdp-savings__save-value"><?= /** @noEscape */ $productViewModel->format($savingsAmount) ?></span>
-    </span>
-    <span class="bb-pdp-savings__was old-price">
-        <span class="cut-price"><?= /** @noEscape */ $productViewModel->format($cutPrice) ?></span>
-    </span>
+<div class="bb-pdp-savings old_prices" role="group" aria-label="<?= $escaper->escapeHtmlAttr(__('Price savings')) ?>">
+    <p class="bb-pdp-savings__list">
+        <span class="bb-pdp-savings__list-label"><?= $escaper->escapeHtml(__('List Price:')) ?></span>
+        <s class="bb-pdp-savings__was old-price cut-price"><?= /** @noEscape */ $productViewModel->format($cutPrice) ?></s>
+    </p>
+    <div class="bb-pdp-savings__highlights">
+        <span class="bb-pdp-savings__save saving-price">
+            <span class="bb-pdp-savings__save-label"><?= $escaper->escapeHtml(__('Your Save:')) ?></span>
+            <span class="bb-pdp-savings__save-value"><?= /** @noEscape */ $productViewModel->format($savingsAmount) ?></span>
+        </span>
+        <?php if ($originalPrice != 0): ?>
+            <span class="bb-pdp-savings__percent percent">
+                <?= $escaper->escapeHtml(__('%1% off', $percentOff)) ?>
+            </span>
+        <?php else: ?>
+            <span class="bb-pdp-savings__quote"><?= $escaper->escapeHtml(__('Get a Quote')) ?></span>
+        <?php endif; ?>
+    </div>
 </div>
-
-<?php if ($originalPrice != 0): ?>
-    <?php $percentOff = (int) round(($savingsAmount / $originalPrice) * 100); ?>
-    <span class="bb-pdp-savings__percent percent">
-        <strong><?= $escaper->escapeHtml(__('%1% off', $percentOff)) ?></strong>
-    </span>
-<?php else: ?>
-    <span class="bb-pdp-savings__quote">(<?= $escaper->escapeHtml(__('Get a Quote')) ?>)</span>
-<?php endif; ?>

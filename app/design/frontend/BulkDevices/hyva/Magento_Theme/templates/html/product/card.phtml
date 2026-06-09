@@ -5,6 +5,7 @@ declare(strict_types=1);
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\ProductPage;
 use Hyva\Theme\ViewModel\ProductPrice;
+use Hyva\Theme\ViewModel\ProductStockItem;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Catalog\ViewModel\Product\OptionsData as ProductOptionsData;
@@ -31,6 +32,9 @@ $productPriceViewModel = $viewModels->require(ProductPrice::class);
 /** @var ProductOptionsData $productOptionsViewModel */
 $productOptionsViewModel = $viewModels->require(ProductOptionsData::class);
 
+/** @var ProductStockItem $stockItemViewModel */
+$stockItemViewModel = $viewModels->require(ProductStockItem::class);
+
 /** @var PricingHelper $pricingHelper */
 $pricingHelper = $this->helper(PricingHelper::class);
 
@@ -53,6 +57,18 @@ $imageLoading = (string) ($imageCustomAttributes['loading'] ?? 'lazy');
 $imageFetchPriority = isset($imageCustomAttributes['fetchpriority'])
     ? (string) $imageCustomAttributes['fetchpriority']
     : null;
+$defaultQty = max(1, (int) $stockItemViewModel->getMinSaleQty($product));
+$minSalesQty = (int) $defaultQty;
+$maxSalesQty = (int) $stockItemViewModel->getMaxSaleQty($product);
+$qtyStep = (int) ($stockItemViewModel->getQtyIncrements($product) ?: 1);
+if ($qtyStep > 1) {
+    $minSalesQty = (int) (ceil($minSalesQty / $qtyStep) * $qtyStep);
+    if ($maxSalesQty) {
+        $maxSalesQty = (int) (floor($maxSalesQty / $qtyStep) * $qtyStep);
+    }
+    $defaultQty = (int) (ceil($defaultQty / $qtyStep) * $qtyStep);
+}
+$qtyInputId = 'bb-card-qty-' . $productId;
 ?>
 
 <article class="bb-product-card home-product-tabs__card">
@@ -117,14 +133,57 @@ $imageFetchPriority = isset($imageCustomAttributes['fetchpriority'])
                                name="<?= $escaper->escapeHtmlAttr($optionItem['name']) ?>"
                                value="<?= $escaper->escapeHtmlAttr($optionItem['value']) ?>">
                     <?php endforeach; ?>
-                    <button
-                        type="submit"
-                        class="bb-product-card__cta home-product-tabs__cta"
-                        data-addto="cart"
-                        aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Cart %1', $sku)) ?>"
-                    >
-                        <?= $escaper->escapeHtml(__('Add to Cart')) ?>
-                    </button>
+                    <div class="bb-product-card__actions">
+                        <div
+                            class="bb-product-card__qty-selector"
+                            x-data="initProductCardQty({
+                                defaultQty: <?= (int) $defaultQty ?>,
+                                minQty: <?= (int) $minSalesQty ?>,
+                                maxQty: <?= $maxSalesQty > 0 ? (int) $maxSalesQty : 'null' ?>,
+                                step: <?= (int) $qtyStep ?>
+                            })"
+                        >
+                            <label class="sr-only" for="<?= $escaper->escapeHtmlAttr($qtyInputId) ?>">
+                                <?= $escaper->escapeHtml(__('Quantity for %1', $sku)) ?>
+                            </label>
+                            <button
+                                type="button"
+                                class="bb-product-card__qty-btn"
+                                @click="decrement()"
+                                :disabled="isMinQty()"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Decrease quantity')) ?>"
+                            >−</button>
+                            <input type="number"
+                                   name="qty"
+                                   id="<?= $escaper->escapeHtmlAttr($qtyInputId) ?>"
+                                   class="bb-product-card__qty form-input qty"
+                                   x-model.number="qty"
+                                   @change="clampQty()"
+                                   @blur="clampQty()"
+                                   min="<?= (int) $minSalesQty ?>"
+                                   <?php if ($maxSalesQty > 0): ?>
+                                   max="<?= (int) $maxSalesQty ?>"
+                                   <?php endif; ?>
+                                   step="<?= (int) $qtyStep ?>"
+                                   inputmode="numeric"
+                                   aria-label="<?= $escaper->escapeHtmlAttr(__('Quantity')) ?>">
+                            <button
+                                type="button"
+                                class="bb-product-card__qty-btn"
+                                @click="increment()"
+                                :disabled="isMaxQty()"
+                                aria-label="<?= $escaper->escapeHtmlAttr(__('Increase quantity')) ?>"
+                            >+</button>
+                        </div>
+                        <button
+                            type="submit"
+                            class="bb-product-card__cta home-product-tabs__cta"
+                            data-addto="cart"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Cart %1', $sku)) ?>"
+                        >
+                            <?= $escaper->escapeHtml(__('Add to Cart')) ?>
+                        </button>
+                    </div>
                 </form>
             <?php endif; ?>
         <?php endif; ?>
