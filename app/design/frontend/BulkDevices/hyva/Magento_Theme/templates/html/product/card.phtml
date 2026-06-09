@@ -134,6 +134,9 @@ $qtyInputId = 'bb-card-qty-' . $productId;
                                value="<?= $escaper->escapeHtmlAttr($optionItem['value']) ?>">
                     <?php endforeach; ?>
                     <div class="bb-product-card__actions">
+                        <label class="sr-only" for="<?= $escaper->escapeHtmlAttr($qtyInputId) ?>">
+                            <?= $escaper->escapeHtml(__('Quantity for %1', $sku)) ?>
+                        </label>
                         <div
                             class="bb-product-card__qty-selector"
                             x-data="initProductCardQty({
@@ -143,12 +146,9 @@ $qtyInputId = 'bb-card-qty-' . $productId;
                                 step: <?= (int) $qtyStep ?>
                             })"
                         >
-                            <label class="sr-only" for="<?= $escaper->escapeHtmlAttr($qtyInputId) ?>">
-                                <?= $escaper->escapeHtml(__('Quantity for %1', $sku)) ?>
-                            </label>
                             <button
                                 type="button"
-                                class="bb-product-card__qty-btn"
+                                class="bb-product-card__qty-btn bb-product-card__qty-btn--decrement"
                                 @click="decrement()"
                                 :disabled="isMinQty()"
                                 aria-label="<?= $escaper->escapeHtmlAttr(__('Decrease quantity')) ?>"
@@ -156,7 +156,7 @@ $qtyInputId = 'bb-card-qty-' . $productId;
                             <input type="number"
                                    name="qty"
                                    id="<?= $escaper->escapeHtmlAttr($qtyInputId) ?>"
-                                   class="bb-product-card__qty form-input qty"
+                                   class="bb-product-card__qty"
                                    x-model.number="qty"
                                    @change="clampQty()"
                                    @blur="clampQty()"
@@ -169,7 +169,7 @@ $qtyInputId = 'bb-card-qty-' . $productId;
                                    aria-label="<?= $escaper->escapeHtmlAttr(__('Quantity')) ?>">
                             <button
                                 type="button"
-                                class="bb-product-card__qty-btn"
+                                class="bb-product-card__qty-btn bb-product-card__qty-btn--increment"
                                 @click="increment()"
                                 :disabled="isMaxQty()"
                                 aria-label="<?= $escaper->escapeHtmlAttr(__('Increase quantity')) ?>"
