@@ -1,0 +1,144 @@
+<?php
+/**
+ * Hyvä-native AJAX layered navigation & pagination (Mageplaza JSON backend).
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+
+?>
+<script>
+    function initPlpAjaxLayer() {
+        return {
+            loading: false,
+            init() {
+                if (!document.getElementById('layer-product-list')) {
+                    return;
+                }
+
+                window.hyvaPlpAjaxNavigate = (url, isPopState = false) => this.navigate(url, isPopState);
+
+                if (typeof window.history.replaceState === 'function' && !window.history.state?.url) {
+                    window.history.replaceState({url: document.URL}, document.title, document.URL);
+                }
+
+                window.addEventListener('popstate', (event) => {
+                    if (event.state?.url) {
+                        this.navigate(event.state.url, true);
+                    }
+                });
+
+                document.addEventListener('click', (event) => this.onLinkClick(event));
+            },
+            onLinkClick(event) {
+                const link = event.target.closest('#layer-product-list a[href], #layered-filter-block-container a[href]');
+                if (!link || !this.shouldIntercept(link, event)) {
+                    return;
+                }
+
+                event.preventDefault();
+                this.navigate(link.href);
+            },
+            shouldIntercept(link, event) {
+                if (event.defaultPrevented || event.button !== 0) {
+                    return false;
+                }
+                if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+                    return false;
+                }
+                if (link.target && link.target !== '_self') {
+                    return false;
+                }
+
+                const href = link.getAttribute('href');
+                if (!href || href.startsWith('#') || href.startsWith('javascript:')) {
+                    return false;
+                }
+
+                try {
+                    const url = new URL(link.href, window.location.origin);
+                    if (url.origin !== window.location.origin) {
+                        return false;
+                    }
+                } catch (error) {
+                    return false;
+                }
+
+                return true;
+            },
+            setLoading(isLoading) {
+                this.loading = isLoading;
+                document.getElementById('layer-product-list')?.classList.toggle('is-loading', isLoading);
+                document.getElementById('layered-filter-block-container')?.classList.toggle('is-loading', isLoading);
+            },
+            replaceHtml(containerId, html) {
+                const container = document.getElementById(containerId);
+                if (!container || !html) {
+                    return;
+                }
+
+                container.innerHTML = html;
+
+                if (typeof hyva !== 'undefined' && typeof hyva.activateScripts === 'function') {
+                    hyva.activateScripts(container);
+                }
+                if (typeof Alpine !== 'undefined' && typeof Alpine.initTree === 'function') {
+                    Alpine.initTree(container);
+                }
+            },
+            async navigate(url, isPopState = false) {
+                if (this.loading) {
+                    return;
+                }
+
+                this.setLoading(true);
+
+                try {
+                    const response = await fetch(url, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-Requested-With': 'XMLHttpRequest'
+                        },
+                        body: JSON.stringify({mp_layer: 1}),
+                        credentials: 'same-origin'
+                    });
+
+                    if (!response.ok) {
+                        throw new Error('Request failed');
+                    }
+
+                    const data = await response.json();
+
+                    if (data.backUrl) {
+                        window.location.href = data.backUrl;
+                        return;
+                    }
+
+                    if (!isPopState && typeof window.history.pushState === 'function') {
+                        window.history.pushState({url}, '', url);
+                    }
+
+                    this.replaceHtml('layer-product-list', data.products);
+                    this.replaceHtml('layered-filter-block-container', data.navigation);
+
+                    const productList = document.getElementById('product-list');
+                    if (productList) {
+                        productList.focus({preventScroll: true});
+                        productList.scrollIntoView({behavior: 'smooth', block: 'start'});
+                    }
+                } catch (error) {
+                    window.location.href = url;
+                } finally {
+                    this.setLoading(false);
+                }
+            }
+        };
+    }
+</script>
+<div x-data="initPlpAjaxLayer()" x-init="init()" class="hidden" aria-hidden="true"></div>

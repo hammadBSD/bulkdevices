@@ -48,6 +48,11 @@ $isCallForPrice = $finalPrice <= 0;
 $showFromLabel = !$isCallForPrice && in_array($productType, ['configurable', 'bundle', 'grouped'], true);
 $formattedPrice = $pricingHelper->currency($product->getFinalPrice(), true, false);
 $options = $productOptionsViewModel->getOptionsData($product);
+$imageCustomAttributes = $product->getData('image_custom_attributes') ?? [];
+$imageLoading = (string) ($imageCustomAttributes['loading'] ?? 'lazy');
+$imageFetchPriority = isset($imageCustomAttributes['fetchpriority'])
+    ? (string) $imageCustomAttributes['fetchpriority']
+    : null;
 ?>
 
 <article class="bb-product-card home-product-tabs__card">
@@ -57,7 +62,10 @@ $options = $productOptionsViewModel->getOptionsData($product);
              width="250"
              height="250"
              alt="<?= $escaper->escapeHtmlAttr($imageLabel) ?>"
-             loading="lazy"
+             loading="<?= $escaper->escapeHtmlAttr($imageLoading) ?>"
+             <?php if ($imageFetchPriority): ?>
+             fetchpriority="<?= $escaper->escapeHtmlAttr($imageFetchPriority) ?>"
+             <?php endif; ?>
              decoding="async">
     </a>
     <div class="bb-product-card__body home-product-tabs__body">

@@ -1,0 +1,40 @@
+/**
+ * Category / PLP overrides.
+ * Base layout uses Hyvä Tailwind defaults; product cards use product-card.css.
+ */
+
+.catalog-category-view #layer-product-list.is-loading,
+.catalog-category-view #layered-filter-block-container.is-loading {
+    opacity: 0.55;
+    pointer-events: none;
+    transition: opacity 0.15s ease;
+}
+
+/* Hide "Items X–Y of Z" on category pages */
+.catalog-category-view .toolbar-amount {
+    display: none;
+}
+
+/* Top toolbar: view mode left, Show + Sort inline on the right */
+.catalog-category-view .bb-plp-toolbar-top {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.catalog-category-view .bb-plp-toolbar-top > .modes,
+.catalog-category-view .bb-plp-toolbar-top > .modes + div:empty {
+    flex: 0 0 auto;
+}
+
+.catalog-category-view .bb-plp-toolbar-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem 1rem;
+    margin-left: auto;
+    flex: 0 0 auto;
+}

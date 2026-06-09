@@ -1,0 +1,140 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+$product = $productViewModel->getProduct();
+$productSku = (string) $product->getSku();
+$contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
+?>
+
+<aside class="bb-pdp-sidebar" aria-labelledby="bb-pdp-sidebar-heading">
+    <div class="bb-pdp-sidebar__inner">
+        <header class="bb-pdp-sidebar__header">
+            <h2 id="bb-pdp-sidebar-heading" class="bb-pdp-sidebar__title">
+                <?= $escaper->escapeHtml(__('Get Started Today')) ?>
+            </h2>
+            <p class="bb-pdp-sidebar__intro">
+                <?= $escaper->escapeHtml(__('Contact us today for stock availability and special discounts.')) ?>
+            </p>
+        </header>
+
+        <form
+            class="bb-pdp-sidebar__form form contact"
+            action="<?= $escaper->escapeUrl($contactFormAction) ?>"
+            id="pdp-contact-form"
+            method="post"
+            data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>"
+        >
+            <?= $block->getBlockHtml('formkey') ?>
+            <fieldset class="bb-pdp-sidebar__fieldset">
+                <legend class="sr-only"><?= $escaper->escapeHtml(__('Write Us')) ?></legend>
+                <div class="bb-pdp-sidebar__fields">
+                    <div class="field name required">
+                        <label class="sr-only" for="pdp-contact-name"><?= $escaper->escapeHtml(__('Full Name')) ?></label>
+                        <input
+                            name="name"
+                            id="pdp-contact-name"
+                            class="bb-pdp-sidebar__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Full Name')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Full Name')) ?>"
+                            required
+                        >
+                    </div>
+                    <div class="field email required">
+                        <label class="sr-only" for="pdp-contact-email"><?= $escaper->escapeHtml(__('Email Address')) ?></label>
+                        <input
+                            name="email"
+                            id="pdp-contact-email"
+                            class="bb-pdp-sidebar__input"
+                            type="email"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Email Address')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Email Address')) ?>"
+                            required
+                        >
+                    </div>
+                    <div class="field telephone">
+                        <label class="sr-only" for="pdp-contact-telephone"><?= $escaper->escapeHtml(__('Phone Number')) ?></label>
+                        <input
+                            name="telephone"
+                            id="pdp-contact-telephone"
+                            class="bb-pdp-sidebar__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
+                        >
+                    </div>
+                    <div class="field company">
+                        <label class="sr-only" for="pdp-contact-company"><?= $escaper->escapeHtml(__('Company')) ?></label>
+                        <input
+                            name="company"
+                            id="pdp-contact-company"
+                            class="bb-pdp-sidebar__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Company')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Company')) ?>"
+                        >
+                    </div>
+                    <div class="field requiredqty">
+                        <label class="sr-only" for="pdp-contact-requiredqty"><?= $escaper->escapeHtml(__('Required Quantity')) ?></label>
+                        <input
+                            name="requiredqty"
+                            id="pdp-contact-requiredqty"
+                            class="bb-pdp-sidebar__input"
+                            type="text"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Required Quantity')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Required Quantity')) ?>"
+                        >
+                    </div>
+                    <div class="field partnum">
+                        <label class="sr-only" for="pdp-contact-partnum"><?= $escaper->escapeHtml(__('Part Number')) ?></label>
+                        <input
+                            name="partnum"
+                            id="pdp-contact-partnum"
+                            class="bb-pdp-sidebar__input"
+                            type="text"
+                            value="<?= $escaper->escapeHtmlAttr($productSku) ?>"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Part Number')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Part Number')) ?>"
+                        >
+                    </div>
+                    <div class="field comment required">
+                        <label class="sr-only" for="pdp-contact-comment"><?= $escaper->escapeHtml(__('Message')) ?></label>
+                        <textarea
+                            name="comment"
+                            id="pdp-contact-comment"
+                            class="bb-pdp-sidebar__textarea"
+                            placeholder="<?= $escaper->escapeHtmlAttr(__('Message')) ?>"
+                            title="<?= $escaper->escapeHtmlAttr(__('Message')) ?>"
+                            rows="4"
+                            required
+                        ></textarea>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="bb-pdp-sidebar__actions">
+                <input type="hidden" name="hideit" value="">
+                <button type="submit" class="bb-pdp-sidebar__submit" title="<?= $escaper->escapeHtmlAttr(__('Submit')) ?>">
+                    <span><?= $escaper->escapeHtml(__('Submit Now')) ?></span>
+                </button>
+            </div>
+        </form>
+    </div>
+</aside>

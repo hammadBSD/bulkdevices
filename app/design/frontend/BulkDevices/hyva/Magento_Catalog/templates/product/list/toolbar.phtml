@@ -1,0 +1,115 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ *
+ * This file includes sections of software developed by Magento, Inc.
+ * (https://github.com/magento/magento2) and distributed under the AFL v3.0.
+ */
+
+declare(strict_types=1);
+
+use Magento\Catalog\Block\Product\ProductList\Toolbar;
+use Magento\Framework\Escaper;
+
+/** @var Escaper $escaper */
+/** @var Toolbar $block */
+
+$uniqueId = '_' . uniqid();
+$additionalOptions = ['page' => 'p'];
+?>
+<script>
+    function initToolbar<?= /** @noEscape */  $uniqueId ?>() {
+        return {
+            options: <?= /* @noEscape */ $block->getWidgetOptionsJson($additionalOptions) ?>.productListToolbarForm || {},
+            getUrlParams: function () {
+                let decode = window.decodeURIComponent,
+                    urlPaths = this.options.url.split('?'),
+                    urlParams = urlPaths[1] ? urlPaths[1].split('&') : [],
+                    params = {},
+                    parameters, i;
+
+                for (i = 0; i < urlParams.length; i++) {
+                    parameters = urlParams[i].split('=');
+                    params[decode(parameters[0])] = parameters[1] !== undefined ?
+                        decode(parameters[1].replace(/\+/g, '%20')) :
+                        '';
+                }
+
+                return params;
+            },
+            getCurrentLimit: function () {
+                return this.getUrlParams()[this.options.limit] || this.options.limitDefault;
+            },
+            getCurrentPage: function () {
+                return this.getUrlParams()[this.options.page] || 1;
+            },
+            buildUrl(paramName, paramValue, defaultValue) {
+                let urlPaths = this.options.url.split('?'),
+                    baseUrl = urlPaths[0],
+                    paramData = this.getUrlParams(),
+                    currentPage = this.getCurrentPage(),
+                    newPage;
+
+                if (currentPage > 1 && paramName === this.options.limit) {
+                    newPage = Math.floor(this.getCurrentLimit() * (currentPage - 1) / paramValue) + 1;
+
+                    if (newPage > 1) {
+                        paramData[this.options.page] = newPage;
+                    } else {
+                        delete paramData[this.options.page];
+                    }
+                }
+
+                paramData[paramName] = paramValue;
+
+                if (this.options.post) {
+                    return { baseUrl, paramData };
+                }
+
+                if (paramValue === defaultValue.toString()) {
+                    delete paramData[paramName];
+                }
+
+                const query = Object.keys(paramData).length === 0
+                    ? ''
+                    : '?' + (new URLSearchParams(paramData));
+
+                return baseUrl + query;
+            },
+            changeUrl(paramName, paramValue, defaultValue) {
+                if (this.options.post) {
+                    const built = this.buildUrl(paramName, paramValue, defaultValue);
+                    hyva.postForm({action: built.baseUrl, data: built.paramData, skipUenc: true});
+                    return;
+                }
+
+                const url = this.buildUrl(paramName, paramValue, defaultValue);
+
+                if (document.getElementById('layer-product-list') && typeof window.hyvaPlpAjaxNavigate === 'function') {
+                    window.hyvaPlpAjaxNavigate(url);
+                    return;
+                }
+
+                location.href = url;
+            }
+        }
+    }
+</script>
+<?php if ($block->getCollection()->getSize()): ?>
+    <div x-data="initToolbar<?= /** @noEscape */ $uniqueId ?>()"
+         class="toolbar toolbar-products <?= $block->getIsBottom() ? 'toolbar-bottom grid grid-cols-4 sm:grid-cols-8 md:grid-cols-4 lg:grid-cols-8 grid-flow-row gap-2 items-center' : 'toolbar-top bb-plp-toolbar-top' ?>">
+        <?php if ($block->getIsBottom()): ?>
+            <?= $block->getPagerHtml() ?>
+        <?php else: ?>
+            <?php if ($block->isExpanded()): ?>
+                <?= /** @noEscape */ $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/viewmode.phtml')) ?>
+                <div class="bb-plp-toolbar-controls">
+                    <?= /** @noEscape */ $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/limiter.phtml')) ?>
+                    <?= /** @noEscape */ $block->fetchView($block->getTemplateFile('Magento_Catalog::product/list/toolbar/sorter.phtml')) ?>
+                </div>
+            <?php endif ?>
+        <?php endif ?>
+    </div>
+<?php endif ?>

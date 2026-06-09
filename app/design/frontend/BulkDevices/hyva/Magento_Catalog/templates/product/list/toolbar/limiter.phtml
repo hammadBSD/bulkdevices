@@ -1,0 +1,50 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\LocaleFormatter;
+use Magento\Catalog\Block\Product\ProductList\Toolbar;
+use Magento\Framework\Escaper;
+
+/** @var Toolbar $block */
+/** @var Escaper $escaper */
+/** @var LocaleFormatter $localeFormatter */
+
+$availableLimitOptions = $block->getAvailableLimit();
+
+?>
+
+<?php if (count($availableLimitOptions) > 1): ?>
+    <div class="field limiter flex items-center shrink-0">
+        <div class="control">
+            <label class="text-sm label flex items-center">
+                <span class="mr-2" aria-label="<?= $escaper->escapeHtmlAttr(__('Show items per page')) ?>">
+                    <?= $escaper->escapeHtml((string)__('Show')) ?>
+                </span>
+                <select
+                    class="form-select limiter-options"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Show items per page')) ?>"
+                    @change="changeUrl(
+                        'product_list_limit',
+                        $event.currentTarget.options[$event.currentTarget.selectedIndex].value,
+                        options.limitDefault
+                    )"
+                >
+                <?php foreach ($block->getAvailableLimit() as $key => $limit): ?>
+                    <option value="<?= $escaper->escapeHtmlAttr($key) ?>"
+                        <?php if ($block->isLimitCurrent($key)): ?>
+                            selected="selected"
+                        <?php endif ?>>
+                        <?= $escaper->escapeHtml(is_numeric($limit) ? $localeFormatter->formatNumber((int) $limit) : $limit) ?>
+                    </option>
+                <?php endforeach; ?>
+                </select>
+            </label>
+        </div>
+    </div>
+<?php endif; ?>

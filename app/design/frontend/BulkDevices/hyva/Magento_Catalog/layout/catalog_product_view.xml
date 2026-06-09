@@ -156,6 +156,12 @@
                            as="product_options_wrapper_bottom"
                            template="Magento_Catalog::product/view/options/wrapper/bottom.phtml"/>
 
+                    <block
+                        class="Magento\Framework\View\Element\Template"
+                        name="product.detail.sidebar"
+                        template="Magento_Catalog::product/view/sidebar.phtml"
+                    />
+
                     <block class="Magento\Catalog\Block\Product\View\Details"
                            name="product.info.details"
                            template="Magento_Catalog::product/view/sections/product-sections.phtml">

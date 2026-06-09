@@ -14,14 +14,24 @@ use Magento\Framework\Escaper;
 /** @var Escaper $escaper */
 ?>
 
-<section
-    class="pb-6 md:py-6 grid grid-cols-1 gap-4 md:items-start md:grid-cols-[42%_minmax(0px,1fr)] lg:grid-cols-2 lg:gap-x-10"
-    aria-label="<?= $escaper->escapeHtmlAttr(__('Product Info')) ?>"
->
-    <?= $block->getChildHtml('product.media') ?>
-    <?= $block->getChildHtml('product.info') ?>
-</section>
+<div class="bb-pdp-page">
+    <div class="bb-pdp-page__layout">
+        <div class="bb-pdp-page__main">
+            <section
+                class="bb-pdp-hero pb-6 md:py-6 grid grid-cols-1 gap-4 md:items-start md:grid-cols-[42%_minmax(0px,1fr)] lg:grid-cols-2 lg:gap-x-10"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Product Info')) ?>"
+            >
+                <?= $block->getChildHtml('product.media') ?>
+                <?= $block->getChildHtml('product.info') ?>
+            </section>
 
-<?= $block->getChildHtml('product_options_wrapper_bottom') ?>
+            <?= $block->getChildHtml('product_options_wrapper_bottom') ?>
 
-<?= $block->getChildHtml('product.info.details'); ?>
+            <div class="bb-pdp-page__details">
+                <?= $block->getChildHtml('product.info.details'); ?>
+            </div>
+        </div>
+
+        <?= $block->getChildHtml('product.detail.sidebar') ?>
+    </div>
+</div>

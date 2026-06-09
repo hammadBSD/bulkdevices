@@ -1,0 +1,63 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Catalog\Block\Product\ProductList\Toolbar;
+use Magento\Framework\Escaper;
+
+/** @var Toolbar $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+?>
+<div class="toolbar-sorter sorter flex items-center shrink-0">
+    <label class="inline-block mr-3">
+        <select data-role="sorter"
+                name="sorter"
+                class="form-select sorter-options"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Sort By')) ?>"
+                @change="changeUrl(
+                    'product_list_order',
+                    $event.currentTarget.options[$event.currentTarget.selectedIndex].value,
+                    options.orderDefault
+                )">
+            <?php foreach ($block->getAvailableOrders() as $orderCode => $orderLabel):?>
+                <option value="<?= $escaper->escapeHtmlAttr($orderCode) ?>"
+                    <?php if ($block->isOrderCurrent($orderCode)): ?>
+                        selected="selected"
+                    <?php endif; ?>
+                    >
+                    <?= $escaper->escapeHtml(__($orderLabel)) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </label>
+    <?php if ($block->getCurrentDirection() == 'desc'): ?>
+        <button
+            title="<?= $escaper->escapeHtmlAttr(__('Set Ascending Direction')) ?>"
+            type="button"
+            class="action sorter-action sort-desc"
+            @click.prevent="changeUrl('product_list_dir', 'asc', options.directionDefault)"
+        >
+            <?= $heroicons->sortAscendingHtml('', 24, 24, ['aria-hidden' => 'true']); ?>
+        </button>
+    <?php else: ?>
+        <button
+            type="button"
+            title="<?= $escaper->escapeHtmlAttr(__('Set Descending Direction')) ?>"
+            class="action sorter-action sort-asc"
+            @click.prevent="changeUrl('product_list_dir', 'desc', options.directionDefault)"
+        >
+            <?= $heroicons->sortDescendingHtml('', 24, 24, ['aria-hidden' => 'true']); ?>
+        </button>
+    <?php endif; ?>
+</div>

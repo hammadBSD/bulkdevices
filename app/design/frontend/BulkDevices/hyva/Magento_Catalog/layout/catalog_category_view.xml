@@ -2,8 +2,24 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="hyva_quotation_modal"/>
+    <head>
+        <css src="css/plp.css"/>
+        <css src="css/product-card.css"/>
+    </head>
     <body>
         <referenceBlock name="custom.block" remove="true"/>
         <referenceBlock name="getaquote_index_index" remove="true"/>
+
+        <referenceBlock name="category.products.list">
+            <block name="category.product.card"
+                   as="product.card"
+                   template="Magento_Theme::html/product/card.phtml"/>
+        </referenceBlock>
+
+        <referenceContainer name="before.body.end">
+            <block name="plp.ajax.layer"
+                   template="Magento_Catalog::product/list/ajax-layer.phtml"
+                   ifconfig="layered_navigation/general/ajax_enable"/>
+        </referenceContainer>
     </body>
 </page>
