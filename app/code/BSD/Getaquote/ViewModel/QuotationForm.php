@@ -9,6 +9,7 @@ use Hyva\Theme\ViewModel\ProductPage;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\App\RequestInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\ScopeInterface;
@@ -23,6 +24,7 @@ class QuotationForm implements ArgumentInterface
         private readonly UrlInterface $urlBuilder,
         private readonly CurrentProduct $currentProduct,
         private readonly ProductPage $productPage,
+        private readonly RequestInterface $request,
     ) {
     }
 
@@ -61,12 +63,11 @@ class QuotationForm implements ArgumentInterface
 
     public function getDefaultProductSku(): string
     {
-        $product = $this->currentProduct->get();
-        if (!$product || !$product->getId()) {
+        if (!$this->currentProduct->exists()) {
             return '';
         }
 
-        return (string) $product->getSku();
+        return (string) $this->currentProduct->get()->getSku();
     }
 
     /**
@@ -74,20 +75,23 @@ class QuotationForm implements ArgumentInterface
      */
     public function getDefaultProductImageUrl(): string
     {
-        $product = $this->currentProduct->get();
-        if (!$product || !$product->getId()) {
+        if (!$this->currentProduct->exists()) {
             return '';
         }
 
         return $this->productPage
-            ->getImage($product, 'product_page_image_small')
+            ->getImage($this->currentProduct->get(), 'product_page_image_small')
             ->getImageUrl();
     }
 
     public function isCallForPriceProduct(): bool
     {
+        if (!$this->currentProduct->exists()) {
+            return false;
+        }
+
         $product = $this->currentProduct->get();
-        if (!$product instanceof Product || !$product->getId()) {
+        if (!$product instanceof Product) {
             return false;
         }
 
@@ -99,12 +103,14 @@ class QuotationForm implements ArgumentInterface
     }
 
     /**
-     * Floating RFQ trigger — category and other pages only, never on PDP.
+     * Floating RFQ trigger — category and other pages only, never on PDP or homepage.
      */
     public function shouldShowFloatingTrigger(): bool
     {
-        $product = $this->currentProduct->get();
+        if ($this->currentProduct->exists()) {
+            return false;
+        }
 
-        return !($product instanceof Product && $product->getId());
+        return !in_array($this->request->getFullActionName(), ['cms_index_index'], true);
     }
 }

@@ -96,6 +96,7 @@ $config = [
                     this.openQuotation({
                         sku: trigger.dataset.sku || '',
                         requestType: trigger.dataset.requestType || 'Request For Quotation',
+                        productImage: trigger.dataset.productImage || '',
                     }, trigger);
                 });
             },
@@ -103,7 +104,9 @@ $config = [
                 this.resetForm();
                 this.sku = options.sku || this.defaultSku || '';
                 this.requestType = options.requestType || 'Request For Quotation';
-                this.productImage = this.resolveProductImage(this.sku);
+                this.productImage = this.normalizeProductImageUrl(
+                    options.productImage || this.resolveProductImage(this.sku)
+                );
                 if (this.sku && !this.productImage) {
                     this.loadProductImage(this.sku);
                 }

@@ -1,6 +1,7 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="hyva_quotation_modal"/>
     <head>
         <css src="css/home.css"/>
         <link src="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-m.webp"
@@ -30,7 +31,11 @@
                     </arguments>
                     <block name="home-promotional-all-static"
                            as="promotional_all_static"
-                           template="Magento_Theme::html/home/promotional-products-all-static.phtml"/>
+                           template="Magento_Theme::html/home/promotional-products-all-static.phtml">
+                        <block name="home.promotional.product.card"
+                               as="product.card"
+                               template="Magento_Theme::html/product/card.phtml"/>
+                    </block>
                 </block>
                 <block name="home-featured-products"
                        as="home_featured_products"

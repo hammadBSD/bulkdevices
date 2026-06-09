@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\ViewModel\ProductPrice;
 use Magento\Catalog\Model\Product;
+use Magento\Catalog\Pricing\Price\FinalPrice;
+use Magento\Catalog\ViewModel\Product\OptionsData as ProductOptionsData;
 use Magento\Framework\Escaper;
 use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 use Magento\Framework\View\Element\Template;
@@ -22,17 +25,29 @@ if (!$product instanceof Product) {
 /** @var ProductPage $productViewModel */
 $productViewModel = $viewModels->require(ProductPage::class);
 
+/** @var ProductPrice $productPriceViewModel */
+$productPriceViewModel = $viewModels->require(ProductPrice::class);
+
+/** @var ProductOptionsData $productOptionsViewModel */
+$productOptionsViewModel = $viewModels->require(ProductOptionsData::class);
+
 /** @var PricingHelper $pricingHelper */
 $pricingHelper = $this->helper(PricingHelper::class);
 
 $productUrl = parse_url($product->getProductUrl(), PHP_URL_PATH) ?: $product->getProductUrl();
 $productName = (string) $product->getName();
 $sku = (string) $product->getSku();
+$productId = (int) $product->getId();
+$productType = $product->getTypeId();
+$isGroupedOrBundle = in_array($productType, ['bundle', 'grouped'], true);
 $image = $productViewModel->getImage($product, 'category_page_grid');
 $imageUrl = $image->getImageUrl();
 $imageLabel = $image->getLabel() ?: $productName;
-$showFromLabel = in_array($product->getTypeId(), ['configurable', 'bundle', 'grouped'], true);
+$finalPrice = (float) $productPriceViewModel->getPriceValue(FinalPrice::PRICE_CODE, $product);
+$isCallForPrice = $finalPrice <= 0;
+$showFromLabel = !$isCallForPrice && in_array($productType, ['configurable', 'bundle', 'grouped'], true);
 $formattedPrice = $pricingHelper->currency($product->getFinalPrice(), true, false);
+$options = $productOptionsViewModel->getOptionsData($product);
 ?>
 
 <article class="bb-product-card home-product-tabs__card">
@@ -50,14 +65,60 @@ $formattedPrice = $pricingHelper->currency($product->getFinalPrice(), true, fals
             <a href="<?= $escaper->escapeUrl($productUrl) ?>"><?= $escaper->escapeHtml($sku) ?></a>
         </h3>
         <p class="bb-product-card__desc home-product-tabs__desc"><?= $escaper->escapeHtml($productName) ?></p>
-        <p class="bb-product-card__price home-product-tabs__price">
-            <?php if ($showFromLabel): ?>
-                <span class="bb-product-card__price-label home-product-tabs__price-label"><?= $escaper->escapeHtml(__('From')) ?></span>
+        <?php if (!$isCallForPrice): ?>
+            <p class="bb-product-card__price home-product-tabs__price">
+                <?php if ($showFromLabel): ?>
+                    <span class="bb-product-card__price-label home-product-tabs__price-label"><?= $escaper->escapeHtml(__('From')) ?></span>
+                <?php endif; ?>
+                <?= $escaper->escapeHtml($formattedPrice) ?>
+            </p>
+        <?php endif; ?>
+        <?php if ($isCallForPrice): ?>
+            <button
+                type="button"
+                class="bb-product-card__cta home-product-tabs__cta bb-pdp-quotation-trigger"
+                aria-haspopup="dialog"
+                data-sku="<?= $escaper->escapeHtmlAttr($sku) ?>"
+                data-product-image="<?= $escaper->escapeHtmlAttr($imageUrl) ?>"
+                data-request-type="<?= $escaper->escapeHtmlAttr(__('Request For Quotation')) ?>"
+            >
+                <?= $escaper->escapeHtml(__('Request For Quotation')) ?>
+            </button>
+        <?php elseif ($product->isSaleable()): ?>
+            <?php if ($isGroupedOrBundle): ?>
+                <a
+                    class="bb-product-card__cta home-product-tabs__cta"
+                    href="<?= $escaper->escapeUrl($productUrl) ?>"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Cart %1', $sku)) ?>"
+                >
+                    <?= $escaper->escapeHtml(__('Add to Cart')) ?>
+                </a>
+            <?php else: ?>
+                <form
+                    method="post"
+                    action="<?= $escaper->escapeUrl($productViewModel->getAddToCartUrl($product, ['useUencPlaceholder' => true])) ?>"
+                    class="bb-product-card__atc-form product_addtocart_form"
+                    <?php if ($product->getOptions()): ?>
+                        enctype="multipart/form-data"
+                    <?php endif; ?>
+                >
+                    <?= /** @noEscape */ $block->getBlockHtml('formkey') ?>
+                    <input type="hidden" name="product" value="<?= $productId ?>">
+                    <?php foreach ($options as $optionItem): ?>
+                        <input type="hidden"
+                               name="<?= $escaper->escapeHtmlAttr($optionItem['name']) ?>"
+                               value="<?= $escaper->escapeHtmlAttr($optionItem['value']) ?>">
+                    <?php endforeach; ?>
+                    <button
+                        type="submit"
+                        class="bb-product-card__cta home-product-tabs__cta"
+                        data-addto="cart"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Cart %1', $sku)) ?>"
+                    >
+                        <?= $escaper->escapeHtml(__('Add to Cart')) ?>
+                    </button>
+                </form>
             <?php endif; ?>
-            <?= $escaper->escapeHtml($formattedPrice) ?>
-        </p>
-        <a class="bb-product-card__cta home-product-tabs__cta" href="<?= $escaper->escapeUrl($productUrl) ?>">
-            <?= $escaper->escapeHtml(__('View product')) ?>
-        </a>
+        <?php endif; ?>
     </div>
 </article>
