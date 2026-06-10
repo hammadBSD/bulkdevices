@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Hyva\ThemeFallback\Service\FallbackPolicy">
+        <plugin name="hyva_custom_checkout_prevent_fallback"
+                type="Hyva\CustomCheckout\Plugin\ThemeFallback\PreventCheckoutFallback"
+                sortOrder="10"/>
+    </type>
+</config>

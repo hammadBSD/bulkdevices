@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Thank You</title>
+        <css src="Hyva_CustomCheckout::css/checkout.css"/>
+    </head>
+    <body>
+        <attribute name="class" value="hyva-custom-checkout hyva-checkout-success"/>
+
+        <referenceContainer name="header.container" remove="true"/>
+        <referenceContainer name="footer-container" remove="true"/>
+        <referenceBlock name="footer" remove="true"/>
+
+        <referenceContainer name="page.top">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hyva.checkout.header"
+                   template="Hyva_CustomCheckout::page/checkout-header.phtml"
+                   before="-"/>
+        </referenceContainer>
+
+        <referenceBlock name="page.main.title" remove="true"/>
+
+        <referenceContainer name="content">
+            <block class="Magento\Checkout\Block\Onepage\Success"
+                   name="checkout.success"
+                   template="Hyva_CustomCheckout::success.phtml"
+                   cacheable="false"/>
+        </referenceContainer>
+
+        <referenceContainer name="page.bottom">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hyva.checkout.footer"
+                   template="Hyva_CustomCheckout::page/checkout-footer.phtml"
+                   after="-"/>
+        </referenceContainer>
+
+        <referenceBlock name="init.external.scripts"
+                        template="Hyva_Theme::page/js/init-external-scripts-user-interaction-bypass.phtml"/>
+    </body>
+</page>

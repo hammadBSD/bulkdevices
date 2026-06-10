@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>SECURE CHECKOUT</title>
+        <css src="css/checkout-hcc.css"/>
+        <css src="Hyva_CustomCheckout::css/checkout.css"/>
+        <remove src="StripeIntegration_Payments::css/wallets.css"/>
+        <remove src="StripeIntegration_Payments::css/stripe_payments.css"/>
+        <script src="https://js.stripe.com/v3/" src_type="url"/>
+        <script src="Hyva_CustomCheckout::js/checkout-stripe.js"/>
+    </head>
+    <body>
+        <attribute name="class" value="hyva-custom-checkout"/>
+
+        <referenceContainer name="header.container" remove="true"/>
+        <referenceContainer name="footer-container" remove="true"/>
+        <referenceBlock name="footer" remove="true"/>
+        <referenceBlock name="header-content" remove="true"/>
+        <referenceBlock name="topmenu" remove="true"/>
+        <referenceBlock name="fallback.module.missing" remove="true"/>
+        <referenceBlock name="page.main.title" remove="true"/>
+        <referenceBlock name="checkout.root" remove="true"/>
+
+        <referenceContainer name="page.top">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hyva.checkout.header"
+                   template="Hyva_CustomCheckout::page/checkout-header.phtml"
+                   before="-"/>
+        </referenceContainer>
+
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hyva.checkout.main"
+                   before="-"
+                   template="Hyva_CustomCheckout::magewire/checkout.phtml"
+                   cacheable="false">
+                <arguments>
+                    <argument name="magewire" xsi:type="object">Hyva\CustomCheckout\Magewire\Checkout</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+
+        <referenceContainer name="page.bottom">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="hyva.checkout.footer"
+                   template="Hyva_CustomCheckout::page/checkout-footer.phtml"
+                   after="-"/>
+        </referenceContainer>
+
+        <referenceBlock name="yireo_googletagmanager2.data-layer">
+            <arguments>
+                <argument name="data_layer_processors" xsi:type="array">
+                    <item name="checkout" xsi:type="object">Yireo\GoogleTagManager2\DataLayer\Processor\Checkout</item>
+                </argument>
+                <argument name="data_layer_events" xsi:type="array">
+                    <item name="begin_checkout" xsi:type="array">
+                        <item name="event" xsi:type="string">begin_checkout</item>
+                        <item name="ecommerce" xsi:type="array">
+                            <item name="items" xsi:type="object">Yireo\GoogleTagManager2\DataLayer\Tag\Cart\CartItems</item>
+                        </item>
+                    </item>
+                </argument>
+            </arguments>
+        </referenceBlock>
+    </body>
+</page>

@@ -7,7 +7,8 @@
 /**
  * Environment initialization
  */
-error_reporting(E_ALL);
+// Suppress E_DEPRECATED for third-party modules not yet updated for PHP 8.2+ (e.g. StripeIntegration)
+error_reporting(E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED);
 if (in_array('phar', \stream_get_wrappers())) {
     stream_wrapper_unregister('phar');
 }

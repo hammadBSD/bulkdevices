@@ -1,0 +1,33 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+?>
+<footer class="hcc-footer">
+    <div class="hcc-footer__inner">
+        <nav class="hcc-footer__links" aria-label="<?= $escaper->escapeHtmlAttr(__('Checkout footer links')) ?>">
+            <a href="<?= $escaper->escapeUrl($block->getUrl('warranty-info')) ?>"><?= $escaper->escapeHtml(__('Warranty Info')) ?></a>
+            <span class="hcc-footer__sep">|</span>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('shipping-policy')) ?>"><?= $escaper->escapeHtml(__('Shipping Policy')) ?></a>
+            <span class="hcc-footer__sep">|</span>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('return-policy')) ?>"><?= $escaper->escapeHtml(__('Return Policy')) ?></a>
+            <span class="hcc-footer__sep">|</span>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('privacy-policy')) ?>"><?= $escaper->escapeHtml(__('Privacy Policy')) ?></a>
+            <span class="hcc-footer__sep">|</span>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('terms-and-condition')) ?>"><?= $escaper->escapeHtml(__('Terms and Condition')) ?></a>
+        </nav>
+        <div class="hcc-footer__contact">
+            <p class="hcc-footer__address">1919 Taylor Street STE F Houston, TX 77007</p>
+            <p class="hcc-footer__phone">
+                <a href="tel:+19036774333">(903) 677-4333</a>
+            </p>
+            <p class="hcc-footer__email">
+                <a href="mailto:support@bulkdevices.com">support@bulkdevices.com</a>
+            </p>
+        </div>
+    </div>
+</footer>

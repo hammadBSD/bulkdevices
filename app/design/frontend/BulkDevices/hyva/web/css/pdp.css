@@ -31,11 +31,11 @@
     min-width: 0;
 }
 
-/* Layout — desktop: main 70%, sidebar 30% */
+/* Layout — desktop: main 75%, sidebar 25% */
 @media (min-width: 1200px) {
     .bb-pdp-page__layout {
         display: grid;
-        grid-template-columns:calc(70% - 0.5vw) calc(30% - 0.5vw);
+        grid-template-columns:calc(75% - 0.5vw) calc(25% - 0.5vw);
         align-items: start;
     }
 }

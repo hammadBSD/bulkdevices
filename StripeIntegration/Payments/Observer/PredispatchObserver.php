@@ -8,10 +8,8 @@ use StripeIntegration\Payments\Helper\Logger;
 class PredispatchObserver implements ObserverInterface
 {
     public function __construct(
-        \Magento\Framework\Event\ManagerInterface $eventManager
-    )
-    {
-        $this->_eventManager = $eventManager;
+        private readonly \Magento\Framework\Event\ManagerInterface $eventManager
+    ) {
     }
 
     /**
@@ -19,7 +17,8 @@ class PredispatchObserver implements ObserverInterface
      */
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-        if (!empty($_SERVER['REQUEST_URI']) && stripos($_SERVER['REQUEST_URI'],"directory/currency/switch") !== false)
-            $this->_eventManager->dispatch('stripe_payments_currency_switch');
+        if (!empty($_SERVER['REQUEST_URI']) && stripos($_SERVER['REQUEST_URI'], 'directory/currency/switch') !== false) {
+            $this->eventManager->dispatch('stripe_payments_currency_switch');
+        }
     }
 }

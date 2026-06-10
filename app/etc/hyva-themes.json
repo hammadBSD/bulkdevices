@@ -5,6 +5,12 @@
         },
         {
             "src": "vendor/mollie/magento2-hyva-compatibility/src/Mollie_HyvaCompatibility"
+        },
+        {
+            "src": "vendor/magewirephp/magewire/src"
+        },
+        {
+            "src": "vendor/magewirephp/magewire/themes/Hyva"
         }
     ]
 }

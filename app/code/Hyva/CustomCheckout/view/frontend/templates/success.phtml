@@ -1,0 +1,23 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Checkout\Block\Onepage\Success;
+use Magento\Framework\Escaper;
+
+/** @var Success $block */
+/** @var Escaper $escaper */
+
+$orderId = $block->getOrderId();
+?>
+<div class="hcc-success">
+    <h1><?= $escaper->escapeHtml(__('Thank you for your purchase!')) ?></h1>
+    <?php if ($orderId): ?>
+        <p><?= $escaper->escapeHtml(__('Your order number is: %1', $orderId)) ?></p>
+    <?php endif; ?>
+    <p><?= $escaper->escapeHtml(__('We\'ll email you an order confirmation with details and tracking info.')) ?></p>
+    <p style="margin-top: 1.5rem">
+        <a href="<?= $escaper->escapeUrl($block->getUrl('')) ?>" class="hcc-header__signin">
+            <?= $escaper->escapeHtml(__('Continue Shopping')) ?>
+        </a>
+    </p>
+</div>

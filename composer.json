@@ -22,7 +22,9 @@
         "hyva-themes/magento2-theme-fallback": "*",
         "magento/composer-dependency-version-audit-plugin": "~0.1",
         "magento/composer-root-update-plugin": "~2.0",
-        "magento/product-community-edition": "2.4.6-p7"
+        "magento/product-community-edition": "2.4.6-p7",
+        "magewirephp/magewire": "^3.1",
+        "stripe/stripe-php": "^7.33"
     },
     "autoload": {
         "exclude-from-classmap": [
@@ -31,7 +33,8 @@
             "**/Test/**"
         ],
         "files": [
-            "app/etc/NonComposerComponentRegistration.php"
+            "app/etc/NonComposerComponentRegistration.php",
+            "StripeIntegration/Payments/registration.php"
         ],
         "psr-0": {
             "": [
@@ -42,7 +45,8 @@
         "psr-4": {
             "Magento\\": "app/code/Magento/",
             "Magento\\Framework\\": "lib/internal/Magento/Framework/",
-            "Magento\\Setup\\": "setup/src/Magento/Setup/"
+            "Magento\\Setup\\": "setup/src/Magento/Setup/",
+            "StripeIntegration\\Payments\\": "StripeIntegration/Payments/"
         }
     },
     "require-dev": {

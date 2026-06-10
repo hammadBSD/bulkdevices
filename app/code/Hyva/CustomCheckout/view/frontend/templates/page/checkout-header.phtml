@@ -1,0 +1,47 @@
+<?php
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Logo\LogoPathResolver;
+use Hyva\Theme\ViewModel\StoreConfig;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Magento\Store\Model\Information as StoreInformation;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$logoPathResolver = $viewModels->require(LogoPathResolver::class);
+$storeConfig = $viewModels->require(StoreConfig::class);
+$storePhone = $storeConfig->getStoreConfig(StoreInformation::XML_PATH_STORE_INFO_PHONE) ?: '(903) 677-4333';
+$logoSrc = $logoPathResolver->getLogoSrc();
+?>
+<header class="hcc-header">
+    <div class="hcc-header__inner">
+        <a href="<?= $escaper->escapeUrl($block->getUrl('')) ?>" class="hcc-header__logo" title="<?= $escaper->escapeHtmlAttr(__('Home')) ?>">
+            <img src="<?= $escaper->escapeUrl($logoSrc) ?>"
+                 alt="<?= $escaper->escapeHtmlAttr($block->getLogoAlt() ?: 'BulkDevices') ?>"
+                 width="189"
+                 height="64"
+                 loading="eager"
+                 decoding="async"/>
+        </a>
+        <div class="hcc-header__actions">
+            <a href="tel:<?= $escaper->escapeUrl(preg_replace('/\D+/', '', $storePhone)) ?>"
+               class="hcc-header__call">
+                <?= $escaper->escapeHtml(__('Call Us')) ?> <?= $escaper->escapeHtml($storePhone) ?>
+            </a>
+            <?php if (!$block->getData('hide_sign_in')): ?>
+                <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login', ['referer' => base64_encode($block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]))])) ?>"
+                   class="hcc-header__signin">
+                    <?= $escaper->escapeHtml(__('Sign In')) ?>
+                </a>
+            <?php endif; ?>
+        </div>
+    </div>
+    <div class="hcc-header__title-wrap">
+        <h1 class="hcc-header__title"><?= $escaper->escapeHtml(__('SECURE CHECKOUT')) ?></h1>
+        <p class="hcc-header__subtitle"><?= $escaper->escapeHtml(__('Please enter your details below to complete your purchase')) ?></p>
+    </div>
+</header>
