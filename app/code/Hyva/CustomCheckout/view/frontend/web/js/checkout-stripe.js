@@ -29,27 +29,150 @@ function hyvaCustomCheckoutStripe() {
             }
 
             this.mountStripe();
+            this.bindAddressWatchers();
+        },
+
+        bindAddressWatchers() {
+            const fields = [
+                'countryId', 'postcode', 'city', 'street', 'telephone', 'regionId',
+                'billingSameAsShipping', 'billingCountryId', 'billingPostcode',
+                'billingCity', 'billingStreet', 'billingTelephone', 'billingRegionId'
+            ];
+            fields.forEach((field) => {
+                this.$watch(`$wire.${field}`, () => this.updatePaymentElement());
+            });
+        },
+
+        getElementOptions() {
+            try {
+                return JSON.parse(this.$el.dataset.elementOptions || '{}');
+            } catch (e) {
+                return this.elementOptions || {};
+            }
+        },
+
+        getStripeAmount() {
+            const opts = this.getElementOptions();
+            const fromOpts = parseInt(opts.amount, 10);
+            if (fromOpts > 0) {
+                return fromOpts;
+            }
+            return parseInt(this.$el.dataset.stripeAmount, 10) || 0;
+        },
+
+        getStripeCurrency() {
+            const opts = this.getElementOptions();
+            return (opts.currency || this.$el.dataset.stripeCurrency || 'usd').toLowerCase();
+        },
+
+        buildElementsOptions() {
+            const elementOptions = this.getElementOptions();
+            const mode = elementOptions.mode || 'payment';
+            const options = {
+                mode,
+                locale: elementOptions.locale || this.initParams.locale || 'auto',
+                appearance: elementOptions.appearance || { theme: 'stripe' },
+            };
+
+            if (mode !== 'setup') {
+                options.amount = this.getStripeAmount();
+                options.currency = this.getStripeCurrency();
+            }
+
+            if (elementOptions.payment_method_types) {
+                options.payment_method_types = elementOptions.payment_method_types;
+            }
+
+            if (elementOptions.paymentMethodCreation) {
+                options.paymentMethodCreation = elementOptions.paymentMethodCreation;
+            }
+
+            return options;
         },
 
         mountStripe() {
+            const options = this.buildElementsOptions();
+
+            if (options.mode !== 'setup' && (!options.amount || options.amount <= 0)) {
+                this.stripeError = this.msgUnavailable;
+                return;
+            }
+
             this.stripe = Stripe(this.initParams.apiKey, this.initParams.options || {});
-            this.elements = this.stripe.elements({
-                mode: this.elementOptions.mode || 'payment',
-                locale: this.initParams.locale || 'auto',
-                appearance: this.elementOptions.appearance || { theme: 'stripe' }
-            });
-            this.paymentElement = this.elements.create('payment', {
-                wallets: this.initParams.wallets || undefined
-            });
+            this.elements = this.stripe.elements(options);
+            this.paymentElement = this.elements.create('payment', this.getPaymentElementOptions());
             this.paymentElement.mount('#stripe-payment-element');
         },
 
+        getPaymentElementOptions() {
+            const options = {};
+            if (this.initParams.wallets) {
+                options.wallets = this.initParams.wallets;
+            }
+
+            const wire = this.$wire;
+            const useShipping = wire.billingSameAsShipping;
+            const country = (useShipping ? wire.countryId : wire.billingCountryId)
+                || this.$el.dataset.defaultCountry
+                || 'US';
+            const postcode = useShipping ? wire.postcode : wire.billingPostcode;
+            const city = useShipping ? wire.city : wire.billingCity;
+            const street = useShipping ? wire.street : wire.billingStreet;
+            const phone = useShipping ? wire.telephone : wire.billingTelephone;
+            const regionId = useShipping ? wire.regionId : wire.billingRegionId;
+            const region = useShipping ? wire.region : wire.billingRegion;
+            const hasState = !!(regionId || region);
+
+            // Match StripeIntegration Luma: collect address on checkout form, only ask card + zip in Payment Element.
+            options.fields = {
+                billingDetails: {
+                    name: 'never',
+                    email: 'never',
+                    phone: phone ? 'never' : 'auto',
+                    address: {
+                        line1: street ? 'never' : 'auto',
+                        city: city ? 'never' : 'auto',
+                        state: hasState ? 'never' : 'auto',
+                        country: country ? 'never' : 'auto',
+                        postalCode: postcode ? 'never' : 'auto'
+                    }
+                }
+            };
+
+            const billingDetails = this.getBillingDetails();
+            if (!billingDetails.address.country) {
+                billingDetails.address.country = country;
+            }
+            options.defaultValues = { billingDetails };
+
+            return options;
+        },
+
+        updatePaymentElement() {
+            if (!this.paymentElement || typeof this.paymentElement.update !== 'function') {
+                return;
+            }
+            try {
+                this.paymentElement.update(this.getPaymentElementOptions());
+            } catch (e) {
+                /* Payment Element may not need an update */
+            }
+        },
+
         refreshElements() {
-            if (this.elements && typeof this.elements.update === 'function') {
+            if (!this.elements || typeof this.elements.update !== 'function') {
+                return;
+            }
+
+            const options = this.buildElementsOptions();
+            if (options.mode !== 'setup' && options.amount > 0) {
                 try {
-                    this.elements.update({});
+                    this.elements.update({
+                        amount: options.amount,
+                        currency: options.currency
+                    });
                 } catch (e) {
-                    /* totals may not need update */
+                    /* Stripe may not need an update */
                 }
             }
         },

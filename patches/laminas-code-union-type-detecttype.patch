@@ -1,0 +1,41 @@
+--- a/src/Reflection/ParameterReflection.php
++++ b/src/Reflection/ParameterReflection.php
+@@ -4,9 +4,11 @@ namespace Laminas\Code\Reflection;
+ 
+ use Laminas\Code\Reflection\DocBlock\Tag\ParamTag;
+ use ReflectionClass;
++use ReflectionIntersectionType;
+ use ReflectionMethod;
+ use ReflectionNamedType;
+ use ReflectionParameter;
+ use ReflectionProperty;
++use ReflectionUnionType;
+ use ReturnTypeWillChange;
+ 
+ use function assert;
+@@ -80,14 +82,20 @@ class ParameterReflection extends ReflectionParameter implements ReflectionInter
+      */
+     public function detectType()
+     {
+-        if (
+-            null !== ($type = $this->getType())
+-            && $type->isBuiltin()
+-        ) {
++        $type = $this->getType();
++
++        if ($type instanceof ReflectionUnionType || $type instanceof ReflectionIntersectionType) {
++            $type = $type->getTypes()[0] ?? null;
++        }
++
++        if (
++            $type instanceof ReflectionNamedType
++            && $type->isBuiltin()
++        ) {
+             return $type->getName();
+         }
+ 
+-        if (null !== $type && $type->getName() === 'self') {
++        if ($type instanceof ReflectionNamedType && $type->getName() === 'self') {
+             $declaringClass = $this->getDeclaringClass();
+ 
+             assert($declaringClass !== null, 'A parameter called `self` can only exist on a class');

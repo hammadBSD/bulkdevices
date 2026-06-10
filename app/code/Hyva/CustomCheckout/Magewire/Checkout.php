@@ -108,7 +108,6 @@ class Checkout extends Component
         $this->countries = $this->getCountryOptions();
         $this->regions = $this->regionProvider->getRegionsForCountry($this->countryId);
         $this->stripeConfig = $this->stripeConfigService->getInitParams();
-        $this->stripeElementOptions = $this->stripeConfigService->getElementOptions();
         $this->loadAgreements();
         $this->loadCart();
 
@@ -303,6 +302,19 @@ class Checkout extends Component
             $this->cartItems = [];
             $this->totals = [];
         }
+
+        $this->syncStripeElementOptions();
+    }
+
+    private function syncStripeElementOptions(): void
+    {
+        $this->stripeElementOptions = array_merge(
+            $this->stripeConfigService->getElementOptions(),
+            [
+                'amount' => (int) ($this->totals['stripe_amount'] ?? 0),
+                'currency' => (string) ($this->totals['stripe_currency'] ?? 'usd'),
+            ]
+        );
     }
 
     private function fetchShippingRates(): void
