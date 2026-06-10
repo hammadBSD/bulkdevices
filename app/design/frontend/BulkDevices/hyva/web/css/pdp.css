@@ -5,34 +5,66 @@
 .bb-pdp-page {
     --bb-pdp-accent: #eb7d1e;
     --bb-pdp-accent-hover: #c96a18;
-    --bb-pdp-sidebar-width: 22rem;
+    --bb-pdp-layout-gap: clamp(1rem, 1vw, 2.5rem);
 }
 
-/* Layout */
+/* Layout — mobile: stacked 100% */
 .bb-pdp-page__layout {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    gap: clamp(1.5rem, 3vw, 2.5rem);
-    align-items: start;
-}
-
-@media (min-width: 1200px) {
-    .bb-pdp-page__layout {
-        grid-template-columns: minmax(0, 1fr) var(--bb-pdp-sidebar-width);
-    }
+    display: flex;
+    flex-direction: column;
+    gap: var(--bb-pdp-layout-gap);
+    align-items: stretch;
 }
 
 .bb-pdp-page__main {
+    width: 100%;
     min-width: 0;
 }
 
 .bb-pdp-page__details {
-    margin-top: clamp(1.5rem, 3vw, 2.5rem);
+    width: 100%;
+    /* margin-top: var(--bb-pdp-layout-gap); */
 }
 
-/* Hero (gallery + info) */
+.bb-pdp-sidebar {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Layout — desktop: main 70%, sidebar 30% */
+@media (min-width: 1200px) {
+    .bb-pdp-page__layout {
+        display: grid;
+        grid-template-columns:calc(70% - 0.5vw) calc(30% - 0.5vw);
+        align-items: start;
+    }
+}
+
+/* Hero — mobile: gallery + info stacked 100% */
 .bb-pdp-hero {
+    display: grid;
+    grid-template-columns: 100%;
+    gap: 1rem;
+    align-items: start;
+    width: 100%;
+    padding-bottom: 1.5rem;
     margin-bottom: 0;
+}
+
+.bb-pdp-hero > .bb-pdp-gallery,
+.bb-pdp-hero > .bb-pdp-info {
+    width: 100%;
+    min-width: 0;
+}
+
+/* Hero — desktop: gallery 40%, info 60% */
+@media (min-width: 768px) {
+    .bb-pdp-hero {
+        grid-template-columns: calc(40% - 0.5vw) calc(60% - 0.5vw);
+        gap: clamp(1rem, 1vw, 2.5rem);
+        padding-top: 1.5rem;
+        padding-bottom: 1.5rem;
+    }
 }
 
 /* Product info card */
@@ -113,9 +145,6 @@
 }
 
 .bb-pdp-info__pricing .price {
-    font-size: clamp(1.5rem, 3vw, 1.875rem);
-    font-weight: 700;
-    color: #111827;
     line-height: 1.2;
 }
 
@@ -154,7 +183,7 @@
 }
 
 .bb-pdp-savings__was {
-    color: #9ca3af;
+    color: #ff0000;
     font-size: 0.9375rem;
     font-weight: 500;
     text-decoration: line-through;
@@ -195,7 +224,7 @@
     align-items: center;
     padding: 0.3125rem 0.625rem;
     border-radius: 6px;
-    background: var(--bb-pdp-accent, #eb7d1e);
+    background: #FFC672;
     color: #111827;
     font-size: 0.75rem;
     font-weight: 700;
@@ -253,7 +282,7 @@
 /* Static sidebar — light theme */
 .bb-pdp-sidebar {
     position: sticky;
-    top: calc(var(--header-height, 5rem) + 1rem);
+    top: 0;
     align-self: start;
 }
 
@@ -286,11 +315,9 @@
 }
 
 .bb-pdp-sidebar__form {
-    margin: 0 1.25rem 1.25rem;
+    margin: 0;
     padding: 1.25rem;
     background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
 }
 
 .bb-pdp-sidebar__fieldset {
@@ -310,13 +337,13 @@
     width: 100%;
     box-sizing: border-box;
     margin: 0;
-    padding: 0.75rem 0.875rem;
+    padding: 0.5rem 0.875rem;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     background: #ffffff;
     color: #111827;
     font-size: 0.875rem;
-    line-height: 1.4;
+    line-height: 1;
     outline: none;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -390,8 +417,8 @@
 
 .pdp-noticebox .item {
     display: flex;
-    gap: 0.875rem;
-    padding: 0.875rem 0;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
     border-top: 1px solid #e5e7eb;
 }
 
@@ -402,12 +429,12 @@
 
 .pdp-noticebox .figure {
     flex-shrink: 0;
-    width: 2rem;
+    width: 1.5rem;
 }
 
 .pdp-noticebox .figure img {
     display: block;
-    width: 2rem;
+    width: 1.5rem;
     height: auto;
 }
 
@@ -480,7 +507,7 @@
     min-height: 1.75rem;
     padding: 0.25rem 0.625rem;
     border: 1px solid #d1d5db;
-    border-radius: 999px;
+    border-radius: 6px;
     background: #ffffff;
     font-size: 0.6875rem;
     font-weight: 600;
@@ -541,10 +568,5 @@
     .bb-pdp-sidebar {
         position: static;
         order: 2;
-    }
-
-    .bb-pdp-page__layout {
-        display: flex;
-        flex-direction: column;
     }
 }

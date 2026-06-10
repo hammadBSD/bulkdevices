@@ -55,6 +55,7 @@ $productName = $block->getProduct()->getName();
 
 <section
     id="gallery"
+    class="bb-pdp-gallery min-w-0"
     x-data="initGallery()"
     x-bind="eventListeners"
     aria-label="<?= $escaper->escapeHtmlAttr(__('Gallery')) ?>"

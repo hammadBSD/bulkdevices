@@ -36,7 +36,7 @@
 
         <referenceBlock name="page.main.title">
             <arguments>
-                <argument name="css_classes" xsi:type="string">text-3xl font-semibold mb-8 text-center md:sr-only</argument>
+                <argument name="css_classes" xsi:type="string">text-3xl font-semibold my-6 text-center md:sr-only</argument>
                 <argument name="add_base_attribute" xsi:type="string">itemprop=name</argument>
             </arguments>
         </referenceBlock>

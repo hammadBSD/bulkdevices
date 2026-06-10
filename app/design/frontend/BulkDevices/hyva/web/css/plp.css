@@ -38,3 +38,188 @@
     margin-left: auto;
     flex: 0 0 auto;
 }
+
+/* Category bottom text — full width below PLP columns (page.bottom.container) */
+.page-bottom .plp-category-bottom {
+    --bb-plp-bottom-accent: #eb7d1e;
+    width: 100%;
+    margin-top: 0;
+    padding-bottom: 2rem;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+}
+
+.plp-category-bottom {
+    --bb-plp-bottom-accent: #eb7d1e;
+}
+
+.plp-category-bottom__read-more {
+    padding: clamp(2rem, 4vw, 3rem) 0;
+    background: #ffffff;
+    border-top: 1px solid #e5e7eb;
+}
+
+.plp-category-bottom__container {
+    width: 100%;
+    max-width: 96rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    box-sizing: border-box;
+}
+
+.plp-category-bottom__inner {
+    max-width: 56rem;
+    margin-inline: auto;
+}
+
+.plp-category-bottom__title {
+    margin: 0 0 1rem;
+    font-size: clamp(1.25rem, 2.5vw, 1.625rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: #1f2937;
+}
+
+.plp-category-bottom__title b,
+.plp-category-bottom__title strong {
+    font-weight: inherit;
+}
+
+.plp-category-bottom__lead,
+.plp-category-bottom__more {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #4b5563;
+}
+
+.plp-category-bottom__lead {
+    margin: 0 0 1rem;
+}
+
+.plp-category-bottom__lead a,
+.plp-category-bottom__more a {
+    color: var(--bb-plp-bottom-accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+.plp-category-bottom__more {
+    margin-top: 1.25rem;
+    padding-top: 1.25rem;
+    border-top: 1px dashed #e5e7eb;
+}
+
+.plp-category-bottom__more .category-heading-2,
+.plp-category-bottom__more h2,
+.plp-category-bottom__more h3 {
+    margin: 1.25rem 0 0.75rem;
+    font-size: clamp(1.0625rem, 2vw, 1.25rem);
+    font-weight: 700;
+    line-height: 1.35;
+    color: #1f2937;
+}
+
+.plp-category-bottom__more .category-heading-2:first-child,
+.plp-category-bottom__more h2:first-child,
+.plp-category-bottom__more h3:first-child {
+    margin-top: 0;
+}
+
+.plp-category-bottom__toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    margin-top: 0.25rem;
+    padding: 0;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--bb-plp-bottom-accent);
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.plp-category-bottom__toggle:hover {
+    color: #c96a18;
+}
+
+.plp-category-bottom__toggle::after {
+    content: "";
+    display: inline-block;
+    width: 0.4rem;
+    height: 0.4rem;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(45deg);
+    transition: transform 0.2s ease;
+    margin-top: -0.15rem;
+}
+
+.plp-category-bottom__toggle[aria-expanded="true"]::after {
+    transform: rotate(-135deg);
+    margin-top: 0.15rem;
+}
+
+.plp-category-bottom__toggle:focus-visible {
+    outline: 2px solid var(--bb-plp-bottom-accent);
+    outline-offset: 3px;
+    border-radius: 2px;
+}
+
+/* plp-faq accordion — outside read more, open by default */
+.plp-category-bottom__faq-wrap {
+    margin-top: 1.5rem;
+}
+
+.plp-category-bottom__faq-item {
+    margin-bottom: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #ffffff;
+    overflow: hidden;
+}
+
+.plp-category-bottom__faq-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #1f2937;
+    text-align: start;
+    background: #f9fafb;
+    border: none;
+    cursor: pointer;
+}
+
+.plp-category-bottom__faq-trigger:hover {
+    background: #f3f4f6;
+}
+
+.plp-category-bottom__faq-icon {
+    flex-shrink: 0;
+    padding: 0.125rem 0.25rem;
+    border: 1px solid #d1d5db;
+    border-radius: 4px;
+    background: #ffffff;
+}
+
+.plp-category-bottom__faq-content {
+    padding: 1rem 1.25rem 1.25rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #4b5563;
+}
+
+.plp-category-bottom__faq--static {
+    font-size: 0.9375rem;
+    line-height: 1.7;
+    color: #4b5563;
+}

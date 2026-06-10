@@ -36,7 +36,7 @@ $finalPrice = (float) $productPriceViewModel->getPriceValue(FinalPrice::PRICE_CO
 $isCallForPrice = $finalPrice <= 0;
 
 ?>
-<div class="card mb-6 bb-pdp-info">
+<div class="card bb-pdp-info min-w-0">
     <?= $block->getChildHtml('product.info.title') ?>
 
     <?php if ($shortDescription = $productViewModel->getShortDescription()): ?>

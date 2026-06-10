@@ -16,6 +16,12 @@
                    template="Magento_Theme::html/product/card.phtml"/>
         </referenceBlock>
 
+        <referenceContainer name="page.bottom.container">
+            <block class="Aalogics\CategoryText\Block\CategoryText"
+                   name="category.text.bottom"
+                   template="Magento_Catalog::category/bottom-text.phtml"/>
+        </referenceContainer>
+
         <referenceContainer name="before.body.end">
             <block name="product.card.qty.script"
                    template="Magento_Theme::html/product/card-qty-script.phtml"/>

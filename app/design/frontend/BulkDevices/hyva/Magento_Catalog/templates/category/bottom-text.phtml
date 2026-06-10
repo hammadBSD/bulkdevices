@@ -1,0 +1,135 @@
+<?php
+
+declare(strict_types=1);
+
+use Aalogics\CategoryText\ViewModel\CategoryBottomText;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var CategoryBottomText $categoryBottomViewModel */
+$categoryBottomViewModel = $viewModels->require(CategoryBottomText::class);
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+$parsed = $categoryBottomViewModel->getParsedContent();
+if ($parsed === null || !$parsed['hasContent']) {
+    return;
+}
+
+$hasReadMore = $parsed['more'] !== '';
+$sectionId = 'plp-category-bottom-' . (int) ($parsed['categoryId'] ?? 0);
+?>
+<section
+    class="plp-category-bottom"
+    aria-label="<?= $escaper->escapeHtmlAttr(__('Category information')) ?>"
+>
+    <?php if ($parsed['title'] !== '' || $parsed['lead'] !== '' || $hasReadMore): ?>
+        <div
+            class="plp-category-bottom__read-more"
+            x-data="{ expanded: false }"
+        >
+            <div class="plp-category-bottom__container">
+                <div class="plp-category-bottom__inner">
+                    <?php if ($parsed['title'] !== ''): ?>
+                        <h2 class="plp-category-bottom__title">
+                            <?= /* @noEscape */ $parsed['title'] ?>
+                        </h2>
+                    <?php endif; ?>
+
+                    <?php if ($parsed['lead'] !== ''): ?>
+                        <div class="plp-category-bottom__lead">
+                            <?= /* @noEscape */ $parsed['lead'] ?>
+                        </div>
+                    <?php endif; ?>
+
+                    <?php if ($hasReadMore): ?>
+                        <div
+                            id="<?= $escaper->escapeHtmlAttr($sectionId . '-more') ?>"
+                            class="plp-category-bottom__more"
+                            x-show="expanded"
+                            x-transition
+                            x-cloak
+                            role="region"
+                            aria-labelledby="<?= $escaper->escapeHtmlAttr($sectionId . '-toggle') ?>"
+                        >
+                            <?= /* @noEscape */ $parsed['more'] ?>
+                        </div>
+
+                        <button
+                            type="button"
+                            id="<?= $escaper->escapeHtmlAttr($sectionId . '-toggle') ?>"
+                            class="plp-category-bottom__toggle"
+                            @click="expanded = !expanded"
+                            :aria-expanded="expanded"
+                            aria-controls="<?= $escaper->escapeHtmlAttr($sectionId . '-more') ?>"
+                            x-text="expanded ? '<?= $escaper->escapeJs(__('Read less')) ?>' : '<?= $escaper->escapeJs(__('Read more')) ?>'"
+                        ></button>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($parsed['faqHtml'] !== ''): ?>
+        <div class="plp-category-bottom__container plp-category-bottom__faq-wrap">
+            <?php if ($parsed['faqItems'] !== []): ?>
+                <div
+                    class="plp-category-bottom__faq"
+                    role="region"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Frequently Asked Questions')) ?>"
+                >
+                    <?php foreach ($parsed['faqItems'] as $index => $faqItem): ?>
+                        <div
+                            x-data="{ open: true, id: $id('plp-faq-item') }"
+                            class="plp-category-bottom__faq-item"
+                        >
+                            <h3 :id="`${id}-title`">
+                                <button
+                                    type="button"
+                                    @click="open = !open"
+                                    class="plp-category-bottom__faq-trigger"
+                                    :aria-controls="`${id}-content`"
+                                    :aria-expanded="open"
+                                >
+                                    <span><?= $escaper->escapeHtml($faqItem['title']) ?></span>
+                                    <span class="plp-category-bottom__faq-icon">
+                                        <?= $heroicons->chevronDownHtml(
+                                            'transition-transform transform duration-300 ease-in-out',
+                                            24,
+                                            24,
+                                            [
+                                                ':class' => "{ 'rotate-180': open }",
+                                                'aria-hidden' => 'true',
+                                                'focusable' => 'false',
+                                            ]
+                                        ); ?>
+                                    </span>
+                                </button>
+                            </h3>
+                            <div
+                                :id="`${id}-content`"
+                                class="plp-category-bottom__faq-content"
+                                x-show="open"
+                                role="region"
+                                :aria-labelledby="`${id}-title`"
+                            >
+                                <?= /* @noEscape */ $faqItem['content'] ?>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php else: ?>
+                <div class="plp-category-bottom__faq plp-category-bottom__faq--static">
+                    <?= /* @noEscape */ $parsed['faqHtml'] ?>
+                </div>
+            <?php endif; ?>
+        </div>
+    <?php endif; ?>
+</section>
