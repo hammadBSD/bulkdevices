@@ -31,7 +31,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                     <input id="hcc-email" type="email" wire:model.blur="email" autocomplete="email" required/>
                 </div>
                 <label class="hcc-checkbox">
-                    <input type="checkbox" wire:model.live="createAccount"/>
+                    <input type="checkbox" wire:model.change="createAccount"/>
                     <span><?= $escaper->escapeHtml(__('Create New Account')) ?></span>
                 </label>
                 <?php if ($magewire->createAccount): ?>
@@ -75,7 +75,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
             <div class="hcc-field-row">
                 <div class="hcc-field">
                     <label for="hcc-region"><?= $escaper->escapeHtml(__('State/Province')) ?> <span class="req">*</span></label>
-                    <select id="hcc-region" wire:model.live="regionId" autocomplete="address-level1">
+                    <select id="hcc-region" wire:model.change="regionId" autocomplete="address-level1">
                         <option value=""><?= $escaper->escapeHtml(__('Please select')) ?></option>
                         <?php foreach ($magewire->regions as $region): ?>
                             <option value="<?= $escaper->escapeHtmlAttr($region['id']) ?>"
@@ -93,7 +93,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
 
             <div class="hcc-field">
                 <label for="hcc-country"><?= $escaper->escapeHtml(__('Country')) ?> <span class="req">*</span></label>
-                <select id="hcc-country" wire:model.live="countryId" autocomplete="country">
+                <select id="hcc-country" wire:model.change="countryId" autocomplete="country">
                     <?php foreach ($magewire->countries as $country): ?>
                         <option value="<?= $escaper->escapeHtmlAttr($country['value']) ?>"
                             <?= $magewire->countryId === $country['value'] ? 'selected' : '' ?>>
@@ -122,7 +122,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                             <input type="radio"
                                    name="shipping_method"
                                    value="<?= $escaper->escapeHtmlAttr($methodKey) ?>"
-                                   wire:model.live="selectedShippingMethodKey"/>
+                                   wire:model.change="selectedShippingMethodKey"/>
                             <span class="hcc-shipping-rate__price">$<?= $escaper->escapeHtml($rate['amount_formatted']) ?></span>
                             <span><?= $escaper->escapeHtml($rate['method_title']) ?></span>
                             <span class="hcc-muted-light"><?= $escaper->escapeHtml($rate['carrier_title']) ?></span>
@@ -148,7 +148,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                 <h2 id="hcc-payment-title" class="hcc-card__title"><?= $escaper->escapeHtml(__('Payment Method')) ?></h2>
 
                 <label class="hcc-checkbox">
-                    <input type="checkbox" wire:model.live="billingSameAsShipping"/>
+                    <input type="checkbox" wire:model.change="billingSameAsShipping"/>
                     <span><?= $escaper->escapeHtml(__('My billing and shipping address are the same')) ?></span>
                 </label>
 

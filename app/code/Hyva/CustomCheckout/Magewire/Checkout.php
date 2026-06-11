@@ -14,17 +14,20 @@ use Magento\CheckoutAgreements\Api\CheckoutAgreementsListInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Directory\Helper\Data as DirectoryHelper;
 use Magento\Directory\Model\ResourceModel\Country\CollectionFactory as CountryCollectionFactory;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\ScopeInterface;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\App\ObjectManager;
+use Magento\Framework\App\CacheInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Serialize\SerializerInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Quote\Model\Quote;
+use Magento\Store\Model\StoreManagerInterface;
 use Magewirephp\Magewire\Component;
 
 class Checkout extends Component
 {
+    private const AGREEMENTS_CACHE_KEY = 'hyva_custom_checkout_agreements';
+    private const AGREEMENTS_CACHE_TAG = 'HYVA_CHECKOUT_AGREEMENTS';
+    private const AGREEMENTS_CACHE_LIFETIME = 86400;
     public string $email = '';
     public string $firstname = '';
     public string $lastname = '';
@@ -99,6 +102,11 @@ class Checkout extends Component
         private readonly CountryCollectionFactory $countryCollectionFactory,
         private readonly CheckoutAgreementsListInterface $checkoutAgreementsList,
         private readonly UrlInterface $urlBuilder,
+        private readonly DirectoryHelper $directoryHelper,
+        private readonly SearchCriteriaBuilder $searchCriteriaBuilder,
+        private readonly CacheInterface $cache,
+        private readonly SerializerInterface $serializer,
+        private readonly StoreManagerInterface $storeManager,
     ) {
     }
 
@@ -107,7 +115,6 @@ class Checkout extends Component
         $this->isLoggedIn = $this->customerSession->isLoggedIn();
         $this->countryId = $this->getDefaultCountryId();
         $this->countries = $this->getCountryOptions();
-        $this->regions = $this->regionProvider->getRegionsForCountry($this->countryId);
         $this->stripeConfig = $this->stripeConfigService->getInitParams();
         $this->loadAgreements();
         $this->loadCart();
@@ -123,9 +130,14 @@ class Checkout extends Component
             $quote = $this->quoteProvider->getActiveQuote();
             $shippingAddress = $quote->getShippingAddress();
 
+            if ($shippingAddress->getCountryId()) {
+                $this->countryId = (string) $shippingAddress->getCountryId();
+            }
+
+            $this->regions = $this->regionProvider->getRegionsForCountry($this->countryId);
+
             if ($shippingAddress->getPostcode()) {
                 $this->postcode = (string) $shippingAddress->getPostcode();
-                $this->countryId = (string) ($shippingAddress->getCountryId() ?: 'US');
                 $this->city = (string) $shippingAddress->getCity();
                 $this->street = (string) ($shippingAddress->getStreetLine(1) ?? '');
                 $this->telephone = (string) $shippingAddress->getTelephone();
@@ -137,6 +149,7 @@ class Checkout extends Component
             }
         } catch (LocalizedException) {
             $this->shippingMethods = [];
+            $this->regions = $this->regionProvider->getRegionsForCountry($this->countryId);
         }
     }
 
@@ -202,7 +215,7 @@ class Checkout extends Component
             $this->cartItemService->updateQty($itemId, $qty);
             $this->loadCart();
             $this->fetchShippingRates();
-            $this->dispatchBrowserEvent('checkout-cart-updated');
+            $this->dispatchBrowserEvent('checkout-cart-updated', []);
         } catch (LocalizedException $e) {
             $this->errorMessage = $e->getMessage();
         }
@@ -214,7 +227,7 @@ class Checkout extends Component
             $this->cartItemService->removeItem($itemId);
             $this->loadCart();
             $this->fetchShippingRates();
-            $this->dispatchBrowserEvent('checkout-cart-updated');
+            $this->dispatchBrowserEvent('checkout-cart-updated', []);
         } catch (LocalizedException $e) {
             $this->errorMessage = $e->getMessage();
         }
@@ -399,10 +412,19 @@ class Checkout extends Component
 
     private function loadAgreements(): void
     {
+        $storeId = (int) $this->storeManager->getStore()->getId();
+        $cacheKey = self::AGREEMENTS_CACHE_KEY . '_' . $storeId;
+        $cached = $this->cache->load($cacheKey);
+
+        if (is_string($cached) && $cached !== '') {
+            $agreements = $this->serializer->unserialize($cached);
+            $this->agreements = is_array($agreements) ? $agreements : [];
+            return;
+        }
+
         $this->agreements = [];
-        $searchCriteria = ObjectManager::getInstance()
-            ->get(SearchCriteriaBuilder::class)
-            ->create();
+        $searchCriteria = $this->searchCriteriaBuilder->create();
+
         foreach ($this->checkoutAgreementsList->getList($searchCriteria) as $agreement) {
             if ($agreement->getIsActive()) {
                 $this->agreements[] = [
@@ -413,13 +435,18 @@ class Checkout extends Component
                 ];
             }
         }
+
+        $this->cache->save(
+            $this->serializer->serialize($this->agreements),
+            $cacheKey,
+            [self::AGREEMENTS_CACHE_TAG],
+            self::AGREEMENTS_CACHE_LIFETIME
+        );
     }
 
     private function getDefaultCountryId(): string
     {
-        $default = ObjectManager::getInstance()
-            ->get(ScopeConfigInterface::class)
-            ->getValue(DirectoryHelper::XML_PATH_DEFAULT_COUNTRY, ScopeInterface::SCOPE_STORE);
+        $default = $this->directoryHelper->getDefaultCountry();
 
         return $default ? (string) $default : 'US';
     }

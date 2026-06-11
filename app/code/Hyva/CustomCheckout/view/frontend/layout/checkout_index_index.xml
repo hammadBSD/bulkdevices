@@ -5,9 +5,14 @@
     <head>
         <title>SECURE CHECKOUT</title>
         <css src="css/checkout-hcc.css"/>
-        <css src="Hyva_CustomCheckout::css/checkout.css"/>
+        <remove src="Hyva_CustomCheckout::css/checkout.css"/>
+        <remove src="css/desktop-menu.css"/>
+        <remove src="css/footer-middle.css"/>
+        <remove src="css/frontendff.css"/>
         <remove src="StripeIntegration_Payments::css/wallets.css"/>
         <remove src="StripeIntegration_Payments::css/stripe_payments.css"/>
+        <link rel="preconnect" src="https://js.stripe.com" src_type="url"/>
+        <link rel="preconnect" src="https://api.stripe.com" src_type="url"/>
         <script src="https://js.stripe.com/v3/" src_type="url"/>
         <script src="Hyva_CustomCheckout::js/checkout-stripe.js"/>
     </head>
