@@ -9,6 +9,8 @@ use Magento\Quote\Api\Data\AddressInterfaceFactory;
 use Magento\Quote\Api\ShipmentEstimationInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\Quote\Address\Rate;
+use Magento\Store\Model\ScopeInterface;
+use Pnp\DisableFreeShippingByWeight\Helper\Data as FreeShippingWeightConfig;
 
 class ShippingRateService
 {
@@ -16,7 +18,75 @@ class ShippingRateService
         private readonly QuoteProvider $quoteProvider,
         private readonly AddressInterfaceFactory $addressFactory,
         private readonly ShipmentEstimationInterface $shipmentEstimation,
+        private readonly FreeShippingWeightConfig $freeShippingWeightConfig,
+        private readonly \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
     ) {
+    }
+
+    /**
+     * Light carts (package weight below store threshold) get free ground shipping only.
+     */
+    public function qualifiesForFreeShippingOnly(Quote $quote): bool
+    {
+        if (!$this->freeShippingWeightConfig->isEnabled()) {
+            return false;
+        }
+
+        return $this->getPackageWeight($quote) < $this->freeShippingWeightConfig->getMinWeight();
+    }
+
+    public function getPackageWeight(Quote $quote): float
+    {
+        $weight = 0.0;
+        foreach ($quote->getAllVisibleItems() as $item) {
+            $weight += (float) $item->getWeight() * (float) $item->getQty();
+        }
+
+        return $weight;
+    }
+
+    /**
+     * @return array<int, array{carrier_code: string, method_code: string, carrier_title: string, method_title: string, amount: float, amount_formatted: string}>
+     */
+    public function applyFreeShippingMethod(Quote $quote, string $countryId = 'US'): array
+    {
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingAddress->setCollectShippingRates(true);
+        if (!$shippingAddress->getCountryId()) {
+            $shippingAddress->setCountryId($countryId);
+        }
+        $shippingAddress->collectShippingRates();
+        $shippingAddress->setShippingMethod('freeshipping_freeshipping');
+
+        $quote->setTotalsCollectedFlag(false);
+        $quote->collectTotals();
+        $this->quoteProvider->saveQuote($quote);
+
+        return [$this->resolveFreeShippingRate($quote)];
+    }
+
+    /**
+     * @return array{carrier_code: string, method_code: string, carrier_title: string, method_title: string, amount: float, amount_formatted: string}
+     */
+    private function resolveFreeShippingRate(Quote $quote): array
+    {
+        foreach ($quote->getShippingAddress()->getAllShippingRates() as $rate) {
+            if ($rate->getCarrier() === 'freeshipping') {
+                return $this->formatRate($rate);
+            }
+        }
+
+        return [
+            'carrier_code' => 'freeshipping',
+            'method_code' => 'freeshipping',
+            'carrier_title' => (string) __('Free'),
+            'method_title' => (string) $this->scopeConfig->getValue(
+                'carriers/freeshipping/title',
+                ScopeInterface::SCOPE_STORE
+            ) ?: 'Free Ground Shipping',
+            'amount' => 0.0,
+            'amount_formatted' => '0.00',
+        ];
     }
 
     /**
@@ -40,7 +110,7 @@ class ShippingRateService
         $cartId = (int) $quote->getId();
         $methods = $this->shipmentEstimation->estimateByExtendedAddress($cartId, $address);
 
-        return array_map(static function ($method) {
+        $rates = array_map(static function ($method) {
             return [
                 'carrier_code' => (string) $method->getCarrierCode(),
                 'method_code' => (string) $method->getMethodCode(),
@@ -50,6 +120,21 @@ class ShippingRateService
                 'amount_formatted' => (string) $method->getAmount(),
             ];
         }, $methods);
+
+        if ($this->qualifiesForFreeShippingOnly($quote)) {
+            $freeRates = array_values(array_filter(
+                $rates,
+                static fn (array $rate): bool => $rate['carrier_code'] === 'freeshipping'
+            ));
+
+            if ($freeRates !== []) {
+                return $freeRates;
+            }
+
+            return $this->applyFreeShippingMethod($quote, $addressData['country_id'] ?? 'US');
+        }
+
+        return $rates;
     }
 
     /**
@@ -96,17 +181,25 @@ class ShippingRateService
         foreach ($groups as $carrierRates) {
             /** @var Rate $rate */
             foreach ($carrierRates as $rate) {
-                $rates[] = [
-                    'carrier_code' => (string) $rate->getCarrier(),
-                    'method_code' => (string) $rate->getMethod(),
-                    'carrier_title' => (string) $rate->getCarrierTitle(),
-                    'method_title' => (string) $rate->getMethodTitle(),
-                    'amount' => (float) $rate->getPrice(),
-                    'amount_formatted' => number_format((float) $rate->getPrice(), 2, '.', ''),
-                ];
+                $rates[] = $this->formatRate($rate);
             }
         }
 
         return $rates;
+    }
+
+    /**
+     * @return array{carrier_code: string, method_code: string, carrier_title: string, method_title: string, amount: float, amount_formatted: string}
+     */
+    private function formatRate(Rate $rate): array
+    {
+        return [
+            'carrier_code' => (string) $rate->getCarrier(),
+            'method_code' => (string) $rate->getMethod(),
+            'carrier_title' => (string) $rate->getCarrierTitle(),
+            'method_title' => (string) $rate->getMethodTitle(),
+            'amount' => (float) $rate->getPrice(),
+            'amount_formatted' => number_format((float) $rate->getPrice(), 2, '.', ''),
+        ];
     }
 }

@@ -20,6 +20,7 @@ use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\UrlInterface;
+use Magento\Quote\Model\Quote;
 use Magewirephp\Magewire\Component;
 
 class Checkout extends Component
@@ -132,8 +133,7 @@ class Checkout extends Component
                 $this->regionId = (string) ($shippingAddress->getRegionId() ?? '');
                 $this->fetchShippingRates();
             } else {
-                $this->shippingMethods = $this->shippingRateService->getRatesFromQuote($quote);
-                $this->selectFirstRate();
+                $this->loadInitialShippingMethods($quote);
             }
         } catch (LocalizedException) {
             $this->shippingMethods = [];
@@ -320,12 +320,54 @@ class Checkout extends Component
     private function fetchShippingRates(): void
     {
         try {
+            $quote = $this->quoteProvider->getActiveQuote();
+
+            if ($this->shippingRateService->qualifiesForFreeShippingOnly($quote)) {
+                $this->applyFreeShippingSelection($quote);
+                $this->loadCart();
+                return;
+            }
+
+            if (strlen($this->postcode) < 5) {
+                $this->shippingMethods = [];
+                $this->selectedCarrier = '';
+                $this->selectedMethod = '';
+                $this->selectedShippingMethodKey = '';
+                $this->loadCart();
+                return;
+            }
+
             $this->shippingMethods = $this->shippingRateService->estimateRates($this->getAddressData());
             $this->selectFirstRate();
             $this->loadCart();
         } catch (LocalizedException $e) {
             $this->errorMessage = $e->getMessage();
         }
+    }
+
+    private function loadInitialShippingMethods(Quote $quote): void
+    {
+        if ($this->shippingRateService->qualifiesForFreeShippingOnly($quote)) {
+            $this->applyFreeShippingSelection($quote);
+            $this->loadCart();
+            return;
+        }
+
+        $this->shippingMethods = [];
+        $this->selectedCarrier = '';
+        $this->selectedMethod = '';
+        $this->selectedShippingMethodKey = '';
+    }
+
+    private function applyFreeShippingSelection(Quote $quote): void
+    {
+        $this->shippingMethods = $this->shippingRateService->applyFreeShippingMethod(
+            $quote,
+            $this->countryId ?: 'US'
+        );
+        $this->selectedCarrier = 'freeshipping';
+        $this->selectedMethod = 'freeshipping';
+        $this->selectedShippingMethodKey = 'freeshipping_freeshipping';
     }
 
     private function selectFirstRate(): void
