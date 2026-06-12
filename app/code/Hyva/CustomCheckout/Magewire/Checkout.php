@@ -5,6 +5,7 @@ namespace Hyva\CustomCheckout\Magewire;
 
 use Hyva\CustomCheckout\Model\Checkout\CartItemService;
 use Hyva\CustomCheckout\Model\Checkout\OrderPlacementService;
+use Hyva\CustomCheckout\Model\Checkout\PaymentMethodService;
 use Hyva\CustomCheckout\Model\Checkout\QuoteProvider;
 use Hyva\CustomCheckout\Model\Checkout\RegionProvider;
 use Hyva\CustomCheckout\Model\Checkout\ShippingRateService;
@@ -28,6 +29,7 @@ class Checkout extends Component
     private const AGREEMENTS_CACHE_KEY = 'hyva_custom_checkout_agreements';
     private const AGREEMENTS_CACHE_TAG = 'HYVA_CHECKOUT_AGREEMENTS';
     private const AGREEMENTS_CACHE_LIFETIME = 86400;
+    private const STRIPE_METHOD_CODE = 'stripe_payments';
     public string $email = '';
     public string $firstname = '';
     public string $lastname = '';
@@ -94,9 +96,15 @@ class Checkout extends Component
 
     public bool $pendingShippingRatesRefresh = false;
 
+    /** @var array<int, array{code: string, title: string}> */
+    public array $paymentMethods = [];
+
+    public string $selectedPaymentMethod = '';
+
     public function __construct(
         private readonly QuoteProvider $quoteProvider,
         private readonly RegionProvider $regionProvider,
+        private readonly PaymentMethodService $paymentMethodService,
         private readonly ShippingRateService $shippingRateService,
         private readonly CartItemService $cartItemService,
         private readonly TotalsService $totalsService,
@@ -151,9 +159,11 @@ class Checkout extends Component
             } else {
                 $this->loadInitialShippingMethods($quote);
             }
+            $this->loadPaymentMethods($quote);
         } catch (LocalizedException) {
             $this->shippingMethods = [];
             $this->regions = $this->regionProvider->getRegionsForCountry($this->countryId);
+            $this->paymentMethods = [];
         }
     }
 
@@ -162,6 +172,12 @@ class Checkout extends Component
         $this->regions = $this->regionProvider->getRegionsForCountry($value);
         $this->regionId = '';
         $this->region = '';
+
+        try {
+            $this->loadPaymentMethods($this->quoteProvider->getActiveQuote());
+        } catch (LocalizedException) {
+            $this->paymentMethods = [];
+        }
     }
 
     public function updatedPostcode(): void
@@ -169,6 +185,11 @@ class Checkout extends Component
         if (strlen($this->postcode) >= 5) {
             $this->refreshShippingRates();
         }
+    }
+
+    public function updatedSelectedPaymentMethod(): void
+    {
+        $this->dispatchBrowserEvent('checkout-payment-method-changed', []);
     }
 
     /**
@@ -264,7 +285,7 @@ class Checkout extends Component
     /**
      * Called from Alpine after Stripe creates a payment method.
      */
-    public function placeOrder(string $stripePaymentMethodId): void
+    public function placeOrder(string $stripePaymentMethodId = ''): void
     {
         $this->errorMessage = '';
         $this->isPlacingOrder = true;
@@ -272,7 +293,7 @@ class Checkout extends Component
         try {
             $this->validateForm();
 
-            if ($stripePaymentMethodId === '') {
+            if ($this->selectedPaymentMethod === self::STRIPE_METHOD_CODE && $stripePaymentMethodId === '') {
                 throw new LocalizedException(__('Please complete your payment details.'));
             }
 
@@ -283,6 +304,7 @@ class Checkout extends Component
                 $addressData,
                 $this->selectedCarrier,
                 $this->selectedMethod,
+                $this->selectedPaymentMethod,
                 $stripePaymentMethodId,
                 $this->billingSameAsShipping,
                 $billingData,
@@ -379,6 +401,7 @@ class Checkout extends Component
             $this->shippingMethods = $this->shippingRateService->estimateRates($this->getAddressData());
             $this->selectShippingRate($quote);
             $this->loadCart(false);
+            $this->loadPaymentMethods($quote);
         } catch (LocalizedException $e) {
             $this->errorMessage = $e->getMessage();
         }
@@ -535,6 +558,44 @@ class Checkout extends Component
         );
     }
 
+    private function loadPaymentMethods(Quote $quote): void
+    {
+        $this->paymentMethods = $this->paymentMethodService->getAvailableMethods($quote, $this->countryId);
+
+        if ($this->paymentMethods === []) {
+            $this->selectedPaymentMethod = '';
+            return;
+        }
+
+        $availableCodes = array_column($this->paymentMethods, 'code');
+
+        if ($this->selectedPaymentMethod !== '' && in_array($this->selectedPaymentMethod, $availableCodes, true)) {
+            return;
+        }
+
+        $defaultMethod = $this->resolveDefaultPaymentMethod();
+        if ($defaultMethod !== '') {
+            $this->selectedPaymentMethod = $defaultMethod;
+            return;
+        }
+
+        $quoteMethod = (string) $quote->getPayment()->getMethod();
+        if ($quoteMethod !== '' && in_array($quoteMethod, $availableCodes, true)) {
+            $this->selectedPaymentMethod = $quoteMethod;
+        }
+    }
+
+    private function resolveDefaultPaymentMethod(): string
+    {
+        foreach ($this->paymentMethods as $method) {
+            if ($method['code'] === self::STRIPE_METHOD_CODE) {
+                return self::STRIPE_METHOD_CODE;
+            }
+        }
+
+        return $this->paymentMethods[0]['code'] ?? '';
+    }
+
     private function getDefaultCountryId(): string
     {
         $default = $this->directoryHelper->getDefaultCountry();
@@ -573,6 +634,10 @@ class Checkout extends Component
 
         if ($this->selectedCarrier === '' || $this->selectedMethod === '') {
             throw new LocalizedException(__('Please select a shipping method.'));
+        }
+
+        if ($this->selectedPaymentMethod === '') {
+            throw new LocalizedException(__('Please select a payment method.'));
         }
 
         if ($this->createAccount && !$this->isLoggedIn) {

@@ -2,7 +2,6 @@
 declare(strict_types=1);
 
 use Hyva\Theme\Model\ViewModelRegistry;
-use Hyva\Theme\ViewModel\HyvaCsp;
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
@@ -11,11 +10,26 @@ use Magento\Framework\View\Element\Template;
 /** @var ViewModelRegistry $viewModels */
 /** @var \Hyva\CustomCheckout\Magewire\Checkout $magewire */
 
-$hyvaCsp = $viewModels->require(HyvaCsp::class);
 $stripeConfigJson = $escaper->escapeHtmlAttr(json_encode($magewire->stripeConfig ?: [], JSON_THROW_ON_ERROR));
 $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementOptions ?: [], JSON_THROW_ON_ERROR));
 ?>
-<div class="hcc-checkout" wire:loading.class="hcc-is-loading" wire:init="refreshShippingRatesIfNeeded">
+<div class="hcc-checkout"
+     wire:loading.class="hcc-is-loading"
+     wire:init="refreshShippingRatesIfNeeded"
+     x-data="initHccCheckoutStripe"
+     data-stripe-config="<?= $stripeConfigJson ?>"
+     data-element-options="<?= $elementOptions ?>"
+     data-stripe-amount="<?= (int) ($magewire->totals['stripe_amount'] ?? 0) ?>"
+     data-stripe-currency="<?= $escaper->escapeHtmlAttr($magewire->totals['stripe_currency'] ?? 'usd') ?>"
+     data-default-country="<?= $escaper->escapeHtmlAttr($magewire->countryId ?: 'US') ?>"
+     data-stripe-action-url="<?= $escaper->escapeHtmlAttr($block->getUrl('rest/V1/stripe/payments/get_requires_action')) ?>"
+     data-success-url="<?= $escaper->escapeHtmlAttr($block->getUrl('checkout/onepage/success')) ?>"
+     data-msg-unavailable="<?= $escaper->escapeHtmlAttr(__('Payment system is unavailable. Please try again later.')) ?>"
+     data-msg-failed="<?= $escaper->escapeHtmlAttr(__('Payment failed. Please try again.')) ?>"
+     @checkout-cart-updated.window="refreshElements"
+     @checkout-payment-method-changed.window="onPaymentMethodChanged"
+     @order-placed.window="handleAuthentication"
+     @order-place-failed.window="onPlaceFailed">
     <?php if ($magewire->errorMessage): ?>
         <div class="hcc-error" role="alert"><?= $escaper->escapeHtml($magewire->errorMessage) ?></div>
     <?php endif; ?>
@@ -142,20 +156,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                 <?php endif; ?>
             </section>
 
-            <section class="hcc-card hcc-section-gap" aria-labelledby="hcc-payment-title"
-                     x-data="hyvaCustomCheckoutStripe"
-                     data-stripe-config="<?= $stripeConfigJson ?>"
-                     data-element-options="<?= $elementOptions ?>"
-                     data-stripe-amount="<?= (int) ($magewire->totals['stripe_amount'] ?? 0) ?>"
-                     data-stripe-currency="<?= $escaper->escapeHtmlAttr($magewire->totals['stripe_currency'] ?? 'usd') ?>"
-                     data-default-country="<?= $escaper->escapeHtmlAttr($magewire->countryId ?: 'US') ?>"
-                     data-stripe-action-url="<?= $escaper->escapeHtmlAttr($block->getUrl('rest/V1/stripe/payments/get_requires_action')) ?>"
-                     data-success-url="<?= $escaper->escapeHtmlAttr($block->getUrl('checkout/onepage/success')) ?>"
-                     data-msg-unavailable="<?= $escaper->escapeHtmlAttr(__('Payment system is unavailable. Please try again later.')) ?>"
-                     data-msg-failed="<?= $escaper->escapeHtmlAttr(__('Payment failed. Please try again.')) ?>"
-                     @checkout-cart-updated.window="refreshElements"
-                     @order-placed.window="handleAuthentication"
-                     @order-place-failed.window="onPlaceFailed">
+            <section class="hcc-card hcc-section-gap" aria-labelledby="hcc-payment-title">
                 <h2 id="hcc-payment-title" class="hcc-card__title"><?= $escaper->escapeHtml(__('Payment Method')) ?></h2>
 
                 <label class="hcc-checkbox">
@@ -163,8 +164,26 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                     <span><?= $escaper->escapeHtml(__('My billing and shipping address are the same')) ?></span>
                 </label>
 
-                <div id="stripe-payment-element" wire:ignore></div>
-                <p x-show="stripeError" x-text="stripeError" class="hcc-error" style="display:none" x-cloak></p>
+                <?php if ($magewire->paymentMethods === []): ?>
+                    <p class="hcc-muted"><?= $escaper->escapeHtml(__('No payment methods are available.')) ?></p>
+                <?php else: ?>
+                    <div class="hcc-payment-methods" role="radiogroup" aria-labelledby="hcc-payment-title">
+                        <?php foreach ($magewire->paymentMethods as $method): ?>
+                            <label class="hcc-payment-rate">
+                                <input type="radio"
+                                       name="payment_method"
+                                       value="<?= $escaper->escapeHtmlAttr($method['code']) ?>"
+                                       wire:model.change="selectedPaymentMethod"/>
+                                <span><?= $escaper->escapeHtml($method['title']) ?></span>
+                            </label>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+
+                <div class="hcc-stripe-wrap" x-show="stripeVisible" x-cloak>
+                    <div id="stripe-payment-element" wire:ignore></div>
+                    <p x-show="stripeError" x-text="stripeError" class="hcc-error" style="display:none" x-cloak></p>
+                </div>
             </section>
         </div>
 
@@ -198,7 +217,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
             <?php foreach ($magewire->cartItems as $item): ?>
                 <div class="hcc-cart-item"
                      wire:key="cart-item-<?= (int) $item['item_id'] ?>"
-                     x-data="hccCartItemRow"
+                     x-data="initHccCartItemRow"
                      data-item-id="<?= (int) $item['item_id'] ?>">
                     <div class="hcc-cart-item__img-wrap hcc-cart-placeholder"></div>
                     <div>
@@ -239,14 +258,3 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
         </section>
     </div>
 </div>
-<script>
-    window.addEventListener('alpine:init', () => {
-        if (typeof hyvaCustomCheckoutStripe === 'function') {
-            Alpine.data('hyvaCustomCheckoutStripe', hyvaCustomCheckoutStripe);
-        }
-        if (typeof hccCartItemRow === 'function') {
-            Alpine.data('hccCartItemRow', hccCartItemRow);
-        }
-    }, { once: true });
-</script>
-<?php $hyvaCsp->registerInlineScript() ?>

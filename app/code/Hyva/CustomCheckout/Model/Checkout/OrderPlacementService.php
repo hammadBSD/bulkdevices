@@ -58,6 +58,7 @@ class OrderPlacementService
         array $addressData,
         string $carrierCode,
         string $methodCode,
+        string $paymentMethodCode,
         string $stripePaymentMethodId,
         bool $billingSameAsShipping,
         ?array $billingData,
@@ -81,7 +82,7 @@ class OrderPlacementService
 
         if ($this->customerSession->isLoggedIn()) {
             $this->shippingInformationManagement->saveAddressInformation($cartId, $shippingInformation);
-            $orderId = $this->placeCustomerOrder($cartId, $stripePaymentMethodId, $agreementIds);
+            $orderId = $this->placeCustomerOrder($cartId, $paymentMethodCode, $stripePaymentMethodId, $agreementIds);
         } else {
             $email = (string) ($addressData['email'] ?? '');
             if ($email === '') {
@@ -101,7 +102,14 @@ class OrderPlacementService
                 $this->createCustomerAccount($addressData, $password);
             }
 
-            $orderId = $this->placeGuestOrder($maskedId, $email, $stripePaymentMethodId, $billingAddress, $agreementIds);
+            $orderId = $this->placeGuestOrder(
+                $maskedId,
+                $email,
+                $paymentMethodCode,
+                $stripePaymentMethodId,
+                $billingAddress,
+                $agreementIds
+            );
         }
 
         $this->checkoutSession->setLastOrderId($orderId);
@@ -114,9 +122,13 @@ class OrderPlacementService
         ];
     }
 
-    private function placeCustomerOrder(int $cartId, string $stripePaymentMethodId, array $agreementIds): int
-    {
-        $payment = $this->buildStripePayment($stripePaymentMethodId, $agreementIds);
+    private function placeCustomerOrder(
+        int $cartId,
+        string $paymentMethodCode,
+        string $stripePaymentMethodId,
+        array $agreementIds
+    ): int {
+        $payment = $this->buildPayment($paymentMethodCode, $stripePaymentMethodId, $agreementIds);
 
         return (int) $this->paymentInformationManagement->savePaymentInformationAndPlaceOrder(
             $cartId,
@@ -128,11 +140,12 @@ class OrderPlacementService
     private function placeGuestOrder(
         string $maskedId,
         string $email,
+        string $paymentMethodCode,
         string $stripePaymentMethodId,
         AddressInterface $billingAddress,
         array $agreementIds
     ): int {
-        $payment = $this->buildStripePayment($stripePaymentMethodId, $agreementIds);
+        $payment = $this->buildPayment($paymentMethodCode, $stripePaymentMethodId, $agreementIds);
 
         return (int) $this->guestPaymentInformationManagement->savePaymentInformationAndPlaceOrder(
             $maskedId,
@@ -142,15 +155,21 @@ class OrderPlacementService
         );
     }
 
-    private function buildStripePayment(string $stripePaymentMethodId, array $agreementIds): PaymentInterface
-    {
+    private function buildPayment(
+        string $paymentMethodCode,
+        string $stripePaymentMethodId,
+        array $agreementIds
+    ): PaymentInterface {
         $payment = $this->paymentFactory->create();
-        $payment->setMethod('stripe_payments');
-        $payment->setAdditionalData([
-            'payment_element' => true,
-            'payment_method' => $stripePaymentMethodId,
-            'manual_authentication' => 'card',
-        ]);
+        $payment->setMethod($paymentMethodCode);
+
+        if ($paymentMethodCode === 'stripe_payments') {
+            $payment->setAdditionalData([
+                'payment_element' => true,
+                'payment_method' => $stripePaymentMethodId,
+                'manual_authentication' => 'card',
+            ]);
+        }
 
         if ($agreementIds !== []) {
             $extensionAttributes = $payment->getExtensionAttributes() ?? $this->paymentExtensionFactory->create();

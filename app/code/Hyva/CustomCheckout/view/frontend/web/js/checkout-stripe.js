@@ -7,6 +7,7 @@ function hyvaCustomCheckoutStripe() {
         elements: null,
         paymentElement: null,
         stripeError: '',
+        stripeVisible: false,
         isSubmitting: false,
         initParams: null,
         elementOptions: null,
@@ -23,13 +24,76 @@ function hyvaCustomCheckoutStripe() {
             this.msgUnavailable = this.$el.dataset.msgUnavailable || this.msgUnavailable;
             this.msgFailed = this.$el.dataset.msgFailed || this.msgFailed;
 
+            this.updateStripeVisibility(this.$wire.selectedPaymentMethod);
+
+            this.$watch('$wire.selectedPaymentMethod', (value) => {
+                this.updateStripeVisibility(value);
+            });
+
+            this.bindAddressWatchers();
+        },
+
+        onPaymentMethodChanged() {
+            this.updateStripeVisibility(this.$wire.selectedPaymentMethod);
+        },
+
+        updateStripeVisibility(method) {
+            const showStripe = method === 'stripe_payments';
+            this.stripeVisible = showStripe;
+
+            if (!showStripe) {
+                this.resetStripeElement();
+                return;
+            }
+
+            this.scheduleStripeMount();
+        },
+
+        scheduleStripeMount() {
+            this.resetStripeElement();
+
+            const mount = () => this.ensureStripeMounted();
+
+            if (typeof this.$nextTick === 'function') {
+                this.$nextTick(() => {
+                    this.$nextTick(mount);
+                });
+                return;
+            }
+
+            requestAnimationFrame(() => requestAnimationFrame(mount));
+        },
+
+        resetStripeElement() {
+            if (this.paymentElement && typeof this.paymentElement.unmount === 'function') {
+                try {
+                    this.paymentElement.unmount();
+                } catch (e) {
+                    /* Element may already be detached */
+                }
+            }
+
+            this.paymentElement = null;
+            this.elements = null;
+            this.stripe = null;
+        },
+
+        ensureStripeMounted() {
+            if (this.paymentElement) {
+                return;
+            }
+
+            const mountTarget = document.getElementById('stripe-payment-element');
+            if (!mountTarget) {
+                return;
+            }
+
             if (!this.initParams.apiKey || typeof Stripe === 'undefined') {
                 this.stripeError = this.msgUnavailable;
                 return;
             }
 
             this.mountStripe();
-            this.bindAddressWatchers();
         },
 
         bindAddressWatchers() {
@@ -123,7 +187,7 @@ function hyvaCustomCheckoutStripe() {
             const region = useShipping ? wire.region : wire.billingRegion;
             const hasState = !!(regionId || region);
 
-            // Match StripeIntegration Luma: collect address on checkout form, only ask card + zip in Payment Element.
+            // Collect billing address on the checkout form; card fields only in Payment Element.
             options.fields = {
                 billingDetails: {
                     name: 'never',
@@ -134,7 +198,7 @@ function hyvaCustomCheckoutStripe() {
                         city: city ? 'never' : 'auto',
                         state: hasState ? 'never' : 'auto',
                         country: country ? 'never' : 'auto',
-                        postalCode: postcode ? 'never' : 'auto'
+                        postalCode: 'never'
                     }
                 }
             };
@@ -181,17 +245,34 @@ function hyvaCustomCheckoutStripe() {
             if (this.isSubmitting) {
                 return;
             }
+
+            const paymentMethod = this.$wire.selectedPaymentMethod;
+            if (!paymentMethod) {
+                return;
+            }
+
             this.stripeError = '';
             this.isSubmitting = true;
 
             try {
+                if (paymentMethod !== 'stripe_payments') {
+                    await this.$wire.placeOrder('');
+                    return;
+                }
+
+                this.ensureStripeMounted();
+
+                if (!this.elements || !this.stripe) {
+                    throw new Error(this.msgUnavailable);
+                }
+
                 const billingDetails = this.getBillingDetails();
                 const { error: submitError } = await this.elements.submit();
                 if (submitError) {
                     throw new Error(submitError.message);
                 }
 
-                const { error, paymentMethod } = await this.stripe.createPaymentMethod({
+                const { error, paymentMethod: stripePaymentMethod } = await this.stripe.createPaymentMethod({
                     elements: this.elements,
                     params: { billing_details: billingDetails }
                 });
@@ -200,7 +281,7 @@ function hyvaCustomCheckoutStripe() {
                     throw new Error(error.message);
                 }
 
-                await this.$wire.placeOrder(paymentMethod.id);
+                await this.$wire.placeOrder(stripePaymentMethod.id);
             } catch (e) {
                 this.stripeError = e.message || this.msgFailed;
                 this.isSubmitting = false;
@@ -224,6 +305,11 @@ function hyvaCustomCheckoutStripe() {
         },
 
         async handleAuthentication() {
+            if (this.$wire.selectedPaymentMethod !== 'stripe_payments') {
+                window.location.href = this.$wire.successRedirectUrl || this.successUrl;
+                return;
+            }
+
             try {
                 const response = await fetch(this.actionUrl, {
                     credentials: 'include',
@@ -276,18 +362,18 @@ function hccCartItemRow() {
     };
 }
 
-(function registerCheckoutAlpineComponents() {
-    const register = () => {
-        Alpine.data('hyvaCustomCheckoutStripe', hyvaCustomCheckoutStripe);
-        Alpine.data('hccCartItemRow', hccCartItemRow);
-    };
-    if (window.Alpine && typeof window.Alpine.data === 'function') {
-        register();
-        return;
-    }
+function initHccCheckoutStripe() {
+    return hyvaCustomCheckoutStripe();
+}
 
-    window.addEventListener('alpine:init', register, { once: true });
-})();
+function initHccCartItemRow() {
+    return hccCartItemRow();
+}
+
+window.addEventListener('alpine:init', () => {
+    Alpine.data('initHccCheckoutStripe', initHccCheckoutStripe);
+    Alpine.data('initHccCartItemRow', initHccCartItemRow);
+}, { once: true });
 
 window.addEventListener('order-placed', () => {
     if (window.dataLayer) {
