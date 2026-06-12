@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace Hyva\CustomCheckout\Model\Checkout;
 
+use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote\Item;
@@ -11,6 +12,7 @@ class CartItemService
 {
     public function __construct(
         private readonly QuoteProvider $quoteProvider,
+        private readonly ImageHelper $imageHelper,
     ) {
     }
 
@@ -41,7 +43,9 @@ class CartItemService
                     [],
                     false
                 ),
-                'image' => $product ? (string) $product->getData('small_image') : '',
+                'image' => $product && $product->getId()
+                    ? (string) $this->imageHelper->init($product, 'mini_cart_product_thumbnail')->getUrl()
+                    : '',
                 'product_url' => $product ? (string) $product->getProductUrl() : '',
             ];
         }

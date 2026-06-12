@@ -241,7 +241,16 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                      wire:key="cart-item-<?= (int) $item['item_id'] ?>"
                      x-data="initHccCartItemRow"
                      data-item-id="<?= (int) $item['item_id'] ?>">
-                    <div class="hcc-cart-item__img-wrap hcc-cart-placeholder"></div>
+                    <?php if (!empty($item['image'])): ?>
+                        <img class="hcc-cart-item__img"
+                             src="<?= $escaper->escapeUrl($item['image']) ?>"
+                             alt="<?= $escaper->escapeHtmlAttr($item['name']) ?>"
+                             width="56"
+                             height="56"
+                             loading="lazy"/>
+                    <?php else: ?>
+                        <div class="hcc-cart-item__img-wrap hcc-cart-placeholder" aria-hidden="true"></div>
+                    <?php endif; ?>
                     <div>
                         <div class="hcc-item-name"><?= $escaper->escapeHtml($item['name']) ?></div>
                         <div><?= $escaper->escapeHtml($item['row_total']) ?></div>

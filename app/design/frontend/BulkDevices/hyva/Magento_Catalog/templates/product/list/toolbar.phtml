@@ -99,7 +99,7 @@ $additionalOptions = ['page' => 'p'];
 </script>
 <?php if ($block->getCollection()->getSize()): ?>
     <div x-data="initToolbar<?= /** @noEscape */ $uniqueId ?>()"
-         class="toolbar toolbar-products <?= $block->getIsBottom() ? 'toolbar-bottom grid grid-cols-4 sm:grid-cols-8 md:grid-cols-4 lg:grid-cols-8 grid-flow-row gap-2 items-center' : 'toolbar-top bb-plp-toolbar-top' ?>">
+         class="toolbar toolbar-products <?= $block->getIsBottom() ? 'toolbar-bottom bb-plp-toolbar-bottom' : 'toolbar-top bb-plp-toolbar-top' ?>">
         <?php if ($block->getIsBottom()): ?>
             <?= $block->getPagerHtml() ?>
         <?php else: ?>

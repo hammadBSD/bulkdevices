@@ -29,18 +29,18 @@ $defaultOpenFilters = ['cat', 'price'];
         x-init="checkIsMobileResolution()"
         @resize.window.debounce="checkIsMobileResolution()"
         @visibilitychange.window.debounce="checkIsMobileResolution()"
-        class="block border border-gray-300 bg-gray-100 p-4 md:border-0 md:bg-transparent md:py-0 md:px-0 my-6"
+        class="bb-plp-filters block"
         role="region"
         aria-label="<?= $escaper->escapeHtmlAttr(__('Product filters')) ?>"
     >
         <h2
             id="filters-heading"
-            class="block-title"
+            class="bb-plp-filters__heading block-title"
         >
             <button
                 type="button"
                 @click="blockOpen = !blockOpen"
-                class="block-title flex items-center justify-between w-full text-start"
+                class="bb-plp-filters__heading-btn block-title flex items-center justify-between w-full text-start"
                 aria-controls="filters-content"
                 :aria-expanded="blockOpen"
                 :aria-disabled="!isMobile"
@@ -68,7 +68,7 @@ $defaultOpenFilters = ['cat', 'price'];
         </h2>
         <div
             id="filters-content"
-            class="block-content filter-content hidden md:block pt-4"
+            class="bb-plp-filters__content block-content filter-content hidden md:block"
             :class="{ 'hidden': !blockOpen }"
         >
             <?= $block->getChildHtml('state') ?>
@@ -87,13 +87,13 @@ $defaultOpenFilters = ['cat', 'price'];
                             id: $id('filter-option')
                         }"
                         x-defer="intersect"
-                        class="filter-option card my-4"
+                        class="bb-plp-filters__group filter-option card"
                     >
                         <h3 :id="`${id}-title`">
                             <button
                                 type="button"
                                 @click="open = !open"
-                                class="filter-options-title flex justify-between items-center cursor-pointer text-start border-gray-300 w-full"
+                                class="bb-plp-filters__group-title filter-options-title flex justify-between items-center cursor-pointer text-start w-full"
                                 :class="{ 'border-b pb-4': open }"
                                 :aria-controls="`${id}-content`"
                                 :aria-expanded="open"
@@ -119,7 +119,7 @@ $defaultOpenFilters = ['cat', 'price'];
                         <template x-if="open">
                             <div
                                 :id="`${id}-content`"
-                                class="filter-options-content pt-3"
+                                class="bb-plp-filters__group-content filter-options-content"
                             >
                                 <?= /* @noEscape */ $block->getChildBlock('renderer')->setFilterTitle($filter->getName())->render($filter); ?>
                             </div>
