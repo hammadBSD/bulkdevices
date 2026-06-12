@@ -129,7 +129,6 @@ class Checkout extends Component
         $this->countries = $this->getCountryOptions();
         $this->stripeConfig = $this->stripeConfigService->getInitParams();
         $this->loadAgreements();
-        $this->loadCart();
 
         if ($this->isLoggedIn) {
             $customer = $this->customerSession->getCustomer();
@@ -156,8 +155,12 @@ class Checkout extends Component
                 $this->company = (string) $shippingAddress->getCompany();
                 $this->regionId = (string) ($shippingAddress->getRegionId() ?? '');
                 $this->hydrateShippingFromQuote($quote);
+                $this->loadCart(false);
             } else {
                 $this->loadInitialShippingMethods($quote);
+                if ($this->shippingMethods === []) {
+                    $this->loadCart(true);
+                }
             }
             $this->loadPaymentMethods($quote);
         } catch (LocalizedException) {
@@ -410,18 +413,16 @@ class Checkout extends Component
     private function hydrateShippingFromQuote(Quote $quote): void
     {
         $shippingAddress = $quote->getShippingAddress();
-        $this->shippingMethods = $this->shippingRateService->getStoredRatesFromQuote($quote);
-
         $shippingMethod = (string) $shippingAddress->getShippingMethod();
         if ($shippingMethod !== '' && str_contains($shippingMethod, '_')) {
             [$carrierCode, $methodCode] = explode('_', $shippingMethod, 2);
             $this->selectedCarrier = $carrierCode;
             $this->selectedMethod = $methodCode;
             $this->selectedShippingMethodKey = $shippingMethod;
-        } elseif ($this->shippingMethods !== []) {
-            $this->selectShippingRate($quote, false);
         }
 
+        $this->shippingMethods = [];
+        $this->isRefreshingShippingRates = true;
         $this->pendingShippingRatesRefresh = true;
     }
 
