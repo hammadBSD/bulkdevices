@@ -166,7 +166,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
 
                 <?php if ($magewire->paymentMethods === []): ?>
                     <p class="hcc-muted"><?= $escaper->escapeHtml(__('No payment methods are available.')) ?></p>
-                <?php else: ?>
+                <?php elseif (count($magewire->paymentMethods) > 1): ?>
                     <div class="hcc-payment-methods" role="radiogroup" aria-labelledby="hcc-payment-title">
                         <?php foreach ($magewire->paymentMethods as $method): ?>
                             <label class="hcc-payment-rate">
