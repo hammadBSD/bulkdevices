@@ -92,9 +92,11 @@ class OrderPlacementService
             $mask = $this->quoteIdMaskFactory->create()->load($cartId, 'quote_id');
             $maskedId = $mask->getMaskedId();
 
+            $quote->setCustomerEmail($email);
+            $this->quoteProvider->saveQuote($quote);
+
             $this->guestShippingInformationManagement->saveAddressInformation(
                 $maskedId,
-                $email,
                 $shippingInformation
             );
 
