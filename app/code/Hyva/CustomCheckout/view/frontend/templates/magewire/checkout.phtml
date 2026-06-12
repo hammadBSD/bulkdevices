@@ -15,7 +15,7 @@ $hyvaCsp = $viewModels->require(HyvaCsp::class);
 $stripeConfigJson = $escaper->escapeHtmlAttr(json_encode($magewire->stripeConfig ?: [], JSON_THROW_ON_ERROR));
 $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementOptions ?: [], JSON_THROW_ON_ERROR));
 ?>
-<div class="hcc-checkout" wire:loading.class="hcc-is-loading">
+<div class="hcc-checkout" wire:loading.class="hcc-is-loading" wire:init="refreshShippingRatesIfNeeded">
     <?php if ($magewire->errorMessage): ?>
         <div class="hcc-error" role="alert"><?= $escaper->escapeHtml($magewire->errorMessage) ?></div>
     <?php endif; ?>
@@ -111,10 +111,21 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
 
         <!-- Column 2: Shipping + Payment -->
         <div>
-            <section class="hcc-card" aria-labelledby="hcc-shipping-methods-title">
+            <section class="hcc-card<?= $magewire->isRefreshingShippingRates ? ' hcc-shipping-rates--refreshing' : '' ?>"
+                     aria-labelledby="hcc-shipping-methods-title"
+                     aria-busy="<?= $magewire->isRefreshingShippingRates ? 'true' : 'false' ?>">
                 <h2 id="hcc-shipping-methods-title" class="hcc-card__title"><?= $escaper->escapeHtml(__('Shipping Methods')) ?></h2>
+                <?php if ($magewire->isRefreshingShippingRates && $magewire->shippingMethods !== []): ?>
+                    <p class="hcc-shipping-rates__status" role="status">
+                        <?= $escaper->escapeHtml(__('Updating shipping rates…')) ?>
+                    </p>
+                <?php endif; ?>
                 <?php if ($magewire->shippingMethods === []): ?>
-                    <p class="hcc-muted"><?= $escaper->escapeHtml(__('Enter your zip code to see shipping rates.')) ?></p>
+                    <?php if ($magewire->isRefreshingShippingRates || $magewire->pendingShippingRatesRefresh): ?>
+                        <p class="hcc-muted" role="status"><?= $escaper->escapeHtml(__('Loading shipping rates…')) ?></p>
+                    <?php else: ?>
+                        <p class="hcc-muted"><?= $escaper->escapeHtml(__('Enter your zip code to see shipping rates.')) ?></p>
+                    <?php endif; ?>
                 <?php else: ?>
                     <?php foreach ($magewire->shippingMethods as $rate): ?>
                         <?php $methodKey = $rate['carrier_code'] . '_' . $rate['method_code']; ?>

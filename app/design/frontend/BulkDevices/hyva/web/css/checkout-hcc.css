@@ -320,3 +320,13 @@
     opacity: 0.75;
     pointer-events: none;
 }
+
+.hcc-shipping-rates--refreshing .hcc-shipping-rate {
+    opacity: 0.65;
+}
+
+.hcc-shipping-rates__status {
+    margin: 0 0 0.75rem;
+    font-size: 0.8125rem;
+    color: #6b7280;
+}

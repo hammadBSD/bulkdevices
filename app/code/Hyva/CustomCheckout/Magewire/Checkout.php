@@ -90,6 +90,10 @@ class Checkout extends Component
     /** @var array<string, mixed> */
     public array $stripeElementOptions = [];
 
+    public bool $isRefreshingShippingRates = false;
+
+    public bool $pendingShippingRatesRefresh = false;
+
     public function __construct(
         private readonly QuoteProvider $quoteProvider,
         private readonly RegionProvider $regionProvider,
@@ -143,7 +147,7 @@ class Checkout extends Component
                 $this->telephone = (string) $shippingAddress->getTelephone();
                 $this->company = (string) $shippingAddress->getCompany();
                 $this->regionId = (string) ($shippingAddress->getRegionId() ?? '');
-                $this->fetchShippingRates();
+                $this->hydrateShippingFromQuote($quote);
             } else {
                 $this->loadInitialShippingMethods($quote);
             }
@@ -163,7 +167,31 @@ class Checkout extends Component
     public function updatedPostcode(): void
     {
         if (strlen($this->postcode) >= 5) {
+            $this->refreshShippingRates();
+        }
+    }
+
+    /**
+     * Deferred rate refresh after initial paint (wire:init).
+     */
+    public function refreshShippingRatesIfNeeded(): void
+    {
+        if (!$this->pendingShippingRatesRefresh) {
+            return;
+        }
+
+        $this->pendingShippingRatesRefresh = false;
+        $this->refreshShippingRates();
+    }
+
+    public function refreshShippingRates(): void
+    {
+        $this->isRefreshingShippingRates = true;
+
+        try {
             $this->fetchShippingRates();
+        } finally {
+            $this->isRefreshingShippingRates = false;
         }
     }
 
@@ -214,7 +242,7 @@ class Checkout extends Component
         try {
             $this->cartItemService->updateQty($itemId, $qty);
             $this->loadCart();
-            $this->fetchShippingRates();
+            $this->refreshShippingRates();
             $this->dispatchBrowserEvent('checkout-cart-updated', []);
         } catch (LocalizedException $e) {
             $this->errorMessage = $e->getMessage();
@@ -226,7 +254,7 @@ class Checkout extends Component
         try {
             $this->cartItemService->removeItem($itemId);
             $this->loadCart();
-            $this->fetchShippingRates();
+            $this->refreshShippingRates();
             $this->dispatchBrowserEvent('checkout-cart-updated', []);
         } catch (LocalizedException $e) {
             $this->errorMessage = $e->getMessage();
@@ -306,11 +334,11 @@ class Checkout extends Component
         ];
     }
 
-    private function loadCart(): void
+    private function loadCart(bool $recollectTotals = true): void
     {
         try {
             $this->cartItems = $this->cartItemService->getItems();
-            $this->totals = $this->totalsService->getTotals();
+            $this->totals = $this->totalsService->getTotals($recollectTotals);
         } catch (LocalizedException) {
             $this->cartItems = [];
             $this->totals = [];
@@ -335,34 +363,50 @@ class Checkout extends Component
         try {
             $quote = $this->quoteProvider->getActiveQuote();
 
-            if ($this->shippingRateService->qualifiesForFreeShippingOnly($quote)) {
-                $this->applyFreeShippingSelection($quote);
-                $this->loadCart();
-                return;
-            }
-
             if (strlen($this->postcode) < 5) {
-                $this->shippingMethods = [];
-                $this->selectedCarrier = '';
-                $this->selectedMethod = '';
-                $this->selectedShippingMethodKey = '';
-                $this->loadCart();
+                if ($this->shippingRateService->qualifiesForFreeShippingOnly($quote)) {
+                    $this->applyFreeShippingSelection($quote);
+                } else {
+                    $this->shippingMethods = [];
+                    $this->selectedCarrier = '';
+                    $this->selectedMethod = '';
+                    $this->selectedShippingMethodKey = '';
+                }
+                $this->loadCart(false);
                 return;
             }
 
             $this->shippingMethods = $this->shippingRateService->estimateRates($this->getAddressData());
-            $this->selectFirstRate();
-            $this->loadCart();
+            $this->selectShippingRate($quote);
+            $this->loadCart(false);
         } catch (LocalizedException $e) {
             $this->errorMessage = $e->getMessage();
         }
+    }
+
+    private function hydrateShippingFromQuote(Quote $quote): void
+    {
+        $shippingAddress = $quote->getShippingAddress();
+        $this->shippingMethods = $this->shippingRateService->getStoredRatesFromQuote($quote);
+
+        $shippingMethod = (string) $shippingAddress->getShippingMethod();
+        if ($shippingMethod !== '' && str_contains($shippingMethod, '_')) {
+            [$carrierCode, $methodCode] = explode('_', $shippingMethod, 2);
+            $this->selectedCarrier = $carrierCode;
+            $this->selectedMethod = $methodCode;
+            $this->selectedShippingMethodKey = $shippingMethod;
+        } elseif ($this->shippingMethods !== []) {
+            $this->selectShippingRate($quote, false);
+        }
+
+        $this->pendingShippingRatesRefresh = true;
     }
 
     private function loadInitialShippingMethods(Quote $quote): void
     {
         if ($this->shippingRateService->qualifiesForFreeShippingOnly($quote)) {
             $this->applyFreeShippingSelection($quote);
-            $this->loadCart();
+            $this->loadCart(false);
             return;
         }
 
@@ -383,7 +427,45 @@ class Checkout extends Component
         $this->selectedShippingMethodKey = 'freeshipping_freeshipping';
     }
 
-    private function selectFirstRate(): void
+    private function selectShippingRate(Quote $quote, bool $persist = true): void
+    {
+        if ($this->shippingMethods === []) {
+            $this->selectedCarrier = '';
+            $this->selectedMethod = '';
+            $this->selectedShippingMethodKey = '';
+            return;
+        }
+
+        if ($this->selectedShippingMethodKey !== '') {
+            foreach ($this->shippingMethods as $rate) {
+                $methodKey = $rate['carrier_code'] . '_' . $rate['method_code'];
+                if ($methodKey === $this->selectedShippingMethodKey) {
+                    if ($persist) {
+                        $this->persistShippingMethodOnQuote($methodKey);
+                    }
+                    return;
+                }
+            }
+        }
+
+        if ($this->shippingRateService->qualifiesForFreeShippingOnly($quote)) {
+            foreach ($this->shippingMethods as $rate) {
+                if ($rate['carrier_code'] === 'freeshipping') {
+                    $this->selectedCarrier = 'freeshipping';
+                    $this->selectedMethod = 'freeshipping';
+                    $this->selectedShippingMethodKey = 'freeshipping_freeshipping';
+                    if ($persist) {
+                        $this->persistShippingMethodOnQuote($this->selectedShippingMethodKey);
+                    }
+                    return;
+                }
+            }
+        }
+
+        $this->selectFirstRate($persist);
+    }
+
+    private function selectFirstRate(bool $persist = true): void
     {
         if ($this->shippingMethods === []) {
             $this->selectedCarrier = '';
@@ -395,13 +477,22 @@ class Checkout extends Component
         $first = $this->shippingMethods[0];
         $this->selectedCarrier = $first['carrier_code'];
         $this->selectedMethod = $first['method_code'];
+        $this->selectedShippingMethodKey = $this->selectedCarrier . '_' . $this->selectedMethod;
+        if ($persist) {
+            $this->persistShippingMethodOnQuote($this->selectedShippingMethodKey);
+        }
+    }
 
+    private function persistShippingMethodOnQuote(string $methodKey): void
+    {
         try {
             $quote = $this->quoteProvider->getActiveQuote();
             $shippingAddress = $quote->getShippingAddress();
-            $shippingAddress->setShippingMethod(
-                $this->selectedCarrier . '_' . $this->selectedMethod
-            );
+            if ((string) $shippingAddress->getShippingMethod() === $methodKey) {
+                return;
+            }
+
+            $shippingAddress->setShippingMethod($methodKey);
             $quote->setTotalsCollectedFlag(false);
             $quote->collectTotals();
             $this->quoteProvider->saveQuote($quote);

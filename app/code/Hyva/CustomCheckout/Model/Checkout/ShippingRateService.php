@@ -24,7 +24,7 @@ class ShippingRateService
     }
 
     /**
-     * Light carts (package weight below store threshold) get free ground shipping only.
+     * Light carts (package weight below store threshold) auto-qualify for free ground shipping.
      */
     public function qualifiesForFreeShippingOnly(Quote $quote): bool
     {
@@ -121,19 +121,6 @@ class ShippingRateService
             ];
         }, $methods);
 
-        if ($this->qualifiesForFreeShippingOnly($quote)) {
-            $freeRates = array_values(array_filter(
-                $rates,
-                static fn (array $rate): bool => $rate['carrier_code'] === 'freeshipping'
-            ));
-
-            if ($freeRates !== []) {
-                return $freeRates;
-            }
-
-            return $this->applyFreeShippingMethod($quote, $addressData['country_id'] ?? 'US');
-        }
-
         return $rates;
     }
 
@@ -165,6 +152,22 @@ class ShippingRateService
         $quote->setTotalsCollectedFlag(false);
         $quote->collectTotals();
         $this->quoteProvider->saveQuote($quote);
+    }
+
+    /**
+     * Read shipping rates already persisted on the quote (no carrier API calls).
+     *
+     * @return array<int, array{carrier_code: string, method_code: string, carrier_title: string, method_title: string, amount: float, amount_formatted: string}>
+     */
+    public function getStoredRatesFromQuote(Quote $quote): array
+    {
+        $rates = [];
+
+        foreach ($quote->getShippingAddress()->getAllShippingRates() as $rate) {
+            $rates[] = $this->formatRate($rate);
+        }
+
+        return $rates;
     }
 
     /**

@@ -24,10 +24,12 @@ class TotalsService
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
-    public function getTotals(): array
+    public function getTotals(bool $recollectTotals = true): array
     {
         $quote = $this->quoteProvider->getActiveQuote();
-        $quote->collectTotals();
+        if ($recollectTotals) {
+            $quote->collectTotals();
+        }
         $currency = $quote->getStore()->getCurrentCurrency();
 
         $shippingAddress = $quote->getShippingAddress();
