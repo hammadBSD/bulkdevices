@@ -18,7 +18,7 @@ class CategoryBottomText implements ArgumentInterface
     }
 
     /**
-     * @return array{title: string, lead: string, more: string, faqHtml: string, faqItems: array<int, array{title: string, content: string}>, hasContent: bool}|null
+     * @return array{title: string, lead: string, more: string, hasContent: bool, categoryId: int}|null
      */
     public function getParsedContent(): ?array
     {
@@ -45,17 +45,14 @@ class CategoryBottomText implements ArgumentInterface
     }
 
     /**
-     * @return array{title: string, lead: string, more: string, faqHtml: string, faqItems: array<int, array{title: string, content: string}>, hasContent: bool}|null
+     * @return array{title: string, lead: string, more: string, hasContent: bool}|null
      */
     private function parseHtml(string $html): ?array
     {
-        $faqHtml = $this->extractOuterHtmlByClass($html, 'plp-faq');
-        $mainHtml = $faqHtml !== '' ? str_replace($faqHtml, '', $html) : $html;
-
         $wrapMatch = [];
         $hasWrap = preg_match(
             '/<div[^>]*class="[^"]*\bcategory-bottom__wrap-test\b[^"]*"[^>]*>(.*)<\/div>/is',
-            $mainHtml,
+            $html,
             $wrapMatch
         );
 
@@ -81,18 +78,13 @@ class CategoryBottomText implements ArgumentInterface
             $more = $this->sanitizeHtmlFragment($more);
             $lead = $this->sanitizeHtmlFragment($lead);
         } else {
-            $strippedMain = trim($mainHtml);
+            $strippedMain = trim($html);
             if ($strippedMain !== '') {
                 $lead = $this->sanitizeHtmlFragment($strippedMain);
             }
         }
 
-        $faqItems = $this->parseFaqItems($faqHtml);
-
-        $hasContent = $title !== ''
-            || $lead !== ''
-            || $more !== ''
-            || $faqHtml !== '';
+        $hasContent = $title !== '' || $lead !== '' || $more !== '';
 
         if (!$hasContent) {
             return null;
@@ -102,23 +94,8 @@ class CategoryBottomText implements ArgumentInterface
             'title' => $title,
             'lead' => $lead,
             'more' => $more,
-            'faqHtml' => $faqHtml,
-            'faqItems' => $faqItems,
             'hasContent' => true,
         ];
-    }
-
-    private function extractOuterHtmlByClass(string $html, string $className): string
-    {
-        if (!preg_match(
-            '/<div[^>]*class="[^"]*\b' . preg_quote($className, '/') . '\b[^"]*"[^>]*>.*?<\/div>/is',
-            $html,
-            $match
-        )) {
-            return '';
-        }
-
-        return $match[0];
     }
 
     private function extractInnerHtmlByTagClass(string $html, string $tag, string $className): string
@@ -139,9 +116,6 @@ class CategoryBottomText implements ArgumentInterface
         return (string) preg_replace($pattern, '', $html, 1);
     }
 
-    /**
-     * Remove orphan wrapper tags left when extracting HTML fragments from CMS blocks.
-     */
     private function sanitizeHtmlFragment(string $html): string
     {
         $html = trim($html);
@@ -165,75 +139,5 @@ class CategoryBottomText implements ArgumentInterface
         }
 
         return trim($html);
-    }
-
-    /**
-     * @return array<int, array{title: string, content: string}>
-     */
-    private function parseFaqItems(string $faqHtml): array
-    {
-        if ($faqHtml === '') {
-            return [];
-        }
-
-        if (!preg_match('/<div[^>]*class="[^"]*\bplp-faq\b[^"]*"[^>]*>(.*)<\/div>/is', $faqHtml, $innerMatch)) {
-            return [];
-        }
-
-        $inner = $innerMatch[1];
-        $items = [];
-
-        if (preg_match_all(
-            '/<div[^>]*class="[^"]*\bplp-faq__item\b[^"]*"[^>]*>(.*?)<\/div>/is',
-            $inner,
-            $itemMatches
-        )) {
-            foreach ($itemMatches[1] as $itemHtml) {
-                $items[] = $this->splitFaqItem($itemHtml);
-            }
-            return array_values(array_filter($items, static fn (array $item): bool => $item['content'] !== ''));
-        }
-
-        if (preg_match_all(
-            '/<(h[2-4])[^>]*>(.*?)<\/\1>(.*?)(?=<h[2-4]|$)/is',
-            $inner,
-            $headingMatches,
-            PREG_SET_ORDER
-        )) {
-            foreach ($headingMatches as $headingMatch) {
-                $items[] = [
-                    'title' => trim(strip_tags($headingMatch[2])),
-                    'content' => trim($headingMatch[3]),
-                ];
-            }
-        }
-
-        if ($items === [] && trim($inner) !== '') {
-            $items[] = [
-                'title' => (string) __('Frequently Asked Questions'),
-                'content' => $inner,
-            ];
-        }
-
-        return $items;
-    }
-
-    /**
-     * @return array{title: string, content: string}
-     */
-    private function splitFaqItem(string $itemHtml): array
-    {
-        $title = '';
-        $content = $itemHtml;
-
-        if (preg_match('/<(h[2-4]|button)[^>]*>(.*?)<\/\1>/is', $itemHtml, $titleMatch)) {
-            $title = trim(strip_tags($titleMatch[2]));
-            $content = trim((string) preg_replace('/<' . $titleMatch[1] . '[^>]*>.*?<\/' . $titleMatch[1] . '>/is', '', $itemHtml, 1));
-        }
-
-        return [
-            'title' => $title !== '' ? $title : (string) __('Details'),
-            'content' => $content,
-        ];
     }
 }

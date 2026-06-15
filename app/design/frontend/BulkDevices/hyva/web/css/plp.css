@@ -796,12 +796,54 @@
     border-radius: 2px;
 }
 
-/* plp-faq accordion — outside read more, open by default */
-.plp-category-bottom__faq-wrap {
-    margin-top: 1.5rem;
+.page-bottom .plp-category-faq {
+    --bb-plp-bottom-accent: #eb7d1e;
+    width: 100%;
+    padding-bottom: 2.5rem;
+    background: #ffffff;
 }
 
-.plp-category-bottom__faq-item {
+.plp-category-faq__container {
+    width: 70%;
+    max-width: 96rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    box-sizing: border-box;
+}
+
+.plp-category-faq__heading {
+    display: flex;
+    align-items: flex-end;
+    width: 100%;
+    margin: 0 0 1.5rem;
+}
+
+.plp-category-faq__heading > span {
+    flex-shrink: 0;
+    font-size: 1.125rem;
+    font-weight: 700;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: #111827;
+    padding-bottom: 0.4rem;
+    border-bottom: 3px solid var(--bb-plp-bottom-accent);
+}
+
+.plp-category-faq__heading::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    margin-bottom: calc(0.4rem + 1px);
+    background: #d1d5db;
+}
+
+.plp-category-faq__accordion {
+    max-width: 56rem;
+    margin-inline: auto;
+}
+
+.plp-category-faq__item {
     margin-bottom: 1rem;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -809,7 +851,11 @@
     overflow: hidden;
 }
 
-.plp-category-bottom__faq-trigger {
+.plp-category-faq__item-title {
+    margin: 0;
+}
+
+.plp-category-faq__trigger {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -826,11 +872,11 @@
     cursor: pointer;
 }
 
-.plp-category-bottom__faq-trigger:hover {
+.plp-category-faq__trigger:hover {
     background: #f3f4f6;
 }
 
-.plp-category-bottom__faq-icon {
+.plp-category-faq__icon {
     flex-shrink: 0;
     padding: 0.125rem 0.25rem;
     border: 1px solid #d1d5db;
@@ -838,14 +884,24 @@
     background: #ffffff;
 }
 
-.plp-category-bottom__faq-content {
+.plp-category-faq__content {
     padding: 1rem 1.25rem 1.25rem;
     font-size: 0.9375rem;
     line-height: 1.7;
     color: #4b5563;
 }
 
-.plp-category-bottom__faq--static {
+.plp-category-faq__content p {
+    margin: 0 0 0.75rem;
+}
+
+.plp-category-faq__content p:last-child {
+    margin-bottom: 0;
+}
+
+.plp-category-faq__static {
+    max-width: 56rem;
+    margin-inline: auto;
     font-size: 0.9375rem;
     line-height: 1.7;
     color: #4b5563;

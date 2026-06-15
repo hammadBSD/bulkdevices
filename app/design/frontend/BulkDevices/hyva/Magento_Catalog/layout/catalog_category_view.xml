@@ -20,6 +20,10 @@
             <block class="Aalogics\CategoryText\Block\CategoryText"
                    name="category.text.bottom"
                    template="Magento_Catalog::category/bottom-text.phtml"/>
+            <block class="Aalogics\CategoryText\Block\CategoryText"
+                   name="category.faqs.bottom"
+                   template="Magento_Catalog::category/faqs.phtml"
+                   after="category.text.bottom"/>
         </referenceContainer>
 
         <referenceContainer name="before.body.end">

@@ -1,0 +1,91 @@
+<?php
+
+declare(strict_types=1);
+
+use Aalogics\CategoryText\ViewModel\CategoryFaqs;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HeroiconsOutline;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var CategoryFaqs $categoryFaqsViewModel */
+$categoryFaqsViewModel = $viewModels->require(CategoryFaqs::class);
+
+/** @var HeroiconsOutline $heroicons */
+$heroicons = $viewModels->require(HeroiconsOutline::class);
+
+$parsed = $categoryFaqsViewModel->getParsedContent();
+if ($parsed === null || !$parsed['hasContent']) {
+    return;
+}
+
+$sectionId = 'plp-category-faq-' . (int) ($parsed['categoryId'] ?? 0);
+?>
+<section
+    class="plp-category-faq"
+    aria-labelledby="<?= $escaper->escapeHtmlAttr($sectionId . '-heading') ?>"
+>
+    <div class="plp-category-faq__container">
+        <div class="plp-category-faq__heading" id="<?= $escaper->escapeHtmlAttr($sectionId . '-heading') ?>">
+            <span><?= $escaper->escapeHtml(__('FAQ')) ?></span>
+        </div>
+
+        <?php if ($parsed['faqItems'] !== []): ?>
+            <div
+                class="plp-category-faq__accordion"
+                role="region"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Frequently Asked Questions')) ?>"
+            >
+                <?php foreach ($parsed['faqItems'] as $faqItem): ?>
+                    <div
+                        x-data="{ open: false, id: $id('plp-category-faq-item') }"
+                        class="plp-category-faq__item"
+                    >
+                        <h3 class="plp-category-faq__item-title" :id="`${id}-title`">
+                            <button
+                                type="button"
+                                @click="open = !open"
+                                class="plp-category-faq__trigger"
+                                :aria-controls="`${id}-content`"
+                                :aria-expanded="open"
+                            >
+                                <span><?= $escaper->escapeHtml($faqItem['title']) ?></span>
+                                <span class="plp-category-faq__icon">
+                                    <?= $heroicons->chevronDownHtml(
+                                        'transition-transform transform duration-300 ease-in-out',
+                                        24,
+                                        24,
+                                        [
+                                            ':class' => "{ 'rotate-180': open }",
+                                            'aria-hidden' => 'true',
+                                            'focusable' => 'false',
+                                        ]
+                                    ); ?>
+                                </span>
+                            </button>
+                        </h3>
+                        <div
+                            :id="`${id}-content`"
+                            class="plp-category-faq__content"
+                            x-show="open"
+                            x-collapse
+                            role="region"
+                            :aria-labelledby="`${id}-title`"
+                            x-cloak
+                        >
+                            <?= /* @noEscape */ $faqItem['content'] ?>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            </div>
+        <?php else: ?>
+            <div class="plp-category-faq__static">
+                <?= /* @noEscape */ $parsed['faqHtml'] ?>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>
