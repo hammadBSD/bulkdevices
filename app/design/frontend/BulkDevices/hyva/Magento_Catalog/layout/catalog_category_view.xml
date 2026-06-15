@@ -1,12 +1,12 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <update handle="hyva_quotation_modal"/>
     <head>
         <css src="css/plp.css"/>
         <css src="css/product-card.css"/>
     </head>
     <body>
+        <referenceBlock name="bdus.hyva.quotation.modal" remove="true"/>
         <referenceBlock name="custom.block" remove="true"/>
         <referenceBlock name="getaquote_index_index" remove="true"/>
 

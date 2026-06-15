@@ -103,7 +103,7 @@ class QuotationForm implements ArgumentInterface
     }
 
     /**
-     * Floating RFQ trigger — category and other pages only, never on PDP or homepage.
+     * Floating RFQ trigger — not on PDP, homepage, or category PLP.
      */
     public function shouldShowFloatingTrigger(): bool
     {
@@ -111,6 +111,9 @@ class QuotationForm implements ArgumentInterface
             return false;
         }
 
-        return !in_array($this->request->getFullActionName(), ['cms_index_index'], true);
+        return !in_array($this->request->getFullActionName(), [
+            'cms_index_index',
+            'catalog_category_view',
+        ], true);
     }
 }
