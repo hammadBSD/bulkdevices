@@ -22,6 +22,8 @@ $currentCategoryViewModel = $viewModels->require(CurrentCategory::class);
 $eagerLoadImagesCount = (int) ($block->getData('eager_load_images_count') ?? 3);
 $productCollection = $block->getLoadedProductCollection();
 $cardBlock = $block->getChildBlock('product.card');
+$viewMode = $block->getMode() === 'grid' ? 'grid' : 'list';
+$isGrid = $viewMode === 'grid';
 
 ?>
 <?php if (!$productCollection->count()): ?>
@@ -39,8 +41,8 @@ $cardBlock = $block->getChildBlock('product.card');
     >
         <?= $block->getToolbarHtml() ?>
         <?= $block->getAdditionalHtml() ?>
-        <div class="bb-plp-list__products products wrapper mode-grid products-grid">
-            <ul role="list" class="bb-plp-grid">
+        <div class="bb-plp-list__products products wrapper mode-<?= $escaper->escapeHtmlAttr($viewMode) ?> products-<?= $escaper->escapeHtmlAttr($viewMode) ?>">
+            <ul role="list" class="bb-plp-grid<?= $isGrid ? '' : ' bb-plp-grid--list' ?>">
                 <?php
                 /** @var \Magento\Catalog\Model\Product $product */
                 foreach (array_values($productCollection->getItems()) as $i => $product):
@@ -51,7 +53,10 @@ $cardBlock = $block->getChildBlock('product.card');
                     }
                     ?>
                     <li class="bb-plp-grid__item">
-                        <?= $cardBlock->setData('product', $product)->toHtml() ?>
+                        <?= $cardBlock
+                            ->setData('product', $product)
+                            ->setData('view_mode', $viewMode)
+                            ->toHtml() ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
