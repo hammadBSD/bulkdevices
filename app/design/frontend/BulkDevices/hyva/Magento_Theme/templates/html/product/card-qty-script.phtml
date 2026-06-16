@@ -16,41 +16,55 @@ use Magento\Framework\View\Element\Template;
 $hyvaCsp = $viewModels->require(HyvaCsp::class);
 ?>
 <script>
-    function initProductCardQty(config) {
-        return {
-            qty: config.defaultQty,
-            minQty: config.minQty,
-            maxQty: config.maxQty,
-            step: config.step || 1,
-            increment() {
-                const next = this.qty + this.step;
-                if (this.maxQty === null || next <= this.maxQty) {
-                    this.qty = next;
+    (function () {
+        function productCardQtyFactory(config) {
+            return {
+                qty: config.defaultQty,
+                minQty: config.minQty,
+                maxQty: config.maxQty,
+                step: config.step || 1,
+                increment() {
+                    const next = this.qty + this.step;
+                    if (this.maxQty === null || next <= this.maxQty) {
+                        this.qty = next;
+                    }
+                },
+                decrement() {
+                    const next = this.qty - this.step;
+                    if (next >= this.minQty) {
+                        this.qty = next;
+                    }
+                },
+                clampQty() {
+                    let value = hyva.safeParseNumber(this.qty);
+                    if (Number.isNaN(value) || value < this.minQty) {
+                        value = this.minQty;
+                    }
+                    if (this.maxQty !== null && value > this.maxQty) {
+                        value = this.maxQty;
+                    }
+                    this.qty = value;
+                },
+                isMinQty() {
+                    return this.qty <= this.minQty;
+                },
+                isMaxQty() {
+                    return this.maxQty !== null && this.qty >= this.maxQty;
                 }
-            },
-            decrement() {
-                const next = this.qty - this.step;
-                if (next >= this.minQty) {
-                    this.qty = next;
+            };
+        }
+
+        window.initProductCardQty = productCardQtyFactory;
+
+        const initAlpine = window.deferLoadingAlpine || ((callback) => callback());
+        window.deferLoadingAlpine = (callback) => {
+            initAlpine(() => {
+                if (window.Alpine && typeof window.Alpine.data === 'function') {
+                    window.Alpine.data('productCardQty', productCardQtyFactory);
                 }
-            },
-            clampQty() {
-                let value = hyva.safeParseNumber(this.qty);
-                if (Number.isNaN(value) || value < this.minQty) {
-                    value = this.minQty;
-                }
-                if (this.maxQty !== null && value > this.maxQty) {
-                    value = this.maxQty;
-                }
-                this.qty = value;
-            },
-            isMinQty() {
-                return this.qty <= this.minQty;
-            },
-            isMaxQty() {
-                return this.maxQty !== null && this.qty >= this.maxQty;
-            }
+                callback();
+            });
         };
-    }
+    })();
 </script>
 <?php $hyvaCsp->registerInlineScript() ?>

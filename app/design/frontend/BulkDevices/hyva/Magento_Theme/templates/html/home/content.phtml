@@ -16,12 +16,15 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             <source
                 media="(max-width: 576px)"
                 srcset="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-m.webp"
+                width="768"
+                height="420"
             >
             <img
                 src="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-d.webp"
                 alt="Refurbished and new IT hardware components"
                 width="1920"
                 height="520"
+                sizes="100vw"
                 loading="eager"
                 fetchpriority="high"
                 decoding="async"
@@ -52,7 +55,7 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             <li class="home-features__item">
                 <article class="home-features__card">
                     <div class="home-features__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/sf-price-icon.webp" alt="" width="48" height="48" loading="lazy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="23" fill="#fff5eb" stroke="#eb7d1e" stroke-width="1.5"/><path fill="#eb7d1e" d="M15 17h14a3 3 0 0 1 0 6h-9v12h-2V17h-3zm2 2v2h11a1 1 0 0 0 0-2H17zm0 4v2h10a1 1 0 0 0 0-2H17zm1 6h8v2h-8v-2z"/></svg>
                     </div>
                     <div class="home-features__body">
                         <h3 class="home-features__title">Price Match Guarantee</h3>
@@ -63,7 +66,7 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             <li class="home-features__item">
                 <article class="home-features__card">
                     <div class="home-features__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/sf-return-icon.webp" alt="" width="48" height="48" loading="lazy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="23" fill="#fff5eb" stroke="#eb7d1e" stroke-width="1.5"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M30 16H18l-4 8h20l-4-8zM14 24h20v6a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2v-6z"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" d="M20 20v-2a4 4 0 0 1 8 0v2"/></svg>
                     </div>
                     <div class="home-features__body">
                         <h3 class="home-features__title">Easy Return</h3>
@@ -74,7 +77,7 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             <li class="home-features__item">
                 <article class="home-features__card">
                     <div class="home-features__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/sf-payment-icon.webp" alt="" width="48" height="48" loading="lazy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="23" fill="#fff5eb" stroke="#eb7d1e" stroke-width="1.5"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M24 14l8 4v8c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-8l8-4z"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 24l3 3 7-7"/></svg>
                     </div>
                     <div class="home-features__body">
                         <h3 class="home-features__title">Secure Payment</h3>
@@ -85,7 +88,7 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             <li class="home-features__item">
                 <article class="home-features__card">
                     <div class="home-features__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/sf-shiping-icon.webp" alt="" width="48" height="48" loading="lazy">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48" aria-hidden="true" focusable="false"><circle cx="24" cy="24" r="23" fill="#fff5eb" stroke="#eb7d1e" stroke-width="1.5"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M12 28h24l-2-8H14l-2 8zm2 0v4h20v-4M16 32h16"/><circle cx="17" cy="36" r="2" fill="#eb7d1e"/><circle cx="31" cy="36" r="2" fill="#eb7d1e"/></svg>
                     </div>
                     <div class="home-features__body">
                         <h3 class="home-features__title">Free Shipping</h3>
@@ -98,7 +101,7 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
 </section>
 <?= $block->getChildHtml('home_promotional_products') ?>
 
-<div x-data="{ visible: false }" x-intersect.once="visible = true">
+<div x-data="{ visible: false }" x-intersect.once.margin.800px="visible = true">
     <template x-if="visible">
         <div>
 <section class="home-industries" aria-labelledby="home-industries-heading">
@@ -183,17 +186,8 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
     </template>
 </div>
 
-<div x-data="{ visible: false }" x-intersect.once="visible = true">
-    <template x-if="visible">
-        <div>
 <?= $block->getChildHtml('home_featured_products') ?>
-        </div>
-    </template>
-</div>
 
-<div x-data="{ visible: false }" x-intersect.once="visible = true">
-    <template x-if="visible">
-        <div>
 <section class="home-top-categories" aria-labelledby="home-top-categories-heading">
     <div class="container home-top-categories__container">
         <h2 id="home-top-categories-heading" class="home-top-categories__title">Top Categories</h2>
@@ -265,9 +259,6 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
         </ul>
     </div>
 </section>
-        </div>
-    </template>
-</div>
 <section class="home-whyus" aria-labelledby="home-whyus-heading">
     <div class="container home-whyus__container">
         <div class="home-whyus__layout">
@@ -304,7 +295,7 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
     </div>
 </section>
 
-<div x-data="{ visible: false }" x-intersect.once="visible = true">
+<div x-data="{ visible: false }" x-intersect.once.margin.300px="visible = true">
     <template x-if="visible">
         <div>
 <section class="home-get-started" aria-labelledby="home-get-started-heading">

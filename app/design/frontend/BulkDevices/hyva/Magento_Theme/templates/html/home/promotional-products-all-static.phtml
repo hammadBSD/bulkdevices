@@ -51,16 +51,21 @@ $cardBlock = $block->getChildBlock('product.card');
 ?>
 
 <ul class="home-product-tabs__grid">
-    <?php foreach ($skus as $sku): ?>
+    <?php foreach ($skus as $index => $sku): ?>
         <?php
         $product = $productsBySku[strtoupper($sku)] ?? null;
         if (!$product instanceof Product) {
             continue;
         }
+        $product->setData(
+            'image_custom_attributes',
+            $index < 4 ? ['loading' => 'eager'] : ['loading' => 'lazy']
+        );
         ?>
         <li class="bb-product-grid__item home-product-tabs__item">
             <?= $cardBlock
                 ?->setData('product', $product)
+                ->setData('defer_qty_alpine', $index >= 4)
                 ->toHtml() ?>
         </li>
     <?php endforeach; ?>

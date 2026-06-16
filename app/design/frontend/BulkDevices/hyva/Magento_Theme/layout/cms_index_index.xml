@@ -3,7 +3,7 @@
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="hyva_quotation_modal"/>
     <head>
-        <css src="css/home.css"/>
+        <css src="css/home-critical.css"/>
         <link src="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-m.webp"
               src_type="url"
               rel="preload"
@@ -19,6 +19,14 @@
         <remove src="Mageplaza_Blog::css/mpBlogIcon.css"/>
     </head>
     <body>
+        <referenceBlock name="head.additional">
+            <block name="home.deferred.styles"
+                   template="Magento_Theme::html/home/deferred-styles.phtml"
+                   before="-"/>
+            <block name="home.promotional.preloads"
+                   template="Magento_Theme::html/home/head-preloads.phtml"
+                   after="home.deferred.styles"/>
+        </referenceBlock>
         <referenceContainer name="content">
             <block name="home-content"
                    template="Magento_Theme::html/home/content.phtml"
@@ -58,9 +66,10 @@
         <referenceBlock name="cms_page" remove="true"/>
         <referenceBlock name="page.main.title" remove="true"/>
 
-        <referenceContainer name="before.body.end">
+        <referenceBlock name="script-alpine-js">
             <block name="product.card.qty.script"
-                   template="Magento_Theme::html/product/card-qty-script.phtml"/>
-        </referenceContainer>
+                   template="Magento_Theme::html/product/card-qty-script.phtml"
+                   before="-"/>
+        </referenceBlock>
     </body>
 </page>
