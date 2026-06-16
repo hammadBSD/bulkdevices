@@ -69,7 +69,7 @@ $defaultOpenFilters = ['cat', 'price'];
         <div
             id="filters-content"
             class="bb-plp-filters__content block-content filter-content hidden md:block"
-            :class="{ 'hidden': !blockOpen }"
+            :class="{ 'hidden': isMobile && !blockOpen }"
         >
             <?= $block->getChildHtml('state') ?>
             <a
@@ -86,7 +86,9 @@ $defaultOpenFilters = ['cat', 'price'];
                             open: <?= $isOpenByDefault ? 'true' : 'false' ?>,
                             id: $id('filter-option')
                         }"
+                        <?php if (!$isOpenByDefault): ?>
                         x-defer="intersect"
+                        <?php endif; ?>
                         class="bb-plp-filters__group filter-option card"
                     >
                         <h3 :id="`${id}-title`">
@@ -116,6 +118,15 @@ $defaultOpenFilters = ['cat', 'price'];
                                 </span>
                             </button>
                         </h3>
+                        <?php if ($isOpenByDefault): ?>
+                            <div
+                                :id="`${id}-content`"
+                                class="bb-plp-filters__group-content filter-options-content"
+                                x-show="open"
+                            >
+                                <?= /* @noEscape */ $block->getChildBlock('renderer')->setFilterTitle($filter->getName())->render($filter); ?>
+                            </div>
+                        <?php else: ?>
                         <template x-if="open">
                             <div
                                 :id="`${id}-content`"
@@ -124,6 +135,7 @@ $defaultOpenFilters = ['cat', 'price'];
                                 <?= /* @noEscape */ $block->getChildBlock('renderer')->setFilterTitle($filter->getName())->render($filter); ?>
                             </div>
                         </template>
+                        <?php endif; ?>
                     </div>
                 <?php endif; ?>
             <?php endforeach; ?>
@@ -139,6 +151,9 @@ $defaultOpenFilters = ['cat', 'price'];
                     this.isMobile = mobileElement
                         ? getComputedStyle(mobileElement).display !== "none"
                         : window.matchMedia('(max-width: 767px)').matches;
+                    if (!this.isMobile) {
+                        this.blockOpen = true;
+                    }
                 }
             }
         }

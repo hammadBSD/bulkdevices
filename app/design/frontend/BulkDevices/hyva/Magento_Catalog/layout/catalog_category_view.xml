@@ -2,15 +2,26 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
-        <css src="css/plp.css"/>
+        <css src="css/plp-critical.css"/>
         <css src="css/product-card.css"/>
     </head>
     <body>
+        <referenceBlock name="head.additional">
+            <block name="plp.deferred.styles"
+                   template="Magento_Catalog::category/plp-deferred-styles.phtml"
+                   before="-"/>
+            <block name="plp.product.preloads"
+                   template="Magento_Catalog::category/head-preloads.phtml"
+                   after="plp.deferred.styles"/>
+        </referenceBlock>
         <referenceBlock name="bdus.hyva.quotation.modal" remove="true"/>
         <referenceBlock name="custom.block" remove="true"/>
         <referenceBlock name="getaquote_index_index" remove="true"/>
 
         <referenceBlock name="category.products.list">
+            <arguments>
+                <argument name="eager_load_images_count" xsi:type="number">4</argument>
+            </arguments>
             <block name="category.product.card"
                    as="product.card"
                    template="Magento_Theme::html/product/card.phtml"/>

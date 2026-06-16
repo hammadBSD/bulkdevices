@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+use BSD\Storefront\ViewModel\CategoryProductPreload;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var CategoryProductPreload $preloadViewModel */
+$preloadViewModel = $viewModels->require(CategoryProductPreload::class);
+
+foreach ($preloadViewModel->getPreloadImageUrls() as $imageUrl): ?>
+<link rel="preload" as="image" href="<?= $escaper->escapeUrl($imageUrl) ?>" fetchpriority="high">
+<?php endforeach; ?>
