@@ -87,7 +87,7 @@ $productName = $block->getProduct()->getName();
                     alt="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
                     title="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
                     class="object-contain object-center w-full h-auto"
-                    :class="fullscreen ? (galleryReady ? 'invisible max-h-[75vh]' : 'max-h-[75vh]') : (galleryReady ? 'invisible' : '')"
+                    :class="fullscreen ? (activeImageLoaded ? 'invisible max-h-[75vh]' : 'max-h-[75vh]') : (activeImageLoaded ? 'invisible' : '')"
                     src="<?= /* @noEscape */ $mainImageData ?>"
                     width="<?= /* @noEscape */ $mediumWidth ?>"
                     height="<?= /* @noEscape */ $mediumHeight ?>"
@@ -105,6 +105,8 @@ $productName = $block->getProduct()->getName();
                         width="<?= /* @noEscape */ $mediumWidth ?>"
                         height="<?= /* @noEscape */ $mediumHeight ?>"
                         :loading="active !== index ? 'lazy' : 'eager'"
+                        :data-gallery-index="index"
+                        @load="active === index && (activeImageLoaded = true)"
                         :src="fullscreen ? image.full : image.img"
                         x-transition.opacity.duration.500ms
                         x-show="active === index"
@@ -201,6 +203,8 @@ $productName = $block->getProduct()->getName();
                                     :title="image.caption || '<?= $escaper->escapeJs(__("%1 thumbnail", $productName)) ?>'"
                                     width="<?= /* @noEscape */ $smallWidth ?>"
                                     height="<?= /* @noEscape */ $smallHeight ?>"
+                                    :loading="index === active ? 'eager' : 'lazy'"
+                                    decoding="async"
                                 >
                                 <span
                                     class="absolute inset-0 grid place-items-center"
@@ -245,6 +249,7 @@ $productName = $block->getProduct()->getName();
         return {
             "showThumbnails": false,
             "galleryReady": false,
+            "activeImageLoaded": false,
             "active": 0,
             "videoData": {},
             "activeVideoType": false,
@@ -269,9 +274,11 @@ $productName = $block->getProduct()->getName();
             init() {
                 this.initActive();
                 this.galleryReady = true;
+                this.activeImageLoaded = false;
                 this.$nextTick(() => {
                     this.calcPageSize();
                     this.calcScrollStartEnd();
+                    this.checkActiveImageLoaded();
                 });
 
                 this.$watch('fullscreen', open => {
@@ -320,6 +327,7 @@ $productName = $block->getProduct()->getName();
             },
             setActive(index) {
                 this.active = index;
+                this.activeImageLoaded = false;
                 this.activeVideoType = false;
                 if (window.youtubePlayer) {
                     window.youtubePlayer.stopVideo();
@@ -329,6 +337,16 @@ $productName = $block->getProduct()->getName();
                 }
                 if (this.images[index].type === 'video' && this.autoplayVideo) {
                     this.activateVideo();
+                }
+                this.$nextTick(() => this.checkActiveImageLoaded());
+            },
+            checkActiveImageLoaded() {
+                const activeImg = this.$el.querySelector(`img[data-gallery-index="${this.active}"]`);
+                if (!activeImg) {
+                    return;
+                }
+                if (activeImg.complete && activeImg.naturalWidth > 0) {
+                    this.activeImageLoaded = true;
                 }
             },
             activateVideo() {

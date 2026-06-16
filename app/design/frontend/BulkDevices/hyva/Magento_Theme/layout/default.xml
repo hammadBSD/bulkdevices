@@ -44,8 +44,8 @@
             </block>
             <block name="header-content" template="Magento_Theme::html/header.phtml">
                 <arguments>
-                    <argument name="show_compare" xsi:type="boolean">true</argument>
-                    <!-- <argument name="show_wishlist" xsi:type="boolean">true</argument> -->
+                    <argument name="show_compare" xsi:type="boolean">false</argument>
+                    <argument name="show_wishlist" xsi:type="boolean">false</argument>
                 </arguments>
 
                 <block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
@@ -57,8 +57,6 @@
                 </block>
 
                 <block name="header-search" template="Magento_Theme::html/header/search-form.phtml"/>
-                <block name="header-compare" as="compare" template="Magento_Theme::html/header/compare.phtml"/>
-
                 <block name="cart-drawer" template="Magento_Theme::html/cart/cart-drawer.phtml" ifconfig="checkout/sidebar/display">
                     <block name="cart-drawer-loading" as="loading" template="Hyva_Theme::ui/loading.phtml"/>
                     <container name="extra_actions"/>
@@ -152,10 +150,6 @@
                    as="authentication-popup"
                    class="Magento\Customer\Block\Account\Customer"
                    template="Magento_Customer::account/authentication-popup.phtml"/>
-            <block name="header.content.wishlist"
-                   as="wishlist"
-                   template="Magento_Wishlist::header/wishlist.phtml"
-                   ifconfig="wishlist/general/active"/>
         </referenceBlock>
 
         <referenceContainer name="top.container">

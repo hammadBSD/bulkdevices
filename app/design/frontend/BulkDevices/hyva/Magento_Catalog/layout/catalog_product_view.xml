@@ -11,9 +11,14 @@
     <update handle="catalog_product_opengraph"/>
     <update handle="hyva_quotation_modal"/>
     <head>
-        <css src="css/pdp.css"/>
+        <css src="css/pdp-critical.css"/>
     </head>
     <body>
+        <referenceBlock name="head.additional">
+            <block name="pdp.deferred.styles"
+                   template="Magento_Catalog::product/pdp-deferred-styles.phtml"
+                   before="-"/>
+        </referenceBlock>
         <referenceBlock name="custom.text" remove="true"/>
         <referenceBlock name="related" remove="true"/>
         <referenceBlock name="upsell" remove="true"/>
@@ -96,11 +101,6 @@
                         />
 
                         <block name="product.info.addtocart"  template="Magento_Catalog::product/view/addtocart.phtml"/>
-
-                        <container name="product.info.additional.actions">
-                            <block name="product.info.addtowishlist"  template="Magento_Catalog::product/view/addtowishlist.phtml"/>
-                            <block name="product.info.addtocompare"  template="Magento_Catalog::product/view/addtocompare.phtml"/>
-                        </container>
 
                         <block name="product.info.stockstatus"  template="Magento_Catalog::product/view/stock-status.phtml"/>
 

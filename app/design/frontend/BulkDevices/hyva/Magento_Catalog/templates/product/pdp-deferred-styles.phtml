@@ -1,0 +1,19 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+
+$deferredStylesUrl = $block->getViewFileUrl('css/pdp-deferred.css');
+?>
+<link rel="stylesheet"
+      href="<?= $escaper->escapeUrl($deferredStylesUrl) ?>"
+      media="print"
+      onload="this.media='all'">
+<noscript>
+    <link rel="stylesheet" href="<?= $escaper->escapeUrl($deferredStylesUrl) ?>">
+</noscript>
