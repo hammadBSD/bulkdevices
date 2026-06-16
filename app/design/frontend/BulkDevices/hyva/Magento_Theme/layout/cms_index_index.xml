@@ -43,7 +43,7 @@
                     <arguments>
                         <argument name="category_id" xsi:type="number">253</argument>
                         <argument name="product_count" xsi:type="number">5</argument>
-                        <argument name="title" xsi:type="string" translate="true">Featured Product</argument>
+                        <argument name="title" xsi:type="string" translate="true">Featured Products</argument>
                     </arguments>
                     <block name="home.product.card"
                            as="product.card"

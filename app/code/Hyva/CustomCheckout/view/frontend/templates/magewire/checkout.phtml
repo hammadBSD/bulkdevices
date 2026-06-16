@@ -35,6 +35,11 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
         <div class="hcc-error" role="alert"><?= $escaper->escapeHtml($magewire->errorMessage) ?></div>
     <?php endif; ?>
 
+    <div class="hcc-checkout__intro">
+        <h1 class="hcc-checkout__title"><?= $escaper->escapeHtml(__('SECURE CHECKOUT')) ?></h1>
+        <p class="hcc-checkout__subtitle"><?= $escaper->escapeHtml(__('Please enter your details below to complete your purchase')) ?></p>
+    </div>
+
     <div class="hcc-grid">
         <!-- Column 1: Shipping Address -->
         <section class="hcc-card" aria-labelledby="hcc-shipping-title">

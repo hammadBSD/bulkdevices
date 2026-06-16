@@ -72,7 +72,7 @@ $sectionId = 'plp-category-faq-' . (int) ($parsed['categoryId'] ?? 0);
                             :id="`${id}-content`"
                             class="plp-category-faq__content"
                             x-show="open"
-                            x-collapse
+                            x-transition
                             role="region"
                             :aria-labelledby="`${id}-title`"
                             x-cloak
