@@ -37,7 +37,7 @@ $config = [
 ];
 ?>
 <script type="application/json" id="bdus-quotation-modal-config"><?= /* @noEscape */ json_encode($config) ?></script>
-<div x-data="Object.assign(hyva.modal(), initBdusQuotationModal())">
+<div x-data="Object.assign(hyva.modal(), initBdusQuotationModal())" x-bind="eventListeners">
     <?php if ($quotationForm->shouldShowFloatingTrigger()): ?>
         <div class="fixed bottom-4 right-4 z-40">
             <button
@@ -244,6 +244,13 @@ $config = [
                 this.message = text;
                 if (window.dispatchMessages) {
                     window.dispatchMessages([{ type: 'error', text }], 5000);
+                }
+            },
+            eventListeners: {
+                ['@pageshow.window'](event) {
+                    if (event.persisted && Object.values(this.opened).some(Boolean)) {
+                        this.hide();
+                    }
                 }
             },
         };

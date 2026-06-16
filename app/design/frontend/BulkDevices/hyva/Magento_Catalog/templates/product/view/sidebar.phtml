@@ -83,10 +83,11 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             <div class="bb-pdp-sidebar__support-body">
                 <p class="bb-pdp-sidebar__support-heading"><?= $escaper->escapeHtml(__('Expert Team Support')) ?></p>
                 <div class="bb-pdp-sidebar__support-links">
-                    <a
+                    <button
+                        type="button"
                         class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--chat"
-                        href="javascript:$zopim.livechat.window.show();"
-                    ><?= $escaper->escapeHtml(__('Chat')) ?></a>
+                        onclick="window.bdusOpenZendeskChat && window.bdusOpenZendeskChat(true)"
+                    ><?= $escaper->escapeHtml(__('Chat')) ?></button>
                     <a
                         class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--whatsapp bb-pdp-sidebar__support-link--desktop"
                         href="https://web.whatsapp.com/send?phone=+921xxxxxxxxx&amp;text=Enter Default Message for general Whatsapp Chat"

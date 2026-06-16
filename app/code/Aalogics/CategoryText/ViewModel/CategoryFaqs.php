@@ -7,10 +7,11 @@ namespace Aalogics\CategoryText\ViewModel;
 use Aalogics\CategoryText\Model\FaqHtmlParser;
 use Magento\Catalog\Model\Category;
 use Magento\Cms\Model\Template\FilterProvider;
+use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
-class CategoryFaqs implements ArgumentInterface
+class CategoryFaqs implements ArgumentInterface, IdentityInterface
 {
     public const ATTRIBUTE_CODE = 'category_faqs';
 
@@ -19,6 +20,15 @@ class CategoryFaqs implements ArgumentInterface
         private readonly Registry $registry,
         private readonly FaqHtmlParser $faqHtmlParser,
     ) {
+    }
+
+    public function getIdentities(): array
+    {
+        $category = $this->registry->registry('current_category');
+
+        return $category instanceof IdentityInterface
+            ? $category->getIdentities()
+            : [];
     }
 
     /**

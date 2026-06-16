@@ -62,7 +62,18 @@ return [
         'pnp_custom_cache_google_seo' => 1
     ],
     'downloadable_domains' => [
-        'bulkdevices.local'
+        'bulkdevices.local',
+        'bulkdevices.com',
+        'www.bulkdevices.com'
+    ],
+    'system' => [
+        'default' => [
+            'system' => [
+                'full_page_cache' => [
+                    'bfcache' => '1'
+                ]
+            ]
+        ]
     ],
     'install' => [
         'date' => 'Thu, 10 Apr 2025 16:54:26 +0000'
@@ -96,6 +107,18 @@ return [
     ],
     'cache' => [
         'frontend' => [
+            'default' => [
+                'id_prefix' => '5a4_',
+                'backend' => 'Magento\\Framework\\Cache\\Backend\\Redis',
+                'backend_options' => [
+                    'server' => '10.75.48.124',
+                    'database' => '0',
+                    'port' => '21364',
+                    'password' => '',
+                    'compress_data' => '1',
+                    'compression_lib' => 'gzip'
+                ]
+            ],
             'page_cache' => [
                 'id_prefix' => '5a4_',
                 'backend' => 'Magento\\Framework\\Cache\\Backend\\Redis',
@@ -104,8 +127,8 @@ return [
                     'database' => '1',
                     'port' => '21364',
                     'password' => '',
-                    'compress_data' => '0',
-                    'compression_lib' => ''
+                    'compress_data' => '1',
+                    'compression_lib' => 'gzip'
                 ]
             ]
         ],

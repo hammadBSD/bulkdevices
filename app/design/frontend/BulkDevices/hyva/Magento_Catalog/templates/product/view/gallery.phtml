@@ -514,6 +514,11 @@ $productName = $block->getProduct()->getName();
                 ['@keyup.arrow-left']() {
                     this.previousItem();
                 },
+                ['@pageshow.window'](event) {
+                    if (event.persisted && this.fullscreen) {
+                        this.closeFullScreen();
+                    }
+                },
             },
             scrollLock(use = true) {
                 document.body.style.overflow = use ? "hidden" : "";

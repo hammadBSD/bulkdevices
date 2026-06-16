@@ -3,13 +3,14 @@
 namespace BSD\ExpertSupportTeamTab\ViewModel;
 
 use BSD\ExpertSupportTeamTab\Model\Config;
+use BSD\ExpertSupportTeamTab\Registry\CurrentProduct;
+use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\Store\Model\ScopeInterface;
-use BSD\ExpertSupportTeamTab\Registry\CurrentProduct;
+use Magento\Store\Model\StoreManagerInterface;
 
-class ExpertSupportTabViewModel implements ArgumentInterface
+class ExpertSupportTabViewModel implements ArgumentInterface, IdentityInterface
 {
     /** @var Config */
     private Config $config;
@@ -63,5 +64,14 @@ class ExpertSupportTabViewModel implements ArgumentInterface
     public function getBaseUrl()
     {
         return $this->storeManager->getStore()->getBaseUrl();
+    }
+
+    public function getIdentities(): array
+    {
+        $product = $this->currentProduct->get();
+
+        return $product instanceof IdentityInterface
+            ? $product->getIdentities()
+            : [];
     }
 }

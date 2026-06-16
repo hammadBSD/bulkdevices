@@ -1,0 +1,56 @@
+<?php declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+use Yireo\GoogleTagManager2\Config\Config;
+
+/** @var Config $config */
+/** @var Template $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+$config = $block->getConfig();
+$hyvaCsp = $viewModels->require(HyvaCsp::class);
+$gtmId = $config->getId();
+?>
+
+<script>
+    (function () {
+        const gtmId = '<?= $escaper->escapeJs($gtmId) ?>';
+
+        const initGtm = () => {
+            if (window.__bdusGtmLoaded) {
+                return;
+            }
+            window.__bdusGtmLoaded = true;
+
+            (function (w, d, s, l, i) {
+                w[l] = w[l] || [];
+                w[l].push({'gtm.start': new Date().getTime(), event: 'gtm.js'});
+                const f = d.getElementsByTagName(s)[0];
+                const j = d.createElement(s);
+                const dl = l !== 'dataLayer' ? '&l=' + l : '';
+                j.async = true;
+                j.src = 'https://www.googletagmanager.com/gtm.js?id=' + i + dl;
+                f.parentNode.insertBefore(j, f);
+            })(window, document, 'script', 'dataLayer', gtmId);
+        };
+
+        if (document.prerendering) {
+            document.addEventListener('prerenderingchange', initGtm, { once: true });
+        } else {
+            window.addEventListener('init-external-scripts', initGtm, { once: true, passive: true });
+        }
+    })();
+    //# sourceURL=bdus-gtm-deferred.js
+</script>
+
+<?php if ($config->isDebug()): ?>
+<script>
+    window.YIREO_GOOGLETAGMANAGER2_DEBUG = true;
+    window.YIREO_GOOGLETAGMANAGER2_DEBUG_CLICKS = <?= $config->isDebugClicks() ? 'true' : 'false' ?>;
+</script>
+<?php endif; ?>
+<?php $hyvaCsp->registerInlineScript() ?>

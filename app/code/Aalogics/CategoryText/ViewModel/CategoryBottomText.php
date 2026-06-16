@@ -6,15 +6,25 @@ namespace Aalogics\CategoryText\ViewModel;
 
 use Magento\Catalog\Model\Category;
 use Magento\Cms\Model\Template\FilterProvider;
+use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
-class CategoryBottomText implements ArgumentInterface
+class CategoryBottomText implements ArgumentInterface, IdentityInterface
 {
     public function __construct(
         private readonly FilterProvider $filterProvider,
         private readonly Registry $registry
     ) {
+    }
+
+    public function getIdentities(): array
+    {
+        $category = $this->registry->registry('current_category');
+
+        return $category instanceof IdentityInterface
+            ? $category->getIdentities()
+            : [];
     }
 
     /**

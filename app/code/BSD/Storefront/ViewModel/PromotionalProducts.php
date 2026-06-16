@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace BSD\Storefront\ViewModel;
 
+use Magento\Catalog\Model\Category;
+use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 
-class PromotionalProducts implements ArgumentInterface
+class PromotionalProducts implements ArgumentInterface, IdentityInterface
 {
     private const DEFAULT_PRODUCT_COUNT = 8;
 
@@ -68,5 +70,16 @@ class PromotionalProducts implements ArgumentInterface
     public function getDefaultProductCount(): int
     {
         return self::DEFAULT_PRODUCT_COUNT;
+    }
+
+    public function getIdentities(): array
+    {
+        $identities = [];
+
+        foreach ($this->getAllowedCategoryIds() as $categoryId) {
+            $identities[] = Category::CACHE_TAG . '_' . $categoryId;
+        }
+
+        return $identities;
     }
 }

@@ -78,6 +78,7 @@ $columnClass = static function (array $children): string {
 <template x-if="menuReady">
 <div
     x-data="initMenuDesktop"
+    x-bind="eventListeners"
     class="menu-container z-9 navigation"
     @keydown.escape.window="closeCategories"
 >
@@ -271,6 +272,13 @@ $columnClass = static function (array $children): string {
             },
             setActiveCategory(index) {
                 this.activeCategory = Number(index);
+            },
+            eventListeners: {
+                ['@pageshow.window'](event) {
+                    if (event.persisted) {
+                        this.closeCategories();
+                    }
+                }
             }
         }
     }

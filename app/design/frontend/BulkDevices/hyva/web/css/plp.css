@@ -454,10 +454,21 @@
     background: #fffaf5;
 }
 
-.catalog-category-view .toolbar-bottom .pages strong {
+.catalog-category-view .toolbar-bottom .pages a[aria-current="page"],
+.catalog-category-view .toolbar-bottom .pages .item.current .page {
     border-color: var(--bb-plp-accent);
-    background: var(--bb-plp-accent);
-    color: #111827;
+    background: #fffaf5;
+    color: var(--bb-plp-accent);
+    cursor: default;
+    pointer-events: none;
+}
+
+.catalog-category-view .toolbar-bottom .pages strong.page {
+    border-color: var(--bb-plp-accent);
+    background: #fffaf5;
+    color: var(--bb-plp-accent);
+    cursor: default;
+    pointer-events: none;
 }
 
 /* Filters sidebar */

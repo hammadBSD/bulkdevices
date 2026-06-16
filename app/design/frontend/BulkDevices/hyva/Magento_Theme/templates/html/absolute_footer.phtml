@@ -5,10 +5,108 @@
  * See COPYING.txt for license details.
  */
 
- declare(strict_types=1);
+declare(strict_types=1);
 
- use Magento\Framework\View\Element\Template;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Magento\Framework\Escaper;
+use Magento\Theme\Block\Html\Footer;
 
-/** @var Template $block */
+/** @var Footer $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+/** @var HyvaCsp $hyvaCsp */
+
+$hyvaCsp = $viewModels->require(HyvaCsp::class);
+
+$miscHtml = (string) $block->getMiscellaneousHtml();
+$zendeskSnippetUrl = '';
+
+if (preg_match('#<script[^>]*\bsrc=["\']([^"\']*zdassets\.com[^"\']*)["\']#i', $miscHtml, $match)) {
+    $zendeskSnippetUrl = $match[1];
+}
+
+$miscHtml = preg_replace(
+    '#<script[^>]*\bsrc=["\'][^"\']*zdassets\.com[^"\']*["\'][^>]*>\s*</script>#i',
+    '',
+    $miscHtml
+);
+$miscHtml = preg_replace(
+    '#<!--\s*Start of[^>]*Zendesk Widget script\s*-->\s*<!--\s*End of[^>]*Zendesk Widget script\s*-->#is',
+    '',
+    $miscHtml
+);
 ?>
-<?= /* @noEscape */ $block->getMiscellaneousHtml();
+<?= /* @noEscape */ $miscHtml ?>
+<?php if ($zendeskSnippetUrl !== ''): ?>
+<script>
+    (function () {
+        const snippetUrl = '<?= $escaper->escapeJs($zendeskSnippetUrl) ?>';
+        let loadPromise = null;
+
+        const loadZendesk = () => {
+            if (loadPromise) {
+                return loadPromise;
+            }
+
+            loadPromise = new Promise((resolve, reject) => {
+                if (window.zE || document.getElementById('ze-snippet')) {
+                    resolve();
+                    return;
+                }
+
+                const script = document.createElement('script');
+                script.id = 'ze-snippet';
+                script.src = snippetUrl;
+                script.async = true;
+                script.onload = () => resolve();
+                script.onerror = () => reject(new Error('Zendesk snippet failed to load'));
+                document.head.appendChild(script);
+            });
+
+            return loadPromise;
+        };
+
+        const openChat = () => {
+            if (typeof window.zE === 'function') {
+                window.zE('messenger', 'open');
+                return true;
+            }
+
+            if (window.$zopim?.livechat?.window?.show) {
+                window.$zopim.livechat.window.show();
+                return true;
+            }
+
+            return false;
+        };
+
+        window.bdusOpenZendeskChat = (shouldOpen = false) => {
+            loadZendesk()
+                .then(() => {
+                    if (!shouldOpen) {
+                        return;
+                    }
+
+                    if (openChat()) {
+                        return;
+                    }
+
+                    let attempts = 0;
+                    const interval = window.setInterval(() => {
+                        if (openChat() || ++attempts >= 20) {
+                            window.clearInterval(interval);
+                        }
+                    }, 250);
+                })
+                .catch(() => {});
+        };
+
+        window.addEventListener('init-external-scripts', () => {
+            window.bdusOpenZendeskChat(false);
+        }, { once: true, passive: true });
+    })();
+    //# sourceURL=bdus-zendesk-deferred.js
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>
+<?php endif; ?>
