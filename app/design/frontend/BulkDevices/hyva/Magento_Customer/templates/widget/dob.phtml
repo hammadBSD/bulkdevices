@@ -1,0 +1,115 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Date;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Hyva\Theme\ViewModel\Locale;
+use Magento\Customer\Block\Widget\Dob;
+use Magento\Customer\ViewModel\Address as AddressViewModel;
+use Magento\Framework\Escaper;
+
+// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
+
+/** @var Escaper $escaper */
+/** @var Dob $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var HyvaCsp $hyvaCsp */
+
+/** @var Date $date */
+$date = $viewModels->require(Date::class);
+
+/** @var Locale $locale */
+$locale = $viewModels->require(Locale::class);
+
+/** @var AddressViewModel $addressViewModel */
+$addressViewModel = $viewModels->require(AddressViewModel::class);
+
+$validationClass = $addressViewModel->addressGetAttributeValidationClass('dob');
+?>
+
+<div
+    class="field field-reserved date <?= $block->isRequired() ? 'required' : '' ?>"
+    x-data="initDatePicker"
+>
+    <label for="<?= $escaper->escapeHtmlAttr($block->getHtmlId()) ?>_picker" class="label">
+        <span><?= $escaper->escapeHtml($block->getStoreLabel('dob')) ?></span>
+    </label>
+    <div class="control">
+        <input
+            type="date"
+            id="<?= $escaper->escapeHtmlAttr($block->getHtmlId()) ?>_picker"
+            name="<?= $escaper->escapeHtmlAttr($block->getHtmlId()) ?>_picker"
+            class="form-input <?= $escaper->escapeHtmlAttr($validationClass) ?: '' ?>"
+            placeholder="<?= $escaper->escapeHtml($block->getDateFormat()) ?>"
+            autocomplete="off"
+            :value="valuePicker"
+            @change="setValuePicker"
+            :min="getMinDate"
+            :max="getMaxDate"
+        >
+        <input
+            type="hidden"
+            name="<?= $escaper->escapeHtmlAttr($block->getFieldName('dob')) ?>"
+            :value="value"
+            <?php if ($block->isRequired()): ?>
+                required
+            <?php endif; ?>
+        >
+    </div>
+</div>
+<script>
+    function initDatePicker() {
+        return {
+            value: '<?= $escaper->escapeJs($block->getValue()) ?>',
+            initValuePicker: '<?= $escaper->escapeJs($date->getDateYMD($block->getValue())) ?>',
+            valuePicker: null,
+            locale: '<?= $escaper->escapeJs($locale->getLocale()) ?>',
+            init() {
+                this.valuePicker = this.value && this.dateToInputDate(new Date(this.initValuePicker));
+                this.$watch('valuePicker', value => this.value = this.convertDateToLocale(value));
+            },
+            setValuePicker() {
+                this.valuePicker = this.$event.target.value;
+            },
+            getDateOnYear(subtractYears = 0) {
+                const today = new Date();
+                const utcDate = new Date(Date.UTC(
+                    today.getUTCFullYear() - subtractYears,
+                    today.getMonth(),
+                    today.getDate()
+                ));
+                return this.dateToInputDate(utcDate);
+            },
+            getMinDate() {
+                return this.getDateOnYear(120);
+            },
+            getMaxDate() {
+                return this.getDateOnYear();
+            },
+            dateToInputDate(date) {
+                const year = date.getFullYear().toString().padStart(4, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const day = date.getDate().toString().padStart(2, '0');
+                return `${year}-${month}-${day}`;
+            },
+            convertDateToLocale(value) {
+                if (isNaN(new Date(value))) {
+                    return '';
+                }
+                const date = new Date(value);
+                const formattedDate = new Intl.DateTimeFormat(this.locale).format(date);
+                return formattedDate;
+            }
+        }
+    }
+
+    window.addEventListener('alpine:init', () => {
+        Alpine.data('initDatePicker', initDatePicker);
+    }, { once: true })
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>

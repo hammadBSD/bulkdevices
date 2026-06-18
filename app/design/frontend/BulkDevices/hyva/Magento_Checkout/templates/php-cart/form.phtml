@@ -1,0 +1,78 @@
+<?php
+/**
+ * Hyvä Themes - https://hyva.io
+ * Copyright © Hyvä Themes. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+declare(strict_types=1);
+
+// phpcs:disable Magento2.Templates.ThisInTemplate
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Cart\ItemOutput;
+use Hyva\Theme\ViewModel\Modal;
+use Magento\Checkout\Block\Cart\Grid;
+use Magento\Checkout\ViewModel\Cart as CartViewModel;
+use Magento\Framework\Escaper;
+
+/** @var Grid $block */
+/** @var ViewModelRegistry $viewModels */
+/** @var Escaper $escaper */
+
+/** @var CartViewModel $cartViewModel */
+$cartViewModel = $viewModels->require(CartViewModel::class);
+
+/** @var Modal $modalViewModel */
+$modalViewModel = $viewModels->require(Modal::class);
+
+/** @var ItemOutput $cartItemOutputViewModel */
+$cartItemOutputViewModel = $viewModels->require(ItemOutput::class);
+
+$mergedCells = ($cartItemOutputViewModel->isItemPriceDisplayBoth() ? 2 : 1);
+?>
+<?= $block->getChildHtml('form_before') ?>
+<form
+    id="form-validate"
+    class="form form-cart"
+    action="<?= $escaper->escapeUrl($block->getUrl('checkout/cart/updatePost')) ?>"
+    method="post"
+    @submit.prevent="postCart"
+>
+    <?= $block->getBlockHtml('formkey') ?>
+    <div class="<?= $mergedCells == 2 ? 'cart detailed' : 'cart' ?>">
+        <fieldset id="shopping-cart-table">
+            <legend class="sr-only">
+                <h2><?= $escaper->escapeHtml(__('Shopping Cart Items')) ?></h2>
+            </legend>
+            <ul>
+                <?php foreach ($block->getItems() as $item): ?>
+                    <li class="py-6 border-b border-gray-300 first:pt-0 last:pb-0 last:border-b-0">
+                        <?= $block->getItemHtml($item) ?>
+                    </li>
+                <?php endforeach ?>
+            </ul>
+        </fieldset>
+        <?php if ($block->getPagerHtml()): ?>
+            <div class="toolbar cart-products-toolbar mt-8">
+                <?= $block->getPagerHtml() ?>
+            </div>
+        <?php endif ?>
+    </div>
+    <div class="actions-toolbar cart actions">
+        <button
+            type="submit"
+            name="update_cart_action"
+            value="update_qty"
+            class="btn btn-secondary"
+            data-cart-item-update
+        ><?= $escaper->escapeHtml(__('Update Shopping Cart')) ?></button>
+
+        <?php if ($cartViewModel->isClearShoppingCartEnabled()): ?>
+            <?= $block->getChildHtml('checkout.cart.form.clear') ?>
+        <?php endif ?>
+
+        <?= $block->getChildHtml('checkout.cart.order.actions') ?>
+    </div>
+</form>
+<?= $block->getChildHtml('shopping.cart.table.after') ?>
