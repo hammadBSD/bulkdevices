@@ -314,6 +314,8 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>"
         >
             <?= $block->getBlockHtml('formkey') ?>
+            <input type="hidden" name="rfq_submission" value="1">
+            <input type="hidden" name="rfq_source" value="homepage">
             <fieldset class="home-get-started__fieldset">
                 <legend class="sr-only"><?= $escaper->escapeHtml(__('Write Us')) ?></legend>
                 <div class="home-get-started__grid">

@@ -1,0 +1,94 @@
+<?php
+
+declare(strict_types=1);
+
+use BSD\RfqThankYou\ViewModel\ThankYouPage;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\HyvaCsp;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ThankYouPage $thankYouPage */
+$thankYouPage = $viewModels->require(ThankYouPage::class);
+/** @var HyvaCsp $hyvaCsp */
+$hyvaCsp = $viewModels->require(HyvaCsp::class);
+
+if (!$thankYouPage->hasSubmission()) {
+    return;
+}
+
+$dataLayerJson = json_encode($thankYouPage->getDataLayerPayload(), JSON_UNESCAPED_SLASHES | JSON_THROW_ON_ERROR);
+$partNumber = $thankYouPage->getPartNumber();
+?>
+<section class="bdus-rfq-thankyou" aria-labelledby="bdus-rfq-thankyou-heading">
+    <div class="bdus-rfq-thankyou__container">
+        <h1 id="bdus-rfq-thankyou-heading" class="bdus-rfq-thankyou__title">
+            <?= $escaper->escapeHtml(__('Thank You')) ?>
+        </h1>
+        <p class="bdus-rfq-thankyou__lead">
+            <?= $escaper->escapeHtml(__('Your quote request has been received. Our team will contact you shortly.')) ?>
+        </p>
+        <?php if ($partNumber !== ''): ?>
+            <p class="bdus-rfq-thankyou__meta">
+                <?= $escaper->escapeHtml(__('Part Number: %1', $partNumber)) ?>
+            </p>
+        <?php endif; ?>
+        <a class="btn btn-primary bdus-rfq-thankyou__cta" href="<?= $escaper->escapeUrl($block->getUrl('')) ?>">
+            <?= $escaper->escapeHtml(__('Continue Shopping')) ?>
+        </a>
+    </div>
+</section>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(<?= /* @noEscape */ $dataLayerJson ?>);
+</script>
+<?php $hyvaCsp->registerInlineScript() ?>
+<style>
+    .bdus-rfq-thankyou {
+        padding: clamp(2rem, 5vw, 4rem) 1.5rem;
+        background: #f9fafb;
+    }
+
+    .bdus-rfq-thankyou__container {
+        max-width: 40rem;
+        margin: 0 auto;
+        padding: clamp(1.5rem, 3vw, 2.5rem);
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        text-align: center;
+    }
+
+    .bdus-rfq-thankyou__title {
+        margin: 0 0 1rem;
+        font-size: clamp(1.5rem, 3vw, 2rem);
+        font-weight: 700;
+        color: #111827;
+    }
+
+    .bdus-rfq-thankyou__lead {
+        margin: 0 0 1rem;
+        font-size: 1rem;
+        line-height: 1.7;
+        color: #4b5563;
+    }
+
+    .bdus-rfq-thankyou__meta {
+        margin: 0 0 1.5rem;
+        font-size: 0.9375rem;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .bdus-rfq-thankyou__cta {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-width: 12rem;
+    }
+</style>

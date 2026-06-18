@@ -3,6 +3,98 @@
  * Scoped to .columns / .column.main only — does not affect header or footer
  */
 
+/* Account pages — responsive columns (matches Hyvä main .columns breakpoints) */
+.customer-account-login .page-main .columns,
+.customer-account-create .page-main .columns,
+.customer-account-forgotpassword .page-main .columns,
+.customer-account-logoutsuccess .page-main .columns,
+.account .page-main .columns,
+.customer-account-login .page-main .container:has(> .page-title),
+.customer-account-create .page-main .container:has(> .page-title),
+.customer-account-forgotpassword .page-main .container:has(> .page-title),
+.customer-account-logoutsuccess .page-main .container:has(> .page-title),
+.account .page-main .container:has(> .page-title) {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    box-sizing: border-box;
+}
+
+@media (min-width: 40rem) {
+    .customer-account-login .page-main .columns,
+    .customer-account-create .page-main .columns,
+    .customer-account-forgotpassword .page-main .columns,
+    .customer-account-logoutsuccess .page-main .columns,
+    .account .page-main .columns,
+    .customer-account-login .page-main .container:has(> .page-title),
+    .customer-account-create .page-main .container:has(> .page-title),
+    .customer-account-forgotpassword .page-main .container:has(> .page-title),
+    .customer-account-logoutsuccess .page-main .container:has(> .page-title),
+    .account .page-main .container:has(> .page-title) {
+        max-width: 80rem;
+    }
+}
+
+@media (min-width: 48rem) {
+    .customer-account-login .page-main .columns,
+    .customer-account-create .page-main .columns,
+    .customer-account-forgotpassword .page-main .columns,
+    .customer-account-logoutsuccess .page-main .columns,
+    .account .page-main .columns,
+    .customer-account-login .page-main .container:has(> .page-title),
+    .customer-account-create .page-main .container:has(> .page-title),
+    .customer-account-forgotpassword .page-main .container:has(> .page-title),
+    .customer-account-logoutsuccess .page-main .container:has(> .page-title),
+    .account .page-main .container:has(> .page-title) {
+        max-width: 80rem;
+    }
+}
+
+@media (min-width: 64rem) {
+    .customer-account-login .page-main .columns,
+    .customer-account-create .page-main .columns,
+    .customer-account-forgotpassword .page-main .columns,
+    .customer-account-logoutsuccess .page-main .columns,
+    .account .page-main .columns,
+    .customer-account-login .page-main .container:has(> .page-title),
+    .customer-account-create .page-main .container:has(> .page-title),
+    .customer-account-forgotpassword .page-main .container:has(> .page-title),
+    .customer-account-logoutsuccess .page-main .container:has(> .page-title),
+    .account .page-main .container:has(> .page-title) {
+        max-width: 80rem;
+    }
+}
+
+@media (min-width: 80rem) {
+    .customer-account-login .page-main .columns,
+    .customer-account-create .page-main .columns,
+    .customer-account-forgotpassword .page-main .columns,
+    .customer-account-logoutsuccess .page-main .columns,
+    .account .page-main .columns,
+    .customer-account-login .page-main .container:has(> .page-title),
+    .customer-account-create .page-main .container:has(> .page-title),
+    .customer-account-forgotpassword .page-main .container:has(> .page-title),
+    .customer-account-logoutsuccess .page-main .container:has(> .page-title),
+    .account .page-main .container:has(> .page-title) {
+        max-width: 80rem;
+    }
+}
+
+@media (min-width: 96rem) {
+    .customer-account-login .page-main .columns,
+    .customer-account-create .page-main .columns,
+    .customer-account-forgotpassword .page-main .columns,
+    .customer-account-logoutsuccess .page-main .columns,
+    .account .page-main .columns,
+    .customer-account-login .page-main .container:has(> .page-title),
+    .customer-account-create .page-main .container:has(> .page-title),
+    .customer-account-forgotpassword .page-main .container:has(> .page-title),
+    .customer-account-logoutsuccess .page-main .container:has(> .page-title),
+    .account .page-main .container:has(> .page-title) {
+        max-width: 96rem;
+    }
+}
+
 .customer-account-login,
 .customer-account-create,
 .customer-account-forgotpassword,
@@ -21,7 +113,6 @@
     --bb-account-radius: 12px;
     --bb-account-radius-sm: 8px;
     --bb-account-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-    --bb-account-container: 75rem;
 }
 
 .account .columns {
@@ -33,7 +124,7 @@
 .customer-account-create .column.main,
 .customer-account-forgotpassword .column.main,
 .customer-account-logoutsuccess .column.main {
-    padding-bottom: clamp(2rem, 4vw, 3rem);
+    /* padding-bottom: clamp(2rem, 4vw, 3rem); */
     background: var(--bb-account-page-bg);
 }
 
@@ -43,9 +134,8 @@
 .customer-account-forgotpassword .page-main .container:has(> .page-title),
 .customer-account-logoutsuccess .page-main .container:has(> .page-title),
 .account .page-main .container:has(> .page-title) {
-    max-width: var(--bb-account-container);
-    margin: 0 auto;
-    padding: clamp(1.25rem, 3vw, 2rem) 1.5rem 0;
+    padding-top: clamp(1.25rem, 3vw, 2rem);
+    padding-bottom: 0;
     background: var(--bb-account-page-bg);
 }
 
@@ -70,22 +160,194 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: clamp(1rem, 2vw, 1.5rem);
-    max-width: 56rem;
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    padding: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 48rem) {
     .customer-account-login .column.main .login-container,
     .customer-account-login .column.main #customer-login-container.login-container {
         grid-template-columns: repeat(2, minmax(0, 1fr));
-        max-width: var(--bb-account-container);
     }
 }
 
 .customer-account-create .column.main .registration-container,
 .customer-account-create .column.main .registation-container {
-    max-width: 42rem;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    padding: 0 !important;
+    box-sizing: border-box;
+}
+
+/* Create account — match sign-in card form */
+.customer-account-create .column.main .form-create-account {
+    background: var(--bb-account-surface);
+    border: 1px solid var(--bb-account-border);
+    border-radius: var(--bb-account-radius);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    box-shadow: var(--bb-account-shadow);
+}
+
+.customer-account-create .column.main .form-create-account .fieldset {
+    margin: 0 0 1.5rem;
+    padding: 0;
+    border: 0;
+}
+
+.customer-account-create .column.main .form-create-account .fieldset:last-of-type {
+    margin-bottom: 0;
+}
+
+.customer-account-create .column.main .form-create-account .fieldset .legend {
+    display: block;
+    width: 100%;
+    margin: 0 0 1rem;
+    padding: 0 0 0.75rem;
+    border-bottom: 1px solid var(--bb-account-border);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--bb-account-text);
+}
+
+.customer-account-create .column.main .form-create-account .fieldset .legend span {
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+}
+
+.customer-account-create .column.main .form-create-account .fieldset br {
+    display: none;
+}
+
+/* First / last name side by side on desktop */
+.customer-account-create .column.main .form-create-account .fieldset.create.info {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+}
+
+@media (min-width: 640px) {
+    .customer-account-create .column.main .form-create-account .fieldset.create.info {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        column-gap: 1rem;
+    }
+
+    .customer-account-create .column.main .form-create-account .fieldset.create.info .legend,
+    .customer-account-create .column.main .form-create-account .fieldset.create.info .field.choice.newsletter,
+    .customer-account-create .column.main .form-create-account .fieldset.create.info input[type="hidden"] {
+        grid-column: 1 / -1;
+    }
+}
+
+.customer-account-create .column.main .form-create-account .field.choice .label {
+    display: inline;
+    margin-bottom: 0;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.customer-account-create .column.main .form-create-account .field.choice input.checkbox {
+    flex-shrink: 0;
+}
+
+/* Create account password — standard inputs, not login toggle wrapper */
+.customer-account-create .column.main .form-create-account .field.password .control,
+.customer-account-create .column.main .form-create-account .field.confirmation .control {
+    display: block;
+    border: none;
+    border-radius: 0;
+    overflow: visible;
+    background: transparent;
+    box-shadow: none;
+}
+
+.customer-account-create .column.main .form-create-account .field.password .control:focus-within,
+.customer-account-create .column.main .form-create-account .field.confirmation .control:focus-within {
+    border: none;
+    box-shadow: none;
+}
+
+.customer-account-create .column.main .form-create-account .field.password .input-text,
+.customer-account-create .column.main .form-create-account .field.confirmation .input-text {
+    width: 100%;
+    box-sizing: border-box;
+    min-height: 2.75rem;
+    padding: 0.625rem 0.875rem;
+    border: 1px solid var(--bb-account-input-border);
+    border-radius: var(--bb-account-radius-sm);
+    background: var(--bb-account-surface);
+    color: var(--bb-account-text);
+    font-size: 0.9375rem;
+    line-height: 1.4;
+}
+
+.customer-account-create .column.main .form-create-account .field.password .input-text:focus,
+.customer-account-create .column.main .form-create-account .field.confirmation .input-text:focus {
+    outline: none;
+    border-color: var(--bb-account-accent);
+    box-shadow: 0 0 0 3px rgba(235, 125, 30, 0.15);
+}
+
+.customer-account-create .column.main #password-strength-meter-container {
+    margin-top: 0.5rem;
+}
+
+.customer-account-create .column.main .password-strength-meter {
+    font-size: 0.8125rem;
+    color: var(--bb-account-muted);
+    line-height: 1.4;
+}
+
+.customer-account-create .column.main #password-strength-meter-label {
+    font-weight: 600;
+    color: var(--bb-account-text-secondary);
+}
+
+.customer-account-create .column.main .form-create-account .fieldset.create.account {
+    margin-top: 0.25rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--bb-account-border);
+}
+
+.customer-account-create .column.main .form-create-account .fieldset[data-hasrequired]::after {
+    display: block;
+    margin-top: 0.75rem;
+    font-size: 0.8125rem;
+    color: var(--bb-account-muted);
+    content: attr(data-hasrequired);
+}
+
+.customer-account-create .column.main .form-create-account .actions-toolbar {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--bb-account-border);
+    justify-content: flex-start;
+}
+
+.customer-account-create .column.main .form-create-account .actions-toolbar .primary,
+.customer-account-create .column.main .form-create-account .actions-toolbar .secondary {
+    margin: 0;
+    flex: 0 0 auto;
+}
+
+.customer-account-create .column.main .form-create-account .actions-toolbar .action.submit.primary {
+    width: auto;
+    min-width: 12rem;
+}
+
+@media (max-width: 767px) {
+    .customer-account-create .column.main .form-create-account .actions-toolbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .customer-account-create .column.main .form-create-account .actions-toolbar .action.submit.primary {
+        width: 100%;
+    }
 }
 
 /* Cards */
@@ -182,13 +444,16 @@
 .account .columns .form-input,
 .account .columns .form-select,
 .account .columns .form-textarea,
+.account .columns .input-text,
 .customer-account-login .column.main .form-input,
 .customer-account-login .column.main .form-select,
 .customer-account-create .column.main .form-input,
 .customer-account-create .column.main .form-select,
 .customer-account-create .column.main .form-textarea,
+.customer-account-create .column.main .input-text,
 .customer-account-forgotpassword .column.main .form-input,
-.customer-account-forgotpassword .column.main .form-select {
+.customer-account-forgotpassword .column.main .form-select,
+.customer-account-forgotpassword .column.main .input-text {
     width: 100%;
     box-sizing: border-box;
     min-height: 2.75rem;
@@ -211,19 +476,21 @@
 .account .columns .form-input:focus,
 .account .columns .form-select:focus,
 .account .columns .form-textarea:focus,
+.account .columns .input-text:focus,
 .customer-account-login .column.main .form-input:focus,
 .customer-account-create .column.main .form-input:focus,
 .customer-account-create .column.main .form-select:focus,
-.customer-account-forgotpassword .column.main .form-input:focus {
+.customer-account-forgotpassword .column.main .form-input:focus,
+.customer-account-forgotpassword .column.main .input-text:focus,
+.customer-account-create .column.main .input-text:focus {
     outline: none;
     border-color: var(--bb-account-accent);
     box-shadow: 0 0 0 3px rgba(235, 125, 30, 0.15);
 }
 
-/* Password field with toggle */
-.customer-account-login .column.main .field.password .control,
-.customer-account-create .column.main .field.password .control,
-.account .columns .field.password .control {
+/* Password field with toggle — login only */
+.customer-account-login .column.main .form-login .field.password .control,
+.account .columns .form-login .field.password .control {
     display: flex;
     align-items: stretch;
     gap: 0;
@@ -234,31 +501,27 @@
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.customer-account-login .column.main .field.password .control:focus-within,
-.customer-account-create .column.main .field.password .control:focus-within,
-.account .columns .field.password .control:focus-within {
+.customer-account-login .column.main .form-login .field.password .control:focus-within,
+.account .columns .form-login .field.password .control:focus-within {
     border-color: var(--bb-account-accent);
     box-shadow: 0 0 0 3px rgba(235, 125, 30, 0.15);
 }
 
-.customer-account-login .column.main .field.password .form-input,
-.customer-account-create .column.main .field.password .form-input,
-.account .columns .field.password .form-input {
+.customer-account-login .column.main .form-login .field.password .form-input,
+.account .columns .form-login .field.password .form-input {
     border: none;
     border-radius: 0;
     box-shadow: none;
     min-height: 2.75rem;
 }
 
-.customer-account-login .column.main .field.password .form-input:focus,
-.customer-account-create .column.main .field.password .form-input:focus,
-.account .columns .field.password .form-input:focus {
+.customer-account-login .column.main .form-login .field.password .form-input:focus,
+.account .columns .form-login .field.password .form-input:focus {
     box-shadow: none;
 }
 
-.customer-account-login .column.main .field.password .control > button,
-.customer-account-create .column.main .field.password .control > button,
-.account .columns .field.password .control > button {
+.customer-account-login .column.main .form-login .field.password .control > button,
+.account .columns .form-login .field.password .control > button {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -272,9 +535,8 @@
     transition: color 0.2s ease, background-color 0.2s ease;
 }
 
-.customer-account-login .column.main .field.password .control > button:hover,
-.customer-account-create .column.main .field.password .control > button:hover,
-.account .columns .field.password .control > button:hover {
+.customer-account-login .column.main .form-login .field.password .control > button:hover,
+.account .columns .form-login .field.password .control > button:hover {
     color: var(--bb-account-accent);
     background: #fffaf5;
 }
@@ -301,7 +563,10 @@
 .account .columns .btn,
 .customer-account-login .column.main .btn,
 .customer-account-create .column.main .btn,
-.customer-account-forgotpassword .column.main .btn {
+.customer-account-forgotpassword .column.main .btn,
+.customer-account-create .column.main .action.submit.primary,
+.customer-account-forgotpassword .column.main .action.submit.btn.btn-primary,
+.customer-account-forgotpassword .column.main .action.submit.primary {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -321,7 +586,11 @@
 .customer-account-create .column.main .btn-primary,
 .customer-account-forgotpassword .column.main .btn-primary,
 .account .columns .block-new-customer .btn-primary,
-.customer-account-login .column.main .block-new-customer .btn-primary {
+.customer-account-login .column.main .block-new-customer .btn-primary,
+.customer-account-create .column.main .action.submit.primary,
+.customer-account-forgotpassword .column.main .action.submit.btn.btn-primary,
+.customer-account-forgotpassword .column.main .action.submit.primary,
+.account .columns .action.save.btn.btn-primary {
     background: var(--bb-account-accent);
     border: 1px solid var(--bb-account-accent);
     color: #fff;
@@ -332,7 +601,11 @@
 .customer-account-create .column.main .btn-primary:hover:not(:disabled),
 .customer-account-forgotpassword .column.main .btn-primary:hover:not(:disabled),
 .account .columns .block-new-customer .btn-primary:hover,
-.customer-account-login .column.main .block-new-customer .btn-primary:hover {
+.customer-account-login .column.main .block-new-customer .btn-primary:hover,
+.customer-account-create .column.main .action.submit.primary:hover:not(:disabled),
+.customer-account-forgotpassword .column.main .action.submit.btn.btn-primary:hover:not(:disabled),
+.customer-account-forgotpassword .column.main .action.submit.primary:hover:not(:disabled),
+.account .columns .action.save.btn.btn-primary:hover:not(:disabled) {
     background: var(--bb-account-accent-hover);
     border-color: var(--bb-account-accent-hover);
     color: #fff;
@@ -375,7 +648,10 @@
 
 .account .columns .actions-toolbar a.underline,
 .customer-account-login .column.main .actions-toolbar a.underline,
-.customer-account-forgotpassword .column.main .actions-toolbar a.underline {
+.customer-account-forgotpassword .column.main .actions-toolbar a.underline,
+.account .columns .actions-toolbar .secondary .action.back,
+.customer-account-create .column.main .actions-toolbar .secondary .action.back,
+.customer-account-forgotpassword .column.main .actions-toolbar .secondary .action.back {
     font-size: 0.875rem;
     font-weight: 600;
     color: var(--bb-account-accent);
@@ -384,7 +660,10 @@
 
 .account .columns .actions-toolbar a.underline:hover,
 .customer-account-login .column.main .actions-toolbar a.underline:hover,
-.customer-account-forgotpassword .column.main .actions-toolbar a.underline:hover {
+.customer-account-forgotpassword .column.main .actions-toolbar a.underline:hover,
+.account .columns .actions-toolbar .secondary .action.back:hover,
+.customer-account-create .column.main .actions-toolbar .secondary .action.back:hover,
+.customer-account-forgotpassword .column.main .actions-toolbar .secondary .action.back:hover {
     color: var(--bb-account-accent-hover);
     text-decoration: underline;
     text-underline-offset: 2px;
@@ -410,6 +689,19 @@
     color: var(--bb-account-accent);
 }
 
+/* Match inspect structures for forgot password / create account pages */
+.customer-account-forgotpassword .column.main .mb-12 {
+    width: 100%;
+    max-width: 100%;
+    margin-inline: auto;
+    padding: 0;
+}
+
+.customer-account-forgotpassword .column.main .w-full.md\:w-1\/2.card {
+    width: 100%;
+    margin: 0;
+}
+
 /* Error messages */
 .customer-account-login .column.main .text-red,
 .account .columns .message-error,
@@ -427,7 +719,11 @@
     line-height: 1.45;
 }
 
-/* Account dashboard layout */
+/* ==========================================================================
+   Logged-in account dashboard (Magento_Customer templates)
+   ========================================================================== */
+
+/* Sidebar + main — 2-column layout */
 .account .columns {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
@@ -435,7 +731,7 @@
     align-items: start;
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 64rem) {
     .account.page-layout-2columns-left .columns {
         grid-template-columns: 17.5rem minmax(0, 1fr);
     }
@@ -446,19 +742,52 @@
     min-width: 0;
 }
 
-/* Account navigation */
-.account .columns .account-nav.card {
-    padding: 0;
+/* Sidebar navigation — navigation.phtml: .block.account-nav > .title + nav.account-nav */
+.account .columns .sidebar-main .block.account-nav,
+.account .columns .sidebar-main nav.account-nav.card {
+    background: var(--bb-account-surface);
+    border: 1px solid var(--bb-account-border);
+    border-radius: var(--bb-account-radius);
+    box-shadow: var(--bb-account-shadow);
     overflow: hidden;
 }
 
-.account .columns .account-nav > button {
+.account .columns .sidebar-main .block.account-nav > .title {
+    display: none;
+    margin: 0;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--bb-account-border);
+    background: #f9fafb;
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--bb-account-text);
+}
+
+.account .columns .sidebar-main .block.account-nav > .title strong {
+    font-weight: inherit;
+}
+
+@media (min-width: 64rem) {
+    .account .columns .sidebar-main .block.account-nav > .title {
+        display: block;
+    }
+}
+
+.account .columns .sidebar-main .block.account-nav > .content,
+.account .columns .sidebar-main nav.account-nav.card {
+    padding: 0;
+}
+
+/* Hyvä mobile nav toggle (when present) */
+.account .columns .sidebar-main .account-nav > button,
+.account .columns .sidebar-main nav.account-nav > button {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
     padding: 1rem 1.25rem;
     border: none;
+    border-bottom: 1px solid var(--bb-account-border);
     background: #f9fafb;
     font-size: 1rem;
     font-weight: 700;
@@ -466,23 +795,25 @@
     cursor: pointer;
 }
 
-@media (min-width: 1024px) {
-    .account .columns .account-nav > button {
+@media (min-width: 64rem) {
+    .account .columns .sidebar-main .account-nav > button,
+    .account .columns .sidebar-main nav.account-nav > button {
         display: none;
     }
 }
 
-.account .columns .account-nav .nav.items {
+.account .columns .sidebar-main .nav.items {
     list-style: none;
     margin: 0;
     padding: 0.5rem;
 }
 
-.account .columns .account-nav .nav.items .nav.item {
+.account .columns .sidebar-main .nav.items .nav.item {
     margin: 0;
 }
 
-.account .columns .account-nav .nav.items a {
+.account .columns .sidebar-main .nav.items a,
+.account .columns .sidebar-main .nav.items strong {
     display: block;
     padding: 0.625rem 0.875rem;
     border-radius: var(--bb-account-radius-sm);
@@ -493,39 +824,141 @@
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-.account .columns .account-nav .nav.items a:hover {
+.account .columns .sidebar-main .nav.items a:hover {
     background: #fffaf5;
     color: var(--bb-account-accent);
 }
 
-.account .columns .account-nav .nav.items .nav.item.current a,
-.account .columns .account-nav .nav.items a[aria-current="page"] {
+.account .columns .sidebar-main .nav.items .nav.item.current a,
+.account .columns .sidebar-main .nav.items a[aria-current="page"],
+.account .columns .sidebar-main .nav.items .nav.item.current strong {
     background: #fffaf5;
     color: var(--bb-account-accent);
     font-weight: 700;
     box-shadow: inset 3px 0 0 var(--bb-account-accent);
 }
 
-/* Dashboard cards */
-.account .columns .column.main .card {
-    height: 100%;
-}
-
-.account .columns .column.main .block-title {
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
+.account .columns .sidebar-main .nav.items .delimiter {
+    display: block;
+    width: 100%;
+    height: 0;
+    margin: 0.5rem 0;
+    border: 0;
     border-bottom: 1px solid var(--bb-account-border);
 }
 
-.account .columns .column.main .block-title h2,
-.account .columns .column.main > h2.block-title {
-    margin: 0;
-    font-size: 1.25rem;
+/* Section headings — dashboard, address book, edit pages */
+.account .columns .column.main > h2.block-title,
+.account .columns .column.main .block-title.text-2xl,
+.account .columns .column.main .text-2xl.mb-6 {
+    margin: 0 0 1.5rem;
+    padding: 0 0 0.75rem;
+    border-bottom: 1px solid var(--bb-account-border);
+    font-size: clamp(1.25rem, 2vw, 1.5rem);
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--bb-account-text);
 }
 
-.account .columns .column.main .card h3 {
+/* Address Book header bar — address.phtml h2.block-title.card */
+.account .columns .column.main h2.block-title.card {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem 1rem;
+    margin: 1.5rem 0;
+    padding: 1rem 1.25rem;
+    border: 1px solid var(--bb-account-border);
+    border-radius: var(--bb-account-radius);
+    background: var(--bb-account-surface);
+    box-shadow: var(--bb-account-shadow);
+}
+
+.account .columns .column.main h2.block-title.card .text-2xl,
+.account .columns .column.main h2.block-title.card > span {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: inherit;
+    font-weight: inherit;
+}
+
+.account .columns .column.main h2.block-title.card .action.edit {
+    font-size: 0.875rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+/* Dashboard card grid — info.phtml + address.phtml wrappers */
+.account .columns .column.main h2.block-title + div,
+.account .columns .block-dashboard-addresses .block-content > div {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    margin: 0 0 1.5rem;
+}
+
+@media (min-width: 64rem) {
+    .account .columns .column.main h2.block-title + div,
+    .account .columns .block-dashboard-addresses .block-content > div {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* Dashboard / address cards */
+.account .columns .column.main .card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    height: 100%;
+    padding: clamp(1.25rem, 2.5vw, 2rem);
+    background: var(--bb-account-surface);
+    border: 1px solid var(--bb-account-border);
+    border-radius: var(--bb-account-radius);
+    box-shadow: var(--bb-account-shadow);
+}
+
+.account .columns .column.main h2.block-title.card {
+    height: auto;
+}
+
+@media (min-width: 640px) {
+    .account .columns .column.main .card:not(h2) {
+        flex-direction: row;
+        align-items: flex-start;
+    }
+}
+
+/* Icon circles — info.phtml user / mail icons */
+.account .columns .column.main .card > div:first-child:not(.grow) {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 4rem;
+    height: 4rem;
+    margin: 0;
+    border-radius: 50%;
+    background: #fffaf5;
+    color: var(--bb-account-accent);
+}
+
+@media (min-width: 640px) {
+    .account .columns .column.main .card > div:first-child:not(.grow) {
+        margin-right: 1.5rem;
+    }
+}
+
+.account .columns .column.main .card .grow {
+    flex: 1;
+    min-width: 0;
+}
+
+.account .columns .column.main .card h3,
+.account .columns .column.main .card .title-font {
     margin: 0 0 0.75rem;
-    font-size: 1rem;
+    font-size: 1.0625rem;
     font-weight: 700;
     color: var(--bb-account-text);
 }
@@ -533,13 +966,38 @@
 .account .columns .column.main .card p {
     margin: 0 0 0.5rem;
     font-size: 0.9375rem;
-    line-height: 1.6;
+    line-height: 1.65;
+    color: var(--bb-account-text-secondary);
+}
+
+.account .columns .column.main .card address {
+    margin: 0 0 0.5rem;
+    font-style: normal;
+    font-size: 0.9375rem;
+    line-height: 1.65;
     color: var(--bb-account-text-secondary);
 }
 
 .account .columns .column.main .card .bg-gray-100 {
     background: #fffaf5 !important;
     color: var(--bb-account-accent);
+}
+
+.account .columns .column.main .card a:not(.btn) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--bb-account-accent);
+    text-decoration: none;
+}
+
+.account .columns .column.main .card a:not(.btn):hover {
+    color: var(--bb-account-accent-hover);
+    text-decoration: underline;
+    text-underline-offset: 2px;
 }
 
 .account .columns .column.main a:not(.btn) {
@@ -552,6 +1010,162 @@
     color: var(--bb-account-accent-hover);
     text-decoration: underline;
     text-underline-offset: 2px;
+}
+
+/* Default addresses — book.phtml */
+.account .columns .block-addresses-default {
+    margin: 1.5rem 0;
+}
+
+.account .columns .block-addresses-default .block-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+@media (min-width: 48rem) {
+    .account .columns .block-addresses-default .block-content {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.account .columns .box-address-billing,
+.account .columns .box-address-shipping,
+.account .columns .box-billing-address,
+.account .columns .box-shipping-address,
+.account .columns .block-addresses-default .box.card {
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    height: 100%;
+}
+
+.account .columns .box-content {
+    margin-bottom: 0.5rem;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+    color: var(--bb-account-text-secondary);
+}
+
+.account .columns .box-content address {
+    font-style: normal;
+}
+
+.account .columns .box-actions a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    font-size: 0.875rem;
+}
+
+/* Additional address grid — grid.phtml */
+.account .columns .block-addresses-list {
+    margin: 1.5rem 0;
+}
+
+.account .columns .block-addresses-list .card.grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0;
+    margin: 1.5rem 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+@media (min-width: 48rem) {
+    .account .columns .block-addresses-list .card.grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@media (min-width: 64rem) {
+    .account .columns .block-addresses-list .card.grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+
+    .account .columns .block-addresses-list .card.grid > .hidden {
+        display: block !important;
+    }
+}
+
+.account .columns .block-addresses-list .card.grid > div {
+    padding: 0.625rem 0.75rem;
+    font-size: 0.8125rem;
+    line-height: 1.45;
+    color: var(--bb-account-text-secondary);
+    border-bottom: 1px solid var(--bb-account-border);
+    word-break: break-word;
+}
+
+.account .columns .block-addresses-list .card.grid > div:nth-child(-n+6) {
+    background: #f9fafb;
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--bb-account-muted);
+}
+
+.account .columns .block-addresses-list .card.grid .bg-gray-100 {
+    background: #f9fafb !important;
+}
+
+.account .columns .block-addresses-list .card.grid .action.edit,
+.account .columns .block-addresses-list .card.grid .action.delete {
+    display: inline-flex;
+    align-items: center;
+    vertical-align: middle;
+    color: var(--bb-account-accent);
+}
+
+.account .columns .block-addresses-list .card.grid .action.delete {
+    margin-left: 0.5rem;
+    color: #dc2626;
+}
+
+.account .columns .block-addresses-list .empty {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    border: 1px dashed var(--bb-account-border);
+    border-radius: var(--bb-account-radius-sm);
+    background: #f9fafb;
+    font-size: 0.9375rem;
+    color: var(--bb-account-muted);
+    text-align: center;
+}
+
+.account .columns .customer-addresses-toolbar {
+    margin-top: 1rem;
+}
+
+/* Account edit / newsletter / address forms */
+.account .columns .form-edit-account,
+.account .columns .form-newsletter-manage,
+.account .columns .form-address-edit {
+    background: var(--bb-account-surface);
+    border: 1px solid var(--bb-account-border);
+    border-radius: var(--bb-account-radius);
+    padding: clamp(1.25rem, 2.5vw, 1.75rem);
+    box-shadow: var(--bb-account-shadow);
+}
+
+.account .columns .form-edit-account .grid-cols-2,
+.account .columns .form-edit-account fieldset .gap-4 {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+}
+
+@media (min-width: 48rem) {
+    .account .columns .form-edit-account .grid-cols-2,
+    .account .columns .form-edit-account fieldset .gap-4 {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+.account .columns .form-edit-account .fieldset br,
+.account .columns .form-address-edit .fieldset br {
+    display: none;
 }
 
 /* Tables — orders, etc. */
@@ -604,22 +1218,6 @@
     text-decoration: underline;
 }
 
-/* Address book */
-.account .columns .block-addresses-list .block-title,
-.account .columns .block-addresses-default .block-title {
-    margin-bottom: 1rem;
-}
-
-.account .columns .box-address-billing,
-.account .columns .box-address-shipping,
-.account .columns .box-billing-address,
-.account .columns .box-shipping-address {
-    padding: 1rem;
-    border: 1px solid var(--bb-account-border);
-    border-radius: var(--bb-account-radius-sm);
-    background: var(--bb-account-panel-bg);
-}
-
 /* Fieldsets on edit pages */
 .account .columns .fieldset {
     margin: 0 0 1.5rem;
@@ -670,8 +1268,9 @@
 
 /* Logout success */
 .customer-account-logoutsuccess .column.main {
-    max-width: 36rem;
-    margin: 0 auto;
+    width: 100%;
+    max-width: 42rem;
+    margin-inline: auto;
     text-align: center;
 }
 
@@ -680,11 +1279,6 @@
 }
 
 @media (max-width: 767px) {
-    .customer-account-login .column.main .login-container,
-    .customer-account-login .column.main #customer-login-container.login-container {
-        max-width: 28rem;
-    }
-
     .account .columns .actions-toolbar,
     .customer-account-login .column.main .actions-toolbar,
     .customer-account-create .column.main .actions-toolbar {
@@ -693,8 +1287,10 @@
     }
 
     .account .columns .actions-toolbar .btn,
+    .account .columns .actions-toolbar .action.save,
     .customer-account-login .column.main .actions-toolbar .btn,
     .customer-account-create .column.main .actions-toolbar .btn,
+    .customer-account-create .column.main .form-create-account .actions-toolbar .action.submit.primary,
     .account .columns .block-new-customer .actions-toolbar .btn,
     .customer-account-login .column.main .block-new-customer .actions-toolbar .btn {
         width: 100%;

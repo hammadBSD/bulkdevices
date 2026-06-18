@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Contact\Controller\Index\Post">
+        <plugin name="bsd_rfq_thankyou_contact_redirect"
+                type="BSD\RfqThankYou\Plugin\Contact\RedirectAfterRfqPlugin"
+                sortOrder="200"/>
+    </type>
+    <type name="BSD\Getaquote\Controller\Index\Save">
+        <plugin name="bsd_rfq_thankyou_getaquote_redirect"
+                type="BSD\RfqThankYou\Plugin\Getaquote\SaveThankYouRedirectPlugin"
+                sortOrder="200"/>
+    </type>
+</config>

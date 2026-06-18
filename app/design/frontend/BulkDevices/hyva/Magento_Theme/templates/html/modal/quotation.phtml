@@ -215,6 +215,10 @@ $config = [
                     .then((response) => response.json())
                     .then((data) => {
                         if (data && data.success) {
+                            if (data.redirectUrl) {
+                                window.location.href = data.redirectUrl;
+                                return;
+                            }
                             this.showSuccess(this.successMessage);
                             if (window.dispatchMessages) {
                                 window.dispatchMessages([{ type: 'success', text: this.successMessage }], 5000);

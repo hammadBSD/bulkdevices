@@ -120,6 +120,9 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
             data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>"
         >
             <?= $block->getBlockHtml('formkey') ?>
+            <input type="hidden" name="comment" value="<?= $escaper->escapeHtmlAttr(__('Request for quote: %1', $productSku)) ?>">
+            <input type="hidden" name="rfq_submission" value="1">
+            <input type="hidden" name="rfq_source" value="pdp_sidebar">
             <fieldset class="bb-pdp-sidebar__fieldset">
                 <legend class="sr-only"><?= $escaper->escapeHtml(__('Write Us')) ?></legend>
                 <div class="bb-pdp-sidebar__fields">
