@@ -59,7 +59,13 @@ $searchConfig = $viewModels->require(SearchConfig::class);
                     }
                 )
                 .then(response => response.json())
-                .then(result => this.suggestions = result);
+                .then(result => { this.suggestions = result; });
+            },
+            searchSuggestion(event) {
+                const title = event.currentTarget.querySelector('[data-suggestion-title]')?.textContent?.trim();
+                if (title) {
+                    this.search(title);
+                }
             },
             <?php endif ?>
             search(term) {
@@ -131,6 +137,26 @@ $searchConfig = $viewModels->require(SearchConfig::class);
                         gap-1 bg-white text-black border border-gray-300 rounded px-1 font-sans text-sm"
                     x-text="textShortcutModifier"
                 ></kbd>
+                <?php if ($searchConfig->isSuggestionsAllowed()): ?>
+                    <template x-if="suggestions.length">
+                        <nav
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Search Suggestions')) ?>"
+                            class="absolute left-0 right-0 top-full z-50 flex flex-col mt-1 text-grey-800 border border-gray-300 bg-white shadow-md max-h-80 overflow-y-auto"
+                        >
+                            <template x-for="suggestion in suggestions" :key="suggestion.title">
+                                <button
+                                    type="button"
+                                    class="flex justify-between gap-4 p-2 text-left bg-white even:bg-gray-50 hover:bg-gray-100 border-b border-gray-200 last:border-b-0"
+                                    @click="searchSuggestion"
+                                    @keydown.enter="searchSuggestion"
+                                >
+                                    <span data-suggestion-title x-text="suggestion.title"></span>
+                                    <span class="shrink-0 text-gray-500 tabular-nums" x-text="suggestion.num_results"></span>
+                                </button>
+                            </template>
+                        </nav>
+                    </template>
+                <?php endif ?>
             </div>
             <button
                 type="submit"
@@ -142,24 +168,4 @@ $searchConfig = $viewModels->require(SearchConfig::class);
             </button>
         </form>
     </search>
-    <?php if ($searchConfig->isSuggestionsAllowed()): ?>
-        <template x-if="suggestions.length">
-            <nav
-                aria-label="<?= $escaper->escapeHtmlAttr(__('Search Suggestions')) ?>"
-                class="flex flex-col mt-1 text-grey-800 gap-1"
-            >
-                <template x-for="suggestion in suggestions">
-                    <button
-                        type="button"
-                        class="flex justify-between p-2 bg-white even:bg-gray-50 border border-gray-300 hover:bg-gray-100"
-                        @click="searchSuggestion"
-                        @keydown.enter="searchSuggestion"
-                    >
-                        <span x-text="suggestion.title"></span>
-                        <span x-text="suggestion.num_results"></span>
-                    </button>
-                </template>
-            </nav>
-        </template>
-    <?php endif ?>
 </div>
