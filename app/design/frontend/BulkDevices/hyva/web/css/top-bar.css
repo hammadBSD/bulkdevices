@@ -1,0 +1,73 @@
+/**
+ * Announcement top bar — above main header
+ */
+
+.bdus-top-bar {
+    background-color: #f4f4f4;
+    border-bottom: 1px solid #e7e7e7;
+    color: #222529;
+    font-size: 0.875rem;
+    line-height: 1.3;
+}
+
+.bdus-top-bar__inner {
+    padding-block: 0.625rem;
+}
+
+.bdus-top-bar__list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1.5rem 2.5rem;
+}
+
+.bdus-top-bar__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.bdus-top-bar__icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: #222529;
+}
+
+.bdus-top-bar__icon svg {
+    display: block;
+}
+
+.bdus-top-bar__text {
+    font-weight: 700;
+    letter-spacing: -0.01em;
+}
+
+@media (min-width: 1024px) {
+    .bdus-top-bar__list {
+        justify-content: center;
+        gap: 3rem 6rem;
+    }
+}
+
+@media (max-width: 1023px) {
+    .bdus-top-bar__list {
+        flex-direction: row;
+        justify-content: center;
+        gap: 0;
+    }
+
+    .bdus-top-bar__item:nth-child(2) {
+        display: none;
+    }
+}
+
+@media (max-width: 639px) {
+    .bdus-top-bar {
+        font-size: 0.8125rem;
+    }
+}

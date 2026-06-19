@@ -26,7 +26,9 @@
             <block class="Magento\Checkout\Block\Onepage\Success"
                    name="checkout.success"
                    template="Hyva_CustomCheckout::success.phtml"
-                   cacheable="false"/>
+                   cacheable="false">
+                <container name="order.success.additional.info" label="Order Success Additional Info"/>
+            </block>
         </referenceContainer>
 
         <referenceContainer name="page.bottom">

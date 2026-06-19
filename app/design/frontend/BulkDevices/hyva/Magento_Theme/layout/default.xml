@@ -9,6 +9,7 @@
         <css src="css/desktop-menu.css" media="screen and (min-width: 1024px)"/>
         <css src="css/footer-middle.css"/>
         <css src="css/frontendff.css"/>
+        <css src="css/top-bar.css"/>
     </head>
     <body>
         <!-- Legacy BSD_Getaquote listing modal uses RequireJS; Hyvä uses bdus.hyva.quotation.modal instead -->
@@ -36,6 +37,9 @@
         </referenceContainer>
 
         <referenceContainer name="header.container">
+            <block name="header.top-bar"
+                   template="Magento_Theme::html/header/top-bar.phtml"
+                   before="header-content"/>
             <block name="skip_to_content" template="Magento_Theme::html/skip.phtml" before="-">
                 <arguments>
                     <argument name="target" xsi:type="string">contentarea</argument>

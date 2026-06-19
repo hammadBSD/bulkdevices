@@ -1,0 +1,36 @@
+<?php
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\LucideIcons;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+$lucideIcons = $viewModels->require(LucideIcons::class);
+?>
+<div class="bdus-top-bar" role="region" aria-label="<?= $escaper->escapeHtmlAttr(__('Store announcements')) ?>">
+    <div class="bdus-top-bar__inner container mx-auto px-6">
+        <ul class="bdus-top-bar__list">
+            <li class="bdus-top-bar__item">
+                <span class="bdus-top-bar__icon" aria-hidden="true">
+                    <?= $lucideIcons->truckHtml('', 20, 20) ?>
+                </span>
+                <span class="bdus-top-bar__text">
+                    <?= $escaper->escapeHtml(__('Fast & Tracked US Shipping On All Full Systems')) ?>
+                </span>
+            </li>
+            <li class="bdus-top-bar__item">
+                <span class="bdus-top-bar__icon" aria-hidden="true">
+                    <?= $lucideIcons->planeHtml('', 20, 20) ?>
+                </span>
+                <span class="bdus-top-bar__text">
+                    <?= $escaper->escapeHtml(__('Cheapest Worldwide Delivery Rates Anywhere')) ?>
+                </span>
+            </li>
+        </ul>
+    </div>
+</div>

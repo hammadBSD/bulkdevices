@@ -25,6 +25,7 @@ use Magento\Checkout\Api\Data\ShippingInformationInterface;
 use Magento\Checkout\Api\Data\ShippingInformationInterfaceFactory;
 use Magento\Quote\Model\QuoteIdMaskFactory;
 use Magento\Quote\Model\Quote;
+use Magento\Sales\Api\OrderRepositoryInterface;
 
 class OrderPlacementService
 {
@@ -46,6 +47,7 @@ class OrderPlacementService
         private readonly CustomerAddressFactory $customerAddressFactory,
         private readonly RegionInterfaceFactory $regionFactory,
         private readonly CartManagementInterface $cartManagement,
+        private readonly OrderRepositoryInterface $orderRepository,
     ) {
     }
 
@@ -114,13 +116,17 @@ class OrderPlacementService
             );
         }
 
-        $this->checkoutSession->setLastOrderId($orderId);
+        $order = $this->orderRepository->get($orderId);
+
+        $this->checkoutSession->setLastOrderId($order->getEntityId());
+        $this->checkoutSession->setLastRealOrderId($order->getIncrementId());
+        $this->checkoutSession->setLastOrderStatus($order->getStatus());
         $this->checkoutSession->setLastSuccessQuoteId($cartId);
         $this->checkoutSession->setLastQuoteId($cartId);
 
         return [
             'success' => true,
-            'order_id' => (string) $orderId,
+            'order_id' => $order->getIncrementId(),
         ];
     }
 

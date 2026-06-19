@@ -14,6 +14,8 @@ use Magento\Framework\Escaper;
         </svg>
     </div>
 
+    <h1 class="bb-success__title"><?= $escaper->escapeHtml(__('Thank you for your purchase!')) ?></h1>
+
     <?php if ($block->getOrderId()): ?>
         <p class="bb-success__order">
             <?php if ($block->getCanViewOrder()): ?>
@@ -28,10 +30,11 @@ use Magento\Framework\Escaper;
                 <span class="bb-success__order-number"><?= $escaper->escapeHtml($block->getOrderId()) ?></span>
             <?php endif; ?>
         </p>
-        <p class="bb-success__message">
-            <?= $escaper->escapeHtml(__('We\'ll email you an order confirmation with details and tracking info.')) ?>
-        </p>
     <?php endif; ?>
+
+    <p class="bb-success__message">
+        <?= $escaper->escapeHtml(__('We\'ll email you an order confirmation with details and tracking info.')) ?>
+    </p>
 
     <?= $block->getAdditionalInfoHtml() ?>
 

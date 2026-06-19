@@ -1,0 +1,21 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+
+$grandTotal = $block->getOrderGrandTotal();
+if ($grandTotal === null) {
+    return;
+}
+?>
+<script>
+    window.uetq = window.uetq || [];
+    window.uetq.push('event', '', {
+        revenue_value: '<?= $escaper->escapeJs((string) $grandTotal) ?>',
+        currency: 'USD'
+    });
+</script>
