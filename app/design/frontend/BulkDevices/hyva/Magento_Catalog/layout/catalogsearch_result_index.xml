@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/plp-critical.css"/>
+        <css src="css/product-card.css"/>
+    </head>
+    <body>
+        <referenceBlock name="head.additional">
+            <block name="search.plp.deferred.styles"
+                   template="Magento_Catalog::category/plp-deferred-styles.phtml"
+                   before="-"/>
+        </referenceBlock>
+
+        <referenceBlock name="search_result_list">
+            <arguments>
+                <argument name="eager_load_images_count" xsi:type="number">4</argument>
+            </arguments>
+            <block name="search.product.card"
+                   as="product.card"
+                   template="Magento_Theme::html/product/card.phtml"/>
+        </referenceBlock>
+
+        <!-- Hyvä layered navigation instead of Mageplaza Luma / RequireJS templates -->
+        <referenceBlock name="catalogsearch.leftnav">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Magento_LayeredNavigation::layer/view.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="catalogsearch.navigation.renderer">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">Magento_LayeredNavigation::layer/filter.phtml</argument>
+            </action>
+        </referenceBlock>
+
+        <referenceContainer name="before.body.end">
+            <block name="search.product.card.qty.script"
+                   template="Magento_Theme::html/product/card-qty-script.phtml"/>
+            <block name="search.plp.ajax.layer"
+                   template="Magento_Catalog::product/list/ajax-layer.phtml"
+                   ifconfig="layered_navigation/general/ajax_enable"/>
+        </referenceContainer>
+    </body>
+</page>

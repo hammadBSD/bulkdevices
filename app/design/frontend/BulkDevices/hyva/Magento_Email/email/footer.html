@@ -1,0 +1,56 @@
+<!--@subject {{trans "Footer"}} @-->
+<!--@vars {
+"var store.frontend_name":"Store Name",
+"var url_about_us":"About Us URL",
+"var url_customer_service":"Customer Service URL",
+"var store_phone":"Store Phone",
+"var store_hours":"Store Hours",
+"var store.formatted_address|raw":"Store Address"
+} @-->
+                    <!-- End Content -->
+                    </td>
+                </tr>
+                <tr>
+                    <td class="footer">
+                        <p class="closing">{{trans "Thank you, %store_name" store_name=$store.frontend_name}}</p>
+                        <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                            <tr>
+                                <td style="vertical-align: top; padding-right: 12px;">
+                                    {{depend url_about_us}}
+                                    <p>
+                                        {{trans '<a href="%url_about_us">About Us</a>' url_about_us=$url_about_us |raw}}
+                                    </p>
+                                    {{/depend}}
+                                    {{depend url_customer_service}}
+                                    <p>
+                                        {{trans '<a href="%url_customer_service">Customer Service</a>' url_customer_service=$url_customer_service |raw}}
+                                    </p>
+                                    {{/depend}}
+                                </td>
+                                <td style="vertical-align: top; padding-right: 12px;">
+                                    {{depend store_phone}}
+                                    <p class="phone">
+                                        {{trans '<a href="tel:%store_phone">%store_phone</a>' store_phone=$store_phone |raw}}
+                                    </p>
+                                    {{/depend}}
+                                    {{depend store_hours}}
+                                    <p class="hours">
+                                        {{trans 'Hours of Operation:<br /><span class="no-link">%store_hours</span>.' store_hours=$store_hours |raw}}
+                                    </p>
+                                    {{/depend}}
+                                </td>
+                                <td style="vertical-align: top;">
+                                    <p class="address">
+                                        {{var store.formatted_address|raw}}
+                                    </p>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+</body>
+</html>

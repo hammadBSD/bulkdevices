@@ -1,0 +1,452 @@
+//
+// BulkDevices — transactional email theme styles
+// Deploy to: web/css/source/_email-extend.less
+//
+
+//
+//  Layout
+//  ---------------------------------------------
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: @email__background-color;
+    color: @email__color;
+    font-family: @font-family__base;
+    font-size: @font-size__base;
+    line-height: @line-height__base;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+
+.wrapper {
+    width: 100%;
+    background-color: @email__background-color;
+    margin: 0;
+    padding: 24px 12px;
+}
+
+.wrapper-inner {
+    width: 100%;
+}
+
+.main {
+    width: @email-body__width;
+    max-width: 100%;
+    margin: 0 auto;
+    border: 1px solid @bb-email-border;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+.main-content {
+    padding: @email-content__padding;
+    background-color: @email-content__background-color;
+}
+
+//
+//  Header / footer
+//  ---------------------------------------------
+
+.header {
+    padding: @email-header__padding;
+    background-color: @email-header__background-color;
+    text-align: center;
+    border-bottom: 3px solid @bb-email-accent;
+}
+
+.header .logo {
+    display: inline-block;
+    text-decoration: none;
+}
+
+.header .logo img {
+    display: block;
+    max-width: 200px;
+    height: auto;
+    margin: 0 auto;
+}
+
+.footer {
+    padding: @email-footer__padding;
+    background-color: @email-footer__background-color;
+    border-top: 1px solid @bb-email-border;
+    color: @bb-email-muted;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.footer table {
+    width: 100%;
+}
+
+.footer p {
+    margin: 0 0 8px;
+    color: @bb-email-muted;
+}
+
+.footer p:last-child {
+    margin-bottom: 0;
+}
+
+.footer a {
+    color: @bb-email-accent;
+    text-decoration: none;
+}
+
+.footer .closing {
+    margin: 0 0 12px;
+    font-size: 14px;
+    font-weight: 700;
+    color: @bb-email-text;
+}
+
+.footer .address {
+    color: @bb-email-muted;
+}
+
+//
+//  Typography & links
+//  ---------------------------------------------
+
+p {
+    margin: 0 0 14px;
+    color: @bb-email-text-secondary;
+}
+
+h1,
+h2,
+h3 {
+    color: @bb-email-text;
+    font-weight: 700;
+    line-height: 1.3;
+}
+
+a {
+    color: @link__color;
+    text-decoration: @link__text-decoration;
+}
+
+a:hover {
+    color: @link__hover__color !important;
+}
+
+.no-link {
+    color: @bb-email-text !important;
+    text-decoration: none !important;
+    cursor: default !important;
+}
+
+.greeting {
+    font-size: 16px;
+    font-weight: 700;
+    color: @bb-email-text;
+    margin-bottom: 12px;
+}
+
+//
+//  Intro / summary blocks
+//  ---------------------------------------------
+
+.email-intro td {
+    padding-bottom: 8px;
+}
+
+.email-summary {
+    padding: 20px 0 8px;
+    border-top: 1px solid @bb-email-border;
+    border-bottom: 1px solid @bb-email-border;
+    margin: 8px 0 20px;
+}
+
+.email-summary h1 {
+    margin: 0 0 8px;
+    font-size: 22px;
+    font-weight: 700;
+    color: @bb-email-text;
+}
+
+.email-summary p {
+    margin: 0;
+    font-size: 14px;
+    color: @bb-email-muted;
+}
+
+.email-information td {
+    padding-top: 4px;
+}
+
+//
+//  Order details
+//  ---------------------------------------------
+
+.order-details {
+    width: 100%;
+    margin: 0 0 24px;
+}
+
+.order-details td {
+    vertical-align: top;
+    padding: 0 12px 16px 0;
+    width: 50%;
+}
+
+.order-details h3 {
+    margin: 0 0 8px;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: @bb-email-muted;
+}
+
+.order-details p {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.6;
+    color: @bb-email-text-secondary;
+}
+
+.address-details,
+.method-info {
+    padding-bottom: 16px;
+}
+
+//
+//  Messages
+//  ---------------------------------------------
+
+.message-info,
+.message-gift {
+    width: 100%;
+    margin: 0 0 20px;
+    background-color: @message-info__background-color;
+    border: 1px solid @message-info__border-color;
+    border-radius: 8px;
+}
+
+.message-info td,
+.message-gift td {
+    padding: 14px 16px;
+    color: @message-info__color;
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.message-gift h3 {
+    margin: 0 0 8px;
+    font-size: 15px;
+    color: @bb-email-text;
+}
+
+//
+//  Items table
+//  ---------------------------------------------
+
+.email-items {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0 0 8px;
+}
+
+.email-items thead th {
+    padding: 12px 10px;
+    background-color: @bb-email-panel-bg;
+    border-bottom: 2px solid @bb-email-border;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: @bb-email-muted;
+    text-align: left;
+}
+
+.email-items tbody td {
+    padding: 14px 10px;
+    border-bottom: 1px solid @bb-email-border;
+    vertical-align: top;
+    color: @bb-email-text-secondary;
+    font-size: 14px;
+}
+
+.email-items tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.email-items .item-info {
+    width: 60%;
+}
+
+.email-items .item-qty {
+    width: 12%;
+    text-align: center;
+    white-space: nowrap;
+}
+
+.email-items .item-price {
+    width: 28%;
+    text-align: right;
+    white-space: nowrap;
+    font-weight: 600;
+    color: @bb-email-text;
+}
+
+.email-items .product-name {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 700;
+    color: @bb-email-text;
+}
+
+.email-items .sku {
+    margin: 0 0 6px;
+    font-size: 12px;
+    color: @bb-email-muted;
+}
+
+.email-items .item-options {
+    margin: 8px 0 0;
+    font-size: 12px;
+}
+
+.email-items .item-options dt {
+    margin: 0;
+    font-weight: 600;
+    color: @bb-email-muted;
+}
+
+.email-items .item-options dd {
+    margin: 0 0 6px;
+    color: @bb-email-text-secondary;
+}
+
+.email-items .item-extra td {
+    padding-top: 0;
+    border-bottom: 1px solid @bb-email-border;
+}
+
+//
+//  Totals
+//  ---------------------------------------------
+
+.order-totals th,
+.order-totals td {
+    padding: 8px 10px;
+    font-size: 14px;
+    color: @bb-email-text-secondary;
+    text-align: right;
+}
+
+.order-totals th {
+    font-weight: 500;
+    text-align: left;
+}
+
+.order-totals tr.grand_total th,
+.order-totals tr.grand_total td {
+    padding-top: 14px;
+    border-top: 2px solid @bb-email-border;
+    font-size: 16px;
+    font-weight: 700;
+    color: @bb-email-text;
+}
+
+.order-totals .price {
+    white-space: nowrap;
+    font-weight: 600;
+    color: @bb-email-text;
+}
+
+//
+//  Buttons
+//  ---------------------------------------------
+
+.button,
+.action.primary,
+button {
+    display: inline-block;
+    background: @button__background;
+    border: @button__border;
+    border-radius: 4px;
+    color: @button__color !important;
+    font-size: @button__font-size;
+    font-weight: @button__font-weight;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+    padding: @button__padding;
+    text-decoration: none !important;
+    text-align: center;
+}
+
+.button:hover,
+.action.primary:hover {
+    background: @button__hover__background !important;
+    border: @button__hover__border !important;
+    color: @button__hover__color !important;
+}
+
+//
+//  Shipment tracking
+//  ---------------------------------------------
+
+.shipment-track {
+    width: 100%;
+    margin: 0 0 16px;
+    border-collapse: collapse;
+}
+
+.shipment-track th,
+.shipment-track td {
+    padding: 10px 12px;
+    border-bottom: 1px solid @bb-email-border;
+    font-size: 13px;
+    text-align: left;
+}
+
+.shipment-track th {
+    background-color: @bb-email-panel-bg;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: @bb-email-muted;
+}
+
+//
+//  Responsive
+//  ---------------------------------------------
+
+@media only screen and (max-width: 600px) {
+    .main {
+        width: 100% !important;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+
+    .main-content,
+    .header,
+    .footer {
+        padding-left: 20px !important;
+        padding-right: 20px !important;
+    }
+
+    .order-details td {
+        display: block;
+        width: 100% !important;
+        padding-right: 0 !important;
+    }
+
+    .email-items .item-info,
+    .email-items .item-qty,
+    .email-items .item-price {
+        display: block;
+        width: 100% !important;
+        text-align: left !important;
+    }
+
+    .email-items .item-price {
+        padding-top: 0;
+    }
+}

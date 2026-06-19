@@ -1,0 +1,43 @@
+<?php
+declare(strict_types=1);
+
+use Magento\Checkout\Block\Onepage\Success;
+use Magento\Framework\Escaper;
+
+/** @var Success $block */
+/** @var Escaper $escaper */
+?>
+<div class="bb-success">
+    <div class="bb-success__icon" aria-hidden="true">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M20 6 9 17l-5-5"/>
+        </svg>
+    </div>
+
+    <?php if ($block->getOrderId()): ?>
+        <p class="bb-success__order">
+            <?php if ($block->getCanViewOrder()): ?>
+                <?= $escaper->escapeHtml(__('Your order number is:')) ?>
+                <span class="bb-success__order-number">
+                    <a href="<?= $escaper->escapeUrl($block->getViewOrderUrl()) ?>">
+                        <?= $escaper->escapeHtml($block->getOrderId()) ?>
+                    </a>
+                </span>
+            <?php else: ?>
+                <?= $escaper->escapeHtml(__('Your order number is:')) ?>
+                <span class="bb-success__order-number"><?= $escaper->escapeHtml($block->getOrderId()) ?></span>
+            <?php endif; ?>
+        </p>
+        <p class="bb-success__message">
+            <?= $escaper->escapeHtml(__('We\'ll email you an order confirmation with details and tracking info.')) ?>
+        </p>
+    <?php endif; ?>
+
+    <?= $block->getAdditionalInfoHtml() ?>
+
+    <div class="bb-success__actions">
+        <a href="<?= $escaper->escapeUrl($block->getContinueUrl()) ?>" class="btn btn-primary">
+            <span><?= $escaper->escapeHtml(__('Continue Shopping')) ?></span>
+        </a>
+    </div>
+</div>
