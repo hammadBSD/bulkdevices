@@ -186,77 +186,7 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
     </template>
 </div>
 
-<section class="home-top-categories" aria-labelledby="home-top-categories-heading">
-    <div class="container home-top-categories__container">
-        <h2 id="home-top-categories-heading" class="home-top-categories__title">Top Categories</h2>
-        <ul class="home-top-categories__grid">
-            <li class="home-top-categories__item">
-                <article class="home-top-categories__card">
-                    <div class="home-top-categories__media">
-                        <img src="https://bulkdevices.com/media/wysiwyg/tc-hdrive-wb.webp" alt="" width="100" height="100" loading="lazy">
-                    </div>
-                    <div class="home-top-categories__body">
-                        <h3 class="home-top-categories__name">Hard Drive</h3>
-                        <ul class="home-top-categories__links">
-                            <li><a class="home-top-categories__link" href="/storage-devices/internal-storage/solid-state-drives">Solid State Drives</a></li>
-                            <li><a class="home-top-categories__link" href="/storage-devices/internal-storage/desktop-hard-drive">Desktop Storage</a></li>
-                            <li><a class="home-top-categories__link" href="/storage-devices/internal-storage/server-hard-drive">Server Storage</a></li>
-                        </ul>
-                        <a class="home-top-categories__viewall" href="/storage-devices/internal-storage">See All</a>
-                    </div>
-                </article>
-            </li>
-            <li class="home-top-categories__item">
-                <article class="home-top-categories__card">
-                    <div class="home-top-categories__media">
-                        <img src="https://bulkdevices.com/media/wysiwyg/tc-cpus-wb.webp" alt="" width="100" height="100" loading="lazy">
-                    </div>
-                    <div class="home-top-categories__body">
-                        <h3 class="home-top-categories__name">CPUs</h3>
-                        <ul class="home-top-categories__links">
-                            <li><a class="home-top-categories__link" href="/cpus/processors/intel-processors">Intel Processors</a></li>
-                            <li><a class="home-top-categories__link" href="/cpus/processors/amd-processors">AMD Processors</a></li>
-                            <li><a class="home-top-categories__link" href="/cpus/board/processors-boards">Processor Boards</a></li>
-                        </ul>
-                        <a class="home-top-categories__viewall" href="/cpus">See All</a>
-                    </div>
-                </article>
-            </li>
-            <li class="home-top-categories__item">
-                <article class="home-top-categories__card">
-                    <div class="home-top-categories__media">
-                        <img src="https://bulkdevices.com/media/wysiwyg/tc-ram-wb.webp" alt="" width="100" height="100" loading="lazy">
-                    </div>
-                    <div class="home-top-categories__body">
-                        <h3 class="home-top-categories__name">Memory</h3>
-                        <ul class="home-top-categories__links">
-                            <li><a class="home-top-categories__link" href="/memory/memory-classification/server-memory">Server Memory</a></li>
-                            <li><a class="home-top-categories__link" href="/memory/memory-classification/desktop-memory">Desktop Memory</a></li>
-                            <li><a class="home-top-categories__link" href="/memory/memory-classification/laptop-memory">Laptop Memory</a></li>
-                        </ul>
-                        <a class="home-top-categories__viewall" href="/memory">See All</a>
-                    </div>
-                </article>
-            </li>
-            <li class="home-top-categories__item">
-                <article class="home-top-categories__card">
-                    <div class="home-top-categories__media">
-                        <img src="https://bulkdevices.com/media/wysiwyg/tc-motherboard-wb.webp" alt="" width="100" height="100" loading="lazy">
-                    </div>
-                    <div class="home-top-categories__body">
-                        <h3 class="home-top-categories__name">Motherboard</h3>
-                        <ul class="home-top-categories__links">
-                            <li><a class="home-top-categories__link" href="/motherboards/motherboards-classification/server-motherboards">Server Motherboards</a></li>
-                            <li><a class="home-top-categories__link" href="/motherboards/motherboards-classification/desktop-motherboards">Desktop Motherboards</a></li>
-                            <li><a class="home-top-categories__link" href="/motherboards/motherboards-classification/laptop-motherboards">Laptop Motherboards</a></li>
-                        </ul>
-                        <a class="home-top-categories__viewall" href="/motherboards">See All</a>
-                    </div>
-                </article>
-            </li>
-        </ul>
-    </div>
-</section>
+<?= $block->getChildHtml('home_top_categories') ?>
 <section class="home-whyus" aria-labelledby="home-whyus-heading">
     <div class="container home-whyus__container">
         <div class="home-whyus__layout">

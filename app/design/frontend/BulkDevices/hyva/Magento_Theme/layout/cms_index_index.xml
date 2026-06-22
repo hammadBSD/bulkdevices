@@ -45,6 +45,9 @@
                                template="Magento_Theme::html/product/card.phtml"/>
                     </block>
                 </block>
+                <block name="home-top-categories"
+                       as="home_top_categories"
+                       template="Magento_Theme::html/home/top-categories.phtml"/>
             </block>
         </referenceContainer>
 

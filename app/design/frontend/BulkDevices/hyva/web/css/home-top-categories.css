@@ -1,12 +1,12 @@
 /**
- * Homepage — Top Categories (4 columns, image left / links right)
+ * Homepage — Top Categories (8 cards, 4×2 grid, image left / links right)
  */
 
 .home-top-categories {
     --bb-topcat-accent: #eb7d1e;
     --bb-topcat-container-max: 96rem;
     padding: clamp(2rem, 4vw, 3rem) 0;
-    background: #ffffff;
+    background: #f3f4f6;
 }
 
 .home-top-categories__container {
@@ -26,13 +26,22 @@
     text-align: center;
 }
 
+.home-top-categories__panel {
+    padding: clamp(1rem, 2vw, 1.5rem);
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgb(15 23 42 / 0.06);
+    box-sizing: border-box;
+}
+
 .home-top-categories__grid {
     list-style: none;
     margin: 0;
     padding: 0;
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.25rem;
+    gap: 1rem;
 }
 
 .home-top-categories__item {
@@ -46,7 +55,7 @@
     gap: 0.875rem;
     height: 100%;
     padding: 1rem;
-    background: #fafafa;
+    background: #ffffff;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;

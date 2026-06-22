@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+use BSD\Storefront\ViewModel\TopCategories;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var TopCategories $topCategories */
+$topCategories = $viewModels->require(TopCategories::class);
+$categories = $topCategories->getCategories();
+?>
+
+<section class="home-top-categories" aria-labelledby="home-top-categories-heading">
+    <div class="container home-top-categories__container">
+        <h2 id="home-top-categories-heading" class="home-top-categories__title">
+            <?= $escaper->escapeHtml(__('Top Categories')) ?>
+        </h2>
+        <div class="home-top-categories__panel">
+            <ul class="home-top-categories__grid">
+                <?php foreach ($categories as $category): ?>
+                    <li class="home-top-categories__item">
+                        <article class="home-top-categories__card">
+                            <div class="home-top-categories__media">
+                                <img src="<?= $escaper->escapeUrl($category['image']) ?>"
+                                     alt=""
+                                     width="100"
+                                     height="100"
+                                     loading="lazy"
+                                     decoding="async">
+                            </div>
+                            <div class="home-top-categories__body">
+                                <h3 class="home-top-categories__name">
+                                    <?= $escaper->escapeHtml(__($category['name'])) ?>
+                                </h3>
+                                <ul class="home-top-categories__links">
+                                    <?php foreach ($category['links'] as $link): ?>
+                                        <li>
+                                            <a class="home-top-categories__link"
+                                               href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => $link['path']])) ?>">
+                                                <?= $escaper->escapeHtml(__($link['label'])) ?>
+                                            </a>
+                                        </li>
+                                    <?php endforeach; ?>
+                                </ul>
+                                <a class="home-top-categories__viewall"
+                                   href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => $category['see_all_path']])) ?>">
+                                    <?= $escaper->escapeHtml(__('See All')) ?>
+                                </a>
+                            </div>
+                        </article>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    </div>
+</section>
