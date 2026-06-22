@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
+use BSD\Storefront\ViewModel\PromotionalProducts;
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\ProductList;
-use Hyva\Theme\ViewModel\Store;
-use Magento\Catalog\Model\Product\Visibility as ProductVisibility;
+use Magento\Catalog\Model\Product;
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
@@ -13,22 +13,17 @@ use Magento\Framework\View\Element\Template;
 /** @var Escaper $escaper */
 /** @var ViewModelRegistry $viewModels */
 
+/** @var PromotionalProducts $promotionalProducts */
+$promotionalProducts = $viewModels->require(PromotionalProducts::class);
+
 /** @var ProductList $productListViewModel */
 $productListViewModel = $viewModels->require(ProductList::class);
 
-/** @var Store $storeViewModel */
-$storeViewModel = $viewModels->require(Store::class);
+$categoryId = (string) ($block->getData('category_id') ?: 64);
+$pageSize = (int) ($block->getData('product_count') ?: 10);
 
-$categoryId = (string) ($block->getData('category_id') ?: 9969);
-$pageSize = (int) ($block->getData('product_count') ?: 8);
-
+$productListViewModel->includeChildCategoryProducts();
 $productListViewModel->addFilter('category_id', $categoryId);
-$productListViewModel->addFilter('website_id', $storeViewModel->getWebsiteId());
-$productListViewModel->addFilter(
-    'visibility',
-    [ProductVisibility::VISIBILITY_IN_CATALOG, ProductVisibility::VISIBILITY_BOTH],
-    'in'
-);
 $productListViewModel->setPageSize($pageSize);
 $productListViewModel->addDescendingSortOrder('created_at');
 
@@ -40,10 +35,19 @@ $cardBlock = $block->getChildBlock('product.card');
     <p class="home-product-tabs__empty"><?= $escaper->escapeHtml(__('We can\'t find products matching the selection.')) ?></p>
 <?php else: ?>
     <ul class="home-product-tabs__grid">
-        <?php foreach ($products as $product): ?>
+        <?php foreach ($products as $index => $product): ?>
+            <?php
+            if ($product instanceof Product) {
+                $product->setData(
+                    'image_custom_attributes',
+                    $promotionalProducts->getFeaturedCardImageAttributes((int) $index)
+                );
+            }
+            ?>
             <li class="bb-product-grid__item home-product-tabs__item">
                 <?= $cardBlock
                     ?->setData('product', $product)
+                    ->setData('hide_qty_selector', true)
                     ->toHtml() ?>
             </li>
         <?php endforeach; ?>

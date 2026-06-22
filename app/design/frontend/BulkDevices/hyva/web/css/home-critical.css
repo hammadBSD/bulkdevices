@@ -95,12 +95,6 @@
     color: var(--bb-banner-cta-text);
     background: var(--bb-banner-accent);
     border-radius: 2px;
-    transition: background-color 0.2s ease, transform 0.2s ease;
-}
-
-.home-banner-slider__cta:hover {
-    background: var(--bb-banner-accent-hover);
-    transform: translateY(-1px);
 }
 
 .home-banner-slider__cta:focus-visible {
@@ -168,13 +162,6 @@
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     box-shadow: 0 8px 24px rgb(15 23 42 / 0.1);
-    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
-}
-
-.home-features__card:hover {
-    border-color: rgb(235 125 30 / 0.35);
-    box-shadow: 0 12px 28px rgb(15 23 42 / 0.14);
-    transform: translateY(-2px);
 }
 
 .home-features__icon {
@@ -311,13 +298,6 @@
     border-bottom: 2px solid transparent;
     border-radius: 0;
     cursor: pointer;
-    transition: color 0.2s ease, border-color 0.2s ease;
-}
-
-.home-product-tabs__tab:hover,
-.home-product-tabs__tab:focus-visible {
-    color: var(--bb-tabs-accent);
-    outline: none;
 }
 
 .home-product-tabs__tab.is-active {
@@ -383,6 +363,33 @@
     }
 }
 
+/* Defer paint for below-fold featured product cards (Speed Index) */
+.home-product-tabs__item:nth-child(n+6) {
+    content-visibility: auto;
+    contain-intrinsic-size: auto 22rem;
+}
+
+@media (max-width: 1279px) {
+    .home-product-tabs__item:nth-child(n+4) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 22rem;
+    }
+}
+
+@media (max-width: 1023px) {
+    .home-product-tabs__item:nth-child(n+3) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 22rem;
+    }
+}
+
+@media (max-width: 639px) {
+    .home-product-tabs__item:nth-child(n+2) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 24rem;
+    }
+}
+
 /* --- product-card.css --- */
 /**
  * BulkDevices product card - shared across homepage, sliders, and catalog lists.
@@ -398,13 +405,6 @@
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     overflow: hidden;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.bb-product-card:hover,
-.home-product-tabs__card:hover {
-    border-color: rgb(235 125 30 / 0.45);
-    box-shadow: 0 8px 24px rgb(15 23 42 / 0.08);
 }
 
 .bb-product-card__media,
@@ -445,11 +445,6 @@
 .home-product-tabs__name a {
     color: #1f2937;
     text-decoration: none;
-}
-
-.bb-product-card__name a:hover,
-.home-product-tabs__name a:hover {
-    color: var(--bb-card-accent);
 }
 
 .bb-product-card__desc,
@@ -524,7 +519,6 @@
     border: none;
     cursor: pointer;
     appearance: none;
-    transition: background-color 0.15s ease;
 }
 
 .bb-product-card__qty-btn--decrement {
@@ -533,10 +527,6 @@
 
 .bb-product-card__qty-btn--increment {
     border-left: 1px solid #d1d5db;
-}
-
-.bb-product-card__qty-btn:hover:not(:disabled) {
-    background: #f3f4f6;
 }
 
 .bb-product-card__qty-btn:disabled {
@@ -591,7 +581,6 @@
     cursor: pointer;
     box-sizing: border-box;
     appearance: none;
-    transition: background-color 0.2s ease;
 }
 
 .bb-product-card__actions .bb-product-card__cta,
@@ -602,12 +591,6 @@
 .bb-product-card__atc-form .bb-product-card__cta,
 .bb-product-card__atc-form .home-product-tabs__cta {
     margin-top: 0;
-}
-
-.bb-product-card__cta:hover,
-.home-product-tabs__cta:hover {
-    background: #d96d12;
-    color: #ffffff;
 }
 
 .bb-product-grid__item,

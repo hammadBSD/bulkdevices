@@ -2,11 +2,10 @@
 
 declare(strict_types=1);
 
+use BSD\Storefront\ViewModel\PromotionalProducts;
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\ProductList;
-use Hyva\Theme\ViewModel\Store;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Visibility as ProductVisibility;
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
@@ -14,36 +13,21 @@ use Magento\Framework\View\Element\Template;
 /** @var Escaper $escaper */
 /** @var ViewModelRegistry $viewModels */
 
+/** @var PromotionalProducts $promotionalProducts */
+$promotionalProducts = $viewModels->require(PromotionalProducts::class);
+
 /** @var ProductList $productListViewModel */
 $productListViewModel = $viewModels->require(ProductList::class);
 
-/** @var Store $storeViewModel */
-$storeViewModel = $viewModels->require(Store::class);
+$urlKeys = $promotionalProducts->getStaticHardDriveUrlKeys();
 
-$skus = [
-    'FPR1010-NGFW-K9',
-    'PWR-IE65W-PC-DC',
-    'CP-8821-K9-BUN',
-    'ST26000NM000C',
-    'ST24000NM000C',
-    '0B36400',
-    'WD102KFBX',
-    'WD101EFBX',
-];
+$productListViewModel->addFilter('url_key', $urlKeys, 'in');
+$productListViewModel->setPageSize(count($urlKeys));
 
-$productListViewModel->addFilter('sku', $skus, 'in');
-$productListViewModel->addFilter('website_id', $storeViewModel->getWebsiteId());
-$productListViewModel->addFilter(
-    'visibility',
-    [ProductVisibility::VISIBILITY_IN_CATALOG, ProductVisibility::VISIBILITY_BOTH],
-    'in'
-);
-$productListViewModel->setPageSize(count($skus));
-
-$productsBySku = [];
+$productsByUrlKey = [];
 foreach ($productListViewModel->getItems() as $product) {
     if ($product instanceof Product) {
-        $productsBySku[strtoupper((string) $product->getSku())] = $product;
+        $productsByUrlKey[(string) $product->getUrlKey()] = $product;
     }
 }
 
@@ -51,21 +35,18 @@ $cardBlock = $block->getChildBlock('product.card');
 ?>
 
 <ul class="home-product-tabs__grid">
-    <?php foreach ($skus as $index => $sku): ?>
+    <?php foreach ($urlKeys as $index => $urlKey): ?>
         <?php
-        $product = $productsBySku[strtoupper($sku)] ?? null;
+        $product = $productsByUrlKey[$urlKey] ?? null;
         if (!$product instanceof Product) {
             continue;
         }
-        $product->setData(
-            'image_custom_attributes',
-            $index < 4 ? ['loading' => 'eager'] : ['loading' => 'lazy']
-        );
+        $product->setData('image_custom_attributes', $promotionalProducts->getFeaturedCardImageAttributes($index));
         ?>
         <li class="bb-product-grid__item home-product-tabs__item">
             <?= $cardBlock
                 ?->setData('product', $product)
-                ->setData('defer_qty_alpine', $index >= 4)
+                ->setData('hide_qty_selector', true)
                 ->toHtml() ?>
         </li>
     <?php endforeach; ?>

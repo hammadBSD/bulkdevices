@@ -35,7 +35,7 @@
                        as="home_promotional_products"
                        template="Magento_Theme::html/home/promotional-products.phtml">
                     <arguments>
-                        <argument name="product_count" xsi:type="number">8</argument>
+                        <argument name="product_count" xsi:type="number">10</argument>
                     </arguments>
                     <block name="home-promotional-all-static"
                            as="promotional_all_static"
@@ -44,18 +44,6 @@
                                as="product.card"
                                template="Magento_Theme::html/product/card.phtml"/>
                     </block>
-                </block>
-                <block name="home-featured-products"
-                       as="home_featured_products"
-                       template="Magento_Theme::html/home/featured-products.phtml">
-                    <arguments>
-                        <argument name="category_id" xsi:type="number">253</argument>
-                        <argument name="product_count" xsi:type="number">5</argument>
-                        <argument name="title" xsi:type="string" translate="true">Featured Products</argument>
-                    </arguments>
-                    <block name="home.product.card"
-                           as="product.card"
-                           template="Magento_Theme::html/product/card.phtml"/>
                 </block>
             </block>
         </referenceContainer>
@@ -67,8 +55,8 @@
         <referenceBlock name="page.main.title" remove="true"/>
 
         <referenceBlock name="script-alpine-js">
-            <block name="product.card.qty.script"
-                   template="Magento_Theme::html/product/card-qty-script.phtml"
+            <block name="home.product.tabs.script"
+                   template="Magento_Theme::html/home/product-tabs-script.phtml"
                    before="-"/>
         </referenceBlock>
     </body>

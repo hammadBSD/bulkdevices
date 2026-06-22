@@ -1,3 +1,69 @@
+/* --- home-above-fold-interactions.css (deferred — hover/transition only) --- */
+
+.home-banner-slider__cta {
+    transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.home-banner-slider__cta:hover {
+    background: var(--bb-banner-accent-hover);
+    transform: translateY(-1px);
+}
+
+.home-features__card {
+    transition: box-shadow 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+}
+
+.home-features__card:hover {
+    border-color: rgb(235 125 30 / 0.35);
+    box-shadow: 0 12px 28px rgb(15 23 42 / 0.14);
+    transform: translateY(-2px);
+}
+
+.home-product-tabs__tab {
+    transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.home-product-tabs__tab:hover,
+.home-product-tabs__tab:focus-visible {
+    color: var(--bb-tabs-accent);
+    outline: none;
+}
+
+.bb-product-card,
+.home-product-tabs__card {
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.bb-product-card:hover,
+.home-product-tabs__card:hover {
+    border-color: rgb(235 125 30 / 0.45);
+    box-shadow: 0 8px 24px rgb(15 23 42 / 0.08);
+}
+
+.bb-product-card__name a:hover,
+.home-product-tabs__name a:hover {
+    color: var(--bb-card-accent);
+}
+
+.bb-product-card__qty-btn {
+    transition: background-color 0.15s ease;
+}
+
+.bb-product-card__qty-btn:hover:not(:disabled) {
+    background: #f3f4f6;
+}
+
+.bb-product-card__cta,
+.home-product-tabs__cta {
+    transition: background-color 0.2s ease;
+}
+
+.bb-product-card__cta:hover,
+.home-product-tabs__cta:hover {
+    background: #d96d12;
+    color: #ffffff;
+}
+
 /* --- home-featured-products.css --- */
 /**
  * Homepage — Featured Product section (dynamic category products)

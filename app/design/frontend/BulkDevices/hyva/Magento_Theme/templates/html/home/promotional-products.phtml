@@ -17,23 +17,27 @@ $promotionalProducts = $viewModels->require(PromotionalProducts::class);
 $tabs = $promotionalProducts->getTabs();
 $productCount = (int) ($block->getData('product_count') ?: $promotionalProducts->getDefaultProductCount());
 $gridUrl = $block->getUrl('bsd/promotional/grid');
-$defaultTab = $tabs['all'];
+$defaultTab = $promotionalProducts->getDefaultTab();
 $staticAllTabHtml = $block->getChildHtml('promotional_all_static');
 ?>
 
 <section
     class="home-product-tabs"
     aria-labelledby="home-product-tabs-heading"
-    x-data="initHomePromotionalTabs()"
-    x-init="init()"
+    x-data="initHomePromotionalTabs({
+        defaultTabId: '<?= $escaper->escapeJs($defaultTab['id']) ?>',
+        gridUrl: '<?= $escaper->escapeJs($gridUrl) ?>',
+        productCount: <?= (int) $productCount ?>,
+        errorMessage: '<?= $escaper->escapeJs(__('Unable to load products. Please try again.')) ?>'
+    })"
 >
     <div class="container home-product-tabs__container">
         <header class="home-product-tabs__header">
             <h2 id="home-product-tabs-heading" class="home-product-tabs__title">
-                <?= $escaper->escapeHtml(__('Promotional Products')) ?>
+                <?= $escaper->escapeHtml(__('Featured Products')) ?>
             </h2>
             <p class="home-product-tabs__intro">
-                <?= $escaper->escapeHtml(__('Shop top picks across our hottest categories and brands.')) ?>
+                <?= $escaper->escapeHtml(__('Shop top picks across our hottest categories.')) ?>
             </p>
         </header>
         <div class="home-product-tabs__nav" role="tablist" aria-label="<?= $escaper->escapeHtmlAttr(__('Product categories')) ?>">
@@ -63,60 +67,16 @@ $staticAllTabHtml = $block->getChildHtml('promotional_all_static');
                     <?= $escaper->escapeHtml(__('Loading products…')) ?>
                 </div>
                 <div
-                    x-show="!loading && activeTab === '<?= $escaper->escapeHtmlAttr($defaultTab['id']) ?>'"
+                    x-show="!loading && activeTab === defaultTabId"
                     style="display: block"
                 >
                     <?= /* @noEscape */ $staticAllTabHtml ?>
                 </div>
                 <div
-                    x-show="!loading && activeTab !== '<?= $escaper->escapeHtmlAttr($defaultTab['id']) ?>'"
+                    x-show="!loading && activeTab !== defaultTabId"
                     x-html="panels[activeTab]"
                 ></div>
             </div>
         </div>
     </div>
-    <script>
-        function initHomePromotionalTabs() {
-            return {
-                activeTab: '<?= $escaper->escapeJs($defaultTab['id']) ?>',
-                loading: false,
-                panels: {},
-                gridUrl: '<?= $escaper->escapeJs($gridUrl) ?>',
-                productCount: <?= (int) $productCount ?>,
-                init() {},
-                selectTab(tabId, categoryId) {
-                    if (this.activeTab === tabId) {
-                        return;
-                    }
-                    this.activeTab = tabId;
-                    if (tabId === '<?= $escaper->escapeJs($defaultTab['id']) ?>' || this.panels[tabId]) {
-                        return;
-                    }
-                    this.loading = true;
-                    const url = new URL(this.gridUrl, window.location.origin);
-                    url.searchParams.set('category_id', String(categoryId));
-                    url.searchParams.set('product_count', String(this.productCount));
-                    fetch(url.toString(), {
-                        headers: { 'X-Requested-With': 'XMLHttpRequest' },
-                        credentials: 'same-origin'
-                    })
-                        .then((response) => {
-                            if (!response.ok) {
-                                throw new Error('Failed to load products');
-                            }
-                            return response.text();
-                        })
-                        .then((html) => {
-                            this.panels[tabId] = html;
-                        })
-                        .catch(() => {
-                            this.panels[tabId] = '<p class="home-product-tabs__empty"><?= $escaper->escapeJs(__('Unable to load products. Please try again.')) ?></p>';
-                        })
-                        .finally(() => {
-                            this.loading = false;
-                        });
-                }
-            };
-        }
-    </script>
 </section>
