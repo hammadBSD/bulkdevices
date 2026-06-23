@@ -36,9 +36,6 @@ $staticAllTabHtml = $block->getChildHtml('promotional_all_static');
             <h2 id="home-product-tabs-heading" class="home-product-tabs__title">
                 <?= $escaper->escapeHtml(__('Featured Products')) ?>
             </h2>
-            <p class="home-product-tabs__intro">
-                <?= $escaper->escapeHtml(__('Shop top picks across our hottest categories.')) ?>
-            </p>
         </header>
         <div class="home-product-tabs__nav" role="tablist" aria-label="<?= $escaper->escapeHtmlAttr(__('Product categories')) ?>">
             <?php foreach ($tabs as $tab): ?>
