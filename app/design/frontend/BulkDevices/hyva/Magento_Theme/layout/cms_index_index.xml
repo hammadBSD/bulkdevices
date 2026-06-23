@@ -51,6 +51,9 @@
                 <block name="home-featured-blogs"
                        as="home_featured_blogs"
                        template="Magento_Theme::html/home/featured-blogs.phtml"/>
+                <block name="home-customers-review"
+                       as="home_customers_review"
+                       template="Magento_Theme::html/home/customers-review.phtml"/>
             </block>
         </referenceContainer>
 

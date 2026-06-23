@@ -430,3 +430,11 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
         </div>
     </template>
 </div>
+
+<div x-data="{ visible: false }" x-intersect.once.margin.300px="visible = true">
+    <template x-if="visible">
+        <div>
+            <?= $block->getChildHtml('home_customers_review') ?>
+        </div>
+    </template>
+</div>
