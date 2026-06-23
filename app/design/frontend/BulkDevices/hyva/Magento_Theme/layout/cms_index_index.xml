@@ -48,6 +48,9 @@
                 <block name="home-top-categories"
                        as="home_top_categories"
                        template="Magento_Theme::html/home/top-categories.phtml"/>
+                <block name="home-featured-blogs"
+                       as="home_featured_blogs"
+                       template="Magento_Theme::html/home/featured-blogs.phtml"/>
             </block>
         </referenceContainer>
 

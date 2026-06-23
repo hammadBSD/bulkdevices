@@ -1,0 +1,62 @@
+<?php
+
+declare(strict_types=1);
+
+use BSD\Storefront\ViewModel\FeaturedBlogs;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var FeaturedBlogs $featuredBlogs */
+$featuredBlogs = $viewModels->require(FeaturedBlogs::class);
+$posts = $featuredBlogs->getPosts();
+?>
+
+<section class="home-featured-blogs" aria-labelledby="home-featured-blogs-heading">
+    <div class="home-featured-blogs__container">
+        <header class="home-featured-blogs__header">
+            <h2 id="home-featured-blogs-heading" class="home-featured-blogs__title">
+                <?= $escaper->escapeHtml(__('Featured Blogs')) ?>
+            </h2>
+            <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => ltrim($featuredBlogs->getViewAllUrl(), '/')])) ?>"
+               class="home-featured-blogs__view-all">
+                <?= $escaper->escapeHtml(__('View All')) ?>
+            </a>
+        </header>
+
+        <div class="home-featured-blogs__grid">
+            <?php foreach ($posts as $post): ?>
+                <article class="home-featured-blogs__card">
+                    <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => ltrim($post['url'], '/')])) ?>"
+                       class="home-featured-blogs__media">
+                        <img class="home-featured-blogs__image"
+                             src="<?= $escaper->escapeUrl($post['image']) ?>"
+                             alt="<?= $escaper->escapeHtmlAttr(__($post['image_alt'])) ?>"
+                             width="640"
+                             height="400"
+                             loading="lazy"
+                             decoding="async">
+                    </a>
+                    <div class="home-featured-blogs__body">
+                        <h3 class="home-featured-blogs__card-title">
+                            <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => ltrim($post['url'], '/')])) ?>">
+                                <?= $escaper->escapeHtml(__($post['title'])) ?>
+                            </a>
+                        </h3>
+                        <p class="home-featured-blogs__excerpt">
+                            <?= $escaper->escapeHtml(__($post['excerpt'])) ?>
+                        </p>
+                        <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => ltrim($post['url'], '/')])) ?>"
+                           class="home-featured-blogs__read-more">
+                            <?= $escaper->escapeHtml(__('Read More')) ?>
+                        </a>
+                    </div>
+                </article>
+            <?php endforeach; ?>
+        </div>
+    </div>
+</section>

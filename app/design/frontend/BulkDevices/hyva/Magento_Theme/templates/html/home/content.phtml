@@ -226,6 +226,14 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
 <div x-data="{ visible: false }" x-intersect.once.margin.300px="visible = true">
     <template x-if="visible">
         <div>
+            <?= $block->getChildHtml('home_featured_blogs') ?>
+        </div>
+    </template>
+</div>
+
+<div x-data="{ visible: false }" x-intersect.once.margin.300px="visible = true">
+    <template x-if="visible">
+        <div>
 <section class="home-get-started" aria-labelledby="home-get-started-heading">
     <div class="home-get-started__container">
         <div class="home-get-started__layout">
