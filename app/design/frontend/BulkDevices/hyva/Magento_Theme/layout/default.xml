@@ -6,10 +6,12 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <update handle="default_hyva"/>
     <head>
+        <css src="css/top-bar.css"/>
+        <css src="css/header.css"/>
         <css src="css/desktop-menu.css" media="screen and (min-width: 1024px)"/>
+        <css src="css/footer-top.css"/>
         <css src="css/footer-middle.css"/>
         <css src="css/frontendff.css"/>
-        <css src="css/top-bar.css"/>
     </head>
     <body>
         <!-- Legacy BSD_Getaquote listing modal uses RequireJS; Hyvä uses bdus.hyva.quotation.modal instead -->
@@ -166,6 +168,10 @@
 
         <referenceContainer name="footer">
             <block name="footer-content" template="Magento_Theme::html/footer.phtml">
+                <block name="footer-top"
+                       as="footer-top"
+                       template="Magento_Theme::html/footer/top.phtml"
+                       before="-"/>
                 <block name="footer-middle" template="Magento_Theme::html/footer/middle.phtml"/>
                 <block
                     class="Magento\Theme\Block\Html\Footer"

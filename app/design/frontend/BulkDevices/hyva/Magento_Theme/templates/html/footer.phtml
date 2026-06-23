@@ -14,6 +14,7 @@ use Magento\Framework\Escaper;
 /** @var Escaper $escaper */
 ?>
 <footer class="site-footer">
+    <?= $block->getChildHtml('footer-top') ?>
     <?= $block->getChildHtml('footer-middle') ?>
     <div class="site-footer__bottom">
         <div class="container site-footer__bottom-inner">

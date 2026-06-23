@@ -33,6 +33,7 @@ $quickLinks = [
     ['label' => __('Power Supply'), 'path' => 'power/power-classification/power-supplies'],
     ['label' => __('Motherboards'), 'path' => 'motherboards'],
     ['label' => __('Switches'), 'path' => 'networking-devices/switches'],
+    ['label' => __('Storage'), 'path' => 'storage-devices'],
 ];
 
 /** @param array<string, mixed> $item */
@@ -82,11 +83,11 @@ $columnClass = static function (array $children): string {
     class="menu-container z-9 navigation"
     @keydown.escape.window="closeCategories"
 >
-    <div class="menu-wrapper flex items-center justify-between gap-4 py-1">
+    <div class="menu-wrapper flex items-center gap-6 py-2">
         <div class="drop-menu shrink-0">
             <button
                 type="button"
-                class="shop-by-categories flex items-center gap-1 py-2 font-semibold whitespace-nowrap"
+                class="shop-by-categories flex items-center gap-1.5 py-1 font-bold uppercase tracking-wide whitespace-nowrap"
                 @click="toggleCategories"
                 :aria-expanded="categoriesOpen"
                 aria-controls="bb-categories-panel"
@@ -217,29 +218,18 @@ $columnClass = static function (array $children): string {
         </div>
 
         <div class="custom-menu-block flex-1 min-w-0">
-            <ul class="second-menu flex flex-wrap items-center justify-end gap-x-4 gap-y-1 text-sm">
+            <ul class="second-menu flex flex-wrap items-center text-sm">
                 <?php foreach ($quickLinks as $quickLink): ?>
                     <li>
                         <a
                             href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => $quickLink['path']])) ?>"
-                            class="whitespace-nowrap hover:text-primary"
+                            class="whitespace-nowrap"
                         >
                             <?= $escaper->escapeHtml($quickLink['label']) ?>
                         </a>
                     </li>
                 <?php endforeach; ?>
             </ul>
-        </div>
-
-        <div class="header-actions shrink-0">
-            <div class="primary">
-                <a
-                    href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => 'promotional-products'])) ?>"
-                    class="action promotion primary btn btn-primary text-sm whitespace-nowrap"
-                >
-                    <span><?= $escaper->escapeHtml(__('Promotion')) ?></span>
-                </a>
-            </div>
         </div>
     </div>
 </div>

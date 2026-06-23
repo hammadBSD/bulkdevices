@@ -92,7 +92,7 @@
     line-height: 1.25;
     text-transform: uppercase;
     text-decoration: none;
-    color: var(--bb-banner-cta-text);
+    color: var(--bb-banner-text);
     background: var(--bb-banner-accent);
     border-radius: 2px;
 }

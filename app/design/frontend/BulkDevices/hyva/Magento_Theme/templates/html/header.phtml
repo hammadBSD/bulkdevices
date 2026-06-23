@@ -42,6 +42,21 @@ $showWishlist = $block->getShowWishlist() !== null ? (bool) $block->getShowWishl
             summaryCount() {
                 return this.cart.summary_count || 0;
             },
+            cartItemsLabel() {
+                return hyva.str(
+                    '<?= $escaper->escapeJs(__('item(s) - %1')) ?>',
+                    this.summaryCount()
+                );
+            },
+            cartSubtotalDisplay() {
+                if (this.cart.subtotal) {
+                    return this.cart.subtotal;
+                }
+                if (this.cart.subtotalAmount != null) {
+                    return hyva.formatPrice(this.cart.subtotalAmount);
+                }
+                return hyva.formatPrice(0);
+            },
             cartAriaLabel() {
                 return '<?= $escaper->escapeJs($showMiniCart ? __('Toggle minicart') : __('View cart')) ?>, ' +
                     (this.isCartEmpty() ? '<?= $escaper->escapeJs(__('Cart is empty')) ?>' : (
@@ -67,7 +82,9 @@ $showWishlist = $block->getShowWishlist() !== null ? (bool) $block->getShowWishl
             },
             searchClose() {
                 this.searchOpen = false;
-                this.$refs.searchButton.focus();
+                if (this.$refs.searchButton) {
+                    this.$refs.searchButton.focus();
+                }
             },
             searchEscape() {
                 this.searchClose();
@@ -93,52 +110,58 @@ $showWishlist = $block->getShowWishlist() !== null ? (bool) $block->getShowWishl
 <?php $hyvaCsp->registerInlineScript() ?>
 
 <div id="header"
-     class="relative z-30 w-full border-b shadow bg-white border-gray-100"
+     class="bdus-header relative z-30 w-full"
      x-data="initHeader()"
      @private-content-loaded.window="getData(event.detail.data)">
 
-    <div class="container mx-auto px-6">
+    <div class="bdus-header__container">
 
-        <!-- ================= ROW 1 ================= -->
-        <div class="flex items-center justify-between gap-4 py-3">
-
-            <div class="flex items-center gap-2 flex-shrink-0">
+        <div class="bdus-header__main">
+            <div class="bdus-header__logo-wrap">
                 <?php if ($topmenu = $block->getChildBlock('topmenu')): ?>
                     <?= $topmenu->getChildHtml('topmenu.mobile') ?>
                 <?php endif; ?>
 
-                <!-- LOGO -->
                 <?= $block->getChildHtml('logo'); ?>
             </div>
 
-            <!-- DESKTOP SEARCH (FULL BAR) -->
-            <div class="hidden lg:flex flex-1 mx-6">
+            <div class="bdus-header__search">
                 <?= $block->getChildHtml('header-search'); ?>
             </div>
 
-            <!-- RIGHT ICONS -->
-            <div class="flex items-center gap-2 ml-auto">
+            <div class="bdus-header__actions">
+                <a href="tel:+19036774333" class="bdus-header__phone">
+                    <span class="bdus-header__phone-icon" aria-hidden="true">
+                        <?= $lucideIcons->phoneHtml('', 32, 32) ?>
+                    </span>
+                    <span class="bdus-header__phone-text">
+                        <span class="bdus-header__phone-label"><?= $escaper->escapeHtml(__('Call Us at')) ?></span>
+                        <span class="bdus-header__phone-number">(903) 677-4333</span>
+                    </span>
+                </a>
 
                 <?php if ($block->getShowCompare()): ?>
                     <?= $block->getChildHtml('compare'); ?>
                 <?php endif; ?>
 
-                <?= $block->getChildHtml('customer'); ?>
+                <div class="bdus-header__account">
+                    <?= $block->getChildHtml('customer'); ?>
+                </div>
 
                 <?php if ($block->getShowWishlist()): ?>
                     <?= $block->getChildHtml('wishlist'); ?>
                 <?php endif; ?>
 
-                <!-- SEARCH ICON (MOBILE ONLY) -->
                 <button
-                    class="lg:hidden btn bg-transparent border-transparent p-1"
+                    type="button"
+                    class="bdus-header__mobile-search lg:hidden"
+                    x-ref="searchButton"
                     @click="toggleSearch"
-                    aria-label="Search"
+                    aria-label="<?= $escaper->escapeHtmlAttr(__('Search')) ?>"
                 >
-                    <?= $lucideIcons->searchHtml('', 24, 24, ["aria-hidden" => "true"]) ?>
+                    <?= $lucideIcons->searchHtml('', 24, 24, ['aria-hidden' => 'true']) ?>
                 </button>
 
-                <!-- CART ICON -->
                 <?php if ($showMiniCart): ?>
                 <button
                 <?php else: ?>
@@ -146,7 +169,7 @@ $showWishlist = $block->getShowWishlist() !== null ? (bool) $block->getShowWishl
                 <?php endif ?>
                     id="menu-cart-icon"
                     type="button"
-                    class="relative btn bg-transparent border-transparent p-1"
+                    class="bdus-header__cart"
                     x-ref="cartButton"
                     :aria-label="cartAriaLabel"
                     <?php if ($showMiniCart): ?>
@@ -158,37 +181,37 @@ $showWishlist = $block->getShowWishlist() !== null ? (bool) $block->getShowWishl
                         aria-label="<?= $escaper->escapeHtmlAttr(__('View cart')) ?>"
                     <?php endif ?>
                 >
-                    <?= $lucideIcons->shoppingCartHtml("md:h-6 md:w-6", 28, 28, ["aria-hidden" => "true"]) ?>
-                    <span
-                        x-text="summaryCount"
-                        x-show="summaryCount"
-                        x-cloak
-                        class="absolute -top-1.5 -right-1.5 px-2 py-1 rounded-full bg-primary text-on-primary text-xs
-                            font-semibold leading-none text-center uppercase tabular-nums"
-                        aria-hidden="true"
-                    ></span>
+                    <span class="bdus-header__cart-icon" aria-hidden="true">
+                        <?= $lucideIcons->shoppingCartHtml('', 32, 32) ?>
+                        <span
+                            x-text="summaryCount"
+                            x-show="summaryCount"
+                            x-cloak
+                            class="bdus-header__cart-badge"
+                        ></span>
+                    </span>
+                    <span class="bdus-header__cart-text">
+                        <span class="bdus-header__cart-count" x-text="cartItemsLabel()"></span>
+                        <span class="bdus-header__cart-total" x-html="cartSubtotalDisplay()"></span>
+                    </span>
                 <?php if ($showMiniCart): ?>
                     </button>
                 <?php else: ?>
                     </a>
                 <?php endif ?>
-
             </div>
         </div>
 
-        <!-- ================= ROW 2 (DESKTOP MENU) ================= -->
-        <div class="border-t hidden lg:block overflow-visible">
+        <div class="bdus-header__nav">
             <?php if ($topmenu = $block->getChildBlock('topmenu')): ?>
                 <?= $topmenu->getChildHtml('topmenu.desktop') ?>
             <?php endif; ?>
         </div>
-
     </div>
 
-    <!-- MOBILE SEARCH PANEL -->
     <div x-show="searchOpen"
          x-cloak
-         class="lg:hidden border-t p-3 bg-white">
+         class="bdus-header__mobile-panel lg:hidden">
         <?= $block->getChildHtml('header-search'); ?>
     </div>
 
