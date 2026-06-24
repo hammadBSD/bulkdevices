@@ -10,11 +10,12 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Pricing\Price\FinalPrice;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\ScopeInterface;
 
-class QuotationForm implements ArgumentInterface
+class QuotationForm implements ArgumentInterface, IdentityInterface
 {
     private const XML_PATH_RECAPTCHA_SITE_KEY = 'getaquote/recaptcha_settings/site_key';
     private const XML_PATH_RECAPTCHA_SCRIPT_URL = 'getaquote/recaptcha_settings/script_url';
@@ -115,5 +116,18 @@ class QuotationForm implements ArgumentInterface
             'cms_index_index',
             'catalog_category_view',
         ], true);
+    }
+
+    public function getIdentities(): array
+    {
+        if (!$this->currentProduct->exists()) {
+            return [];
+        }
+
+        $product = $this->currentProduct->get();
+
+        return $product instanceof IdentityInterface
+            ? $product->getIdentities()
+            : [];
     }
 }

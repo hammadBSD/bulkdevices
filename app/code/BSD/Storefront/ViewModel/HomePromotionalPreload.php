@@ -9,10 +9,11 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
+use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\StoreManagerInterface;
 
-class HomePromotionalPreload implements ArgumentInterface
+class HomePromotionalPreload implements ArgumentInterface, IdentityInterface
 {
     private const PRELOAD_PRODUCT_COUNT = 1;
 
@@ -28,6 +29,37 @@ class HomePromotionalPreload implements ArgumentInterface
      * @return string[]
      */
     public function getPreloadImageUrls(): array
+    {
+        $urls = [];
+        foreach ($this->getPreloadProducts() as $product) {
+            $imageUrl = $this->productPageViewModel
+                ->getImage($product, 'category_page_grid')
+                ->getImageUrl();
+            if ($imageUrl !== '') {
+                $urls[] = $imageUrl;
+            }
+        }
+
+        return array_values(array_unique($urls));
+    }
+
+    public function getIdentities(): array
+    {
+        $identities = $this->promotionalProducts->getIdentities();
+
+        foreach ($this->getPreloadProducts() as $product) {
+            if ($product instanceof IdentityInterface) {
+                $identities = array_merge($identities, $product->getIdentities());
+            }
+        }
+
+        return array_values(array_unique($identities));
+    }
+
+    /**
+     * @return Product[]
+     */
+    private function getPreloadProducts(): array
     {
         $urlKeys = array_slice($this->promotionalProducts->getStaticHardDriveUrlKeys(), 0, self::PRELOAD_PRODUCT_COUNT);
         if ($urlKeys === []) {
@@ -53,20 +85,14 @@ class HomePromotionalPreload implements ArgumentInterface
             }
         }
 
-        $urls = [];
+        $products = [];
         foreach ($urlKeys as $urlKey) {
             $product = $productsByUrlKey[$urlKey] ?? null;
-            if (!$product instanceof Product) {
-                continue;
-            }
-            $imageUrl = $this->productPageViewModel
-                ->getImage($product, 'category_page_grid')
-                ->getImageUrl();
-            if ($imageUrl !== '') {
-                $urls[] = $imageUrl;
+            if ($product instanceof Product) {
+                $products[] = $product;
             }
         }
 
-        return array_values(array_unique($urls));
+        return $products;
     }
 }

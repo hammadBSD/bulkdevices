@@ -107,7 +107,7 @@ $product = $currentProductViewModel->exists() ? $currentProductViewModel->get() 
         <?php if ($product): ?>
         breadcrumbs.push({
             name: 'product',
-            label: '<?= $escaper->escapeJs($product->getName()) ?>',
+            label: '<?= $escaper->escapeJs($product->getSku()) ?>',
             title: null,
             link: BASE_URL + '<?= $escaper->escapeJs($product->getUrlKey()) ?>' + '<?= $escaper->escapeJs($productUrlSuffix) ?>'
         });
