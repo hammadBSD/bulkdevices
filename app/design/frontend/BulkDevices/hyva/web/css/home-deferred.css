@@ -1301,6 +1301,46 @@
     background: var(--bb-reviews-divider);
 }
 
+.home-customers-review__widget {
+    width: 100%;
+    margin-top: clamp(1.5rem, 3vw, 2rem);
+}
+
+.home-customers-review__widget--sa {
+    min-height: clamp(260px, 32vw, 300px);
+    contain: layout style;
+}
+
+.home-customers-review__widget--sa .SA__wrapper {
+    min-height: inherit;
+}
+
+/* Shopper Approved injects inline footer icons — override theme svg { display: block } */
+.home-customers-review__widget .SA__wrapper .SA__more_review {
+    text-align: right;
+    padding: 10px 50px 0 0;
+}
+
+.home-customers-review__widget .SA__wrapper .SA__more_review a {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.home-customers-review__widget .SA__wrapper .SA__more_review .sa-bottom-logo,
+.home-customers-review__widget .SA__wrapper .SA__more_review .sa-bottom-arrow {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+.home-customers-review__widget .SA__wrapper .SA__more_review .sa-bottom-logo svg,
+.home-customers-review__widget .SA__wrapper .SA__more_review .sa-bottom-arrow svg {
+    display: inline !important;
+    vertical-align: middle !important;
+    width: auto !important;
+    height: auto !important;
+    max-width: 25px !important;
+}
+
 .home-customers-review__track {
     display: grid;
     grid-template-columns: minmax(0, 1fr);

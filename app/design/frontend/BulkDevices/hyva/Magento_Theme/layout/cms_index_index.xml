@@ -4,6 +4,9 @@
     <update handle="hyva_quotation_modal"/>
     <head>
         <css src="css/home-critical.css"/>
+        <link src="https://www.shopperapproved.com"
+              src_type="url"
+              rel="preconnect"/>
         <link src="https://bulkdevices.com/media/wysiwyg/banner-28-4-25-m.webp"
               src_type="url"
               rel="preload"

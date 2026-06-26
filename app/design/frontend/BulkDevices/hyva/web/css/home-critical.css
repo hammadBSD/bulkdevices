@@ -600,3 +600,24 @@
     list-style: none;
 }
 
+/* Shopper Approved rotating widget — override Hyvä svg { display: block } */
+#SA_wrapper_default.SA__wrapper .SA__more_review {
+    text-align: right !important;
+    padding: 10px 50px 0 0 !important;
+}
+
+#SA_wrapper_default.SA__wrapper .SA__more_review a,
+#SA_wrapper_default.SA__wrapper .SA__more_review .sa-bottom-logo,
+#SA_wrapper_default.SA__wrapper .SA__more_review .sa-bottom-arrow {
+    display: inline !important;
+    vertical-align: middle !important;
+}
+
+#SA_wrapper_default.SA__wrapper .SA__more_review svg {
+    display: inline !important;
+    vertical-align: middle !important;
+    width: auto !important;
+    max-width: 25px !important;
+    height: auto !important;
+}
+

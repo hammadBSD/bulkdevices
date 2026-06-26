@@ -12,6 +12,9 @@
     <update handle="hyva_quotation_modal"/>
     <head>
         <css src="css/pdp-critical.css"/>
+        <link src="https://www.shopperapproved.com"
+              src_type="url"
+              rel="preconnect"/>
     </head>
     <body>
         <referenceBlock name="head.additional">
@@ -187,6 +190,12 @@
                         </block>
 
                     </block>
+
+                    <block
+                        class="Magento\Framework\View\Element\Template"
+                        name="product.shopper.approved.reviews"
+                        template="Magento_Catalog::product/view/shopper-approved-reviews.phtml"
+                    />
                 </block>
 
             </referenceContainer>

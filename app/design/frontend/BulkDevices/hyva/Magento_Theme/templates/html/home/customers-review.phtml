@@ -10,18 +10,11 @@ use Magento\Framework\View\Element\Template;
 /** @var Template $block */
 /** @var Escaper $escaper */
 /** @var ViewModelRegistry $viewModels */
-
-/** @var CustomerReviews $customerReviews */
-$customerReviews = $viewModels->require(CustomerReviews::class);
-$reviews = $customerReviews->getReviews();
-$paginationCount = $customerReviews->getPaginationCount();
-$starPath = 'M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.77l-4.94 2.6.94-5.5-4-3.9 5.53-.8L10 1.5z';
 ?>
 
 <section
     class="home-customers-review"
     aria-labelledby="home-customers-review-heading"
-    x-data="{ activeSlide: 0 }"
 >
     <div class="home-customers-review__container">
         <header class="home-customers-review__header">
@@ -31,9 +24,87 @@ $starPath = 'M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.77l-4.94 2.6.94-5.5-4-3
             <hr class="home-customers-review__divider" aria-hidden="true">
         </header>
 
+        <div class="home-customers-review__widget home-customers-review__widget--sa">
+            <style>
+                /* Shopper Approved footer — Hyvä/Tailwind sets svg { display: block } */
+                #SA_wrapper_default.SA__wrapper .SA__more_review {
+                    text-align: right !important;
+                    padding: 10px 50px 0 0 !important;
+                }
+
+                #SA_wrapper_default.SA__wrapper .SA__more_review a,
+                #SA_wrapper_default.SA__wrapper .SA__more_review .sa-bottom-logo,
+                #SA_wrapper_default.SA__wrapper .SA__more_review .sa-bottom-arrow {
+                    display: inline !important;
+                    vertical-align: middle !important;
+                }
+
+                #SA_wrapper_default.SA__wrapper .SA__more_review svg {
+                    display: inline !important;
+                    vertical-align: middle !important;
+                    width: auto !important;
+                    max-width: 25px !important;
+                    height: auto !important;
+                }
+            </style>
+            <div id="SA_wrapper_default" class="SA__wrapper" lang="en"></div>
+            <script type="text/javascript">
+                (function () {
+                    var sa_interval = 5000;
+
+                    if (typeof saLoadScript !== 'function') {
+                        function saLoadScript(src) {
+                            var js = window.document.createElement('script');
+                            js.src = src;
+                            js.type = 'text/javascript';
+                            document.getElementsByTagName('head')[0].appendChild(js);
+                        }
+                    }
+
+                    function loadShopperApprovedRotating() {
+                        if (typeof shopper_first !== 'undefined') {
+                            return;
+                        }
+                        saLoadScript('https://www.shopperapproved.com/widgets/42172/merchant/rotating-widget/default.js?v=1');
+                    }
+
+                    if ('requestIdleCallback' in window) {
+                        requestIdleCallback(loadShopperApprovedRotating, { timeout: 2000 });
+                    } else {
+                        setTimeout(loadShopperApprovedRotating, 1);
+                    }
+                })();
+            </script>
+        </div>
+
+        <?php
+        /*
+        |--------------------------------------------------------------------------
+        | Static carousel (commented out while testing Shopper Approved)
+        |--------------------------------------------------------------------------
+        |
+        | To restore: remove this block comment wrapper and delete the widget
+        | block above, or move this section back outside the comment.
+        |
+        | @var CustomerReviews $customerReviews
+        | $customerReviews = $viewModels->require(CustomerReviews::class);
+        | $reviews = $customerReviews->getReviews();
+        | $paginationCount = $customerReviews->getPaginationCount();
+        | $starPath = 'M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.77l-4.94 2.6.94-5.5-4-3.9 5.53-.8L10 1.5z';
+        */
+        ?>
+        <?php if (false): ?>
+        <?php
+        /** @var CustomerReviews $customerReviews */
+        $customerReviews = $viewModels->require(CustomerReviews::class);
+        $reviews = $customerReviews->getReviews();
+        $paginationCount = $customerReviews->getPaginationCount();
+        $starPath = 'M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.77l-4.94 2.6.94-5.5-4-3.9 5.53-.8L10 1.5z';
+        ?>
         <div
             class="home-customers-review__track"
             role="list"
+            x-data="{ activeSlide: 0 }"
             @scroll.debounce.100ms="
                 const card = $el.querySelector('.home-customers-review__card');
                 if (!card) return;
@@ -43,60 +114,61 @@ $starPath = 'M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.77l-4.94 2.6.94-5.5-4-3
                 );
             "
         >
-            <?php foreach ($reviews as $review): ?>
-                <article class="home-customers-review__card" role="listitem">
-                    <div
-                        class="home-customers-review__stars"
-                        aria-label="<?= $escaper->escapeHtmlAttr(__('%1 out of 5 stars', $review['rating'])) ?>"
-                    >
-                        <?php for ($i = 0; $i < $review['rating']; $i++): ?>
-                            <svg viewBox="0 0 20 20" aria-hidden="true">
-                                <path d="<?= $escaper->escapeHtmlAttr($starPath) ?>"/>
+                <?php foreach ($reviews as $review): ?>
+                    <article class="home-customers-review__card" role="listitem">
+                        <div
+                            class="home-customers-review__stars"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('%1 out of 5 stars', $review['rating'])) ?>"
+                        >
+                            <?php for ($i = 0; $i < $review['rating']; $i++): ?>
+                                <svg viewBox="0 0 20 20" aria-hidden="true">
+                                    <path d="<?= $escaper->escapeHtmlAttr($starPath) ?>"/>
+                                </svg>
+                            <?php endfor; ?>
+                        </div>
+                        <p class="home-customers-review__author">
+                            <?= $escaper->escapeHtml(__('- %1', $review['author'])) ?>
+                        </p>
+                        <h3 class="home-customers-review__headline">
+                            <?= $escaper->escapeHtml(__($review['headline'])) ?>
+                        </h3>
+                        <p class="home-customers-review__text">
+                            <?= $escaper->escapeHtml(__($review['text'])) ?>
+                        </p>
+                        <a href="<?= $escaper->escapeUrl($review['url']) ?>"
+                           class="home-customers-review__read-more">
+                            <?= $escaper->escapeHtml(__('Read more')) ?>
+                            <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+                                <path d="M15 3h6v6"/>
+                                <path d="M10 14 21 3"/>
                             </svg>
-                        <?php endfor; ?>
-                    </div>
-                    <p class="home-customers-review__author">
-                        <?= $escaper->escapeHtml(__('- %1', $review['author'])) ?>
-                    </p>
-                    <h3 class="home-customers-review__headline">
-                        <?= $escaper->escapeHtml(__($review['headline'])) ?>
-                    </h3>
-                    <p class="home-customers-review__text">
-                        <?= $escaper->escapeHtml(__($review['text'])) ?>
-                    </p>
-                    <a href="<?= $escaper->escapeUrl($review['url']) ?>"
-                       class="home-customers-review__read-more">
-                        <?= $escaper->escapeHtml(__('Read more')) ?>
-                        <svg viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M18 13v6a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
-                            <path d="M15 3h6v6"/>
-                            <path d="M10 14 21 3"/>
-                        </svg>
-                    </a>
-                </article>
-            <?php endforeach; ?>
-        </div>
+                        </a>
+                    </article>
+                <?php endforeach; ?>
+            </div>
 
-        <ul class="home-customers-review__pagination" aria-label="<?= $escaper->escapeHtmlAttr(__('Review slides')) ?>">
-            <?php for ($i = 0; $i < $paginationCount; $i++): ?>
-                <li>
-                    <button
-                        type="button"
-                        class="home-customers-review__dot"
-                        :class="{ 'is-active': activeSlide === <?= (int) $i ?> }"
-                        :aria-current="activeSlide === <?= (int) $i ?> ? 'true' : null"
-                        aria-label="<?= $escaper->escapeHtmlAttr(__('Slide %1', $i + 1)) ?>"
-                        @click="
-                            activeSlide = <?= (int) $i ?>;
-                            const track = $el.closest('.home-customers-review').querySelector('.home-customers-review__track');
-                            const card = track?.querySelector('.home-customers-review__card');
-                            if (track && card) {
-                                track.scrollTo({ left: card.offsetWidth * <?= (int) $i ?> + (16 * <?= (int) $i ?>), behavior: 'smooth' });
-                            }
-                        "
-                    ></button>
-                </li>
-            <?php endfor; ?>
-        </ul>
+            <ul class="home-customers-review__pagination" aria-label="<?= $escaper->escapeHtmlAttr(__('Review slides')) ?>">
+                <?php for ($i = 0; $i < $paginationCount; $i++): ?>
+                    <li>
+                        <button
+                            type="button"
+                            class="home-customers-review__dot"
+                            :class="{ 'is-active': activeSlide === <?= (int) $i ?> }"
+                            :aria-current="activeSlide === <?= (int) $i ?> ? 'true' : null"
+                            aria-label="<?= $escaper->escapeHtmlAttr(__('Slide %1', $i + 1)) ?>"
+                            @click="
+                                activeSlide = <?= (int) $i ?>;
+                                const track = $el.closest('.home-customers-review').querySelector('.home-customers-review__track');
+                                const card = track?.querySelector('.home-customers-review__card');
+                                if (track && card) {
+                                    track.scrollTo({ left: card.offsetWidth * <?= (int) $i ?> + (16 * <?= (int) $i ?>), behavior: 'smooth' });
+                                }
+                            "
+                        ></button>
+                    </li>
+                <?php endfor; ?>
+            </ul>
+        <?php endif; ?>
     </div>
 </section>

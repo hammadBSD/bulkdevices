@@ -1,0 +1,128 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+?>
+
+<section
+    class="bb-pdp-reviews"
+    aria-label="<?= $escaper->escapeHtmlAttr(__('Customer reviews')) ?>"
+>
+    <div class="bb-pdp-reviews__container">
+        <div
+            class="bb-pdp-reviews__defer"
+            x-data="{ visible: false }"
+            x-intersect.once.margin.300px="visible = true"
+            :class="{ 'bb-pdp-reviews__defer--loaded': visible }"
+        >
+            <div
+                class="bb-pdp-reviews__placeholder"
+                x-show="!visible"
+                aria-hidden="true"
+            ></div>
+
+            <template x-if="visible">
+                <div class="bb-pdp-reviews__widget">
+                    <style>
+                        /* Shopper Approved review page — Hyvä/Tailwind sets svg { display: block } */
+                        #SA_review_wrapper svg {
+                            display: inline !important;
+                            vertical-align: middle !important;
+                            width: auto !important;
+                            height: auto !important;
+                            max-width: none !important;
+                        }
+
+                        #SA_review_wrapper .SA__review_widget {
+                            display: flex !important;
+                            flex-wrap: wrap !important;
+                            justify-content: space-between !important;
+                            align-items: center !important;
+                            gap: 10px !important;
+                            width: 100% !important;
+                        }
+
+                        #SA_review_wrapper .SA__review_widget .SA__review_widget_item.middle {
+                            flex: 1 1 auto !important;
+                            min-width: 240px !important;
+                        }
+
+                        #SA_review_wrapper .SA__review_widget .SA__review_widget_item .SA__review_content .SA__review_bar {
+                            display: flex !important;
+                            flex-direction: row !important;
+                            align-items: center !important;
+                            position: relative !important;
+                        }
+
+                        #SA_review_wrapper .SA__review_widget .SA__review_widget_item .SA__review_content .SA__review_bar_label {
+                            display: inline-flex !important;
+                            align-items: center !important;
+                            flex: 0 0 50px !important;
+                            position: absolute !important;
+                            left: 0 !important;
+                            white-space: nowrap !important;
+                            line-height: 13px !important;
+                        }
+
+                        #SA_review_wrapper .SA__review_widget .SA__review_widget_item .SA__review_content .SA__review_bar_label svg {
+                            display: inline !important;
+                            vertical-align: middle !important;
+                            height: 13px !important;
+                            width: auto !important;
+                        }
+
+                        #SA_review_wrapper .SA__more_review {
+                            text-align: right !important;
+                        }
+
+                        #SA_review_wrapper .SA__more_review a,
+                        #SA_review_wrapper .SA__more_review .sa-bottom-logo,
+                        #SA_review_wrapper .SA__more_review .sa-bottom-arrow {
+                            display: inline !important;
+                            vertical-align: middle !important;
+                        }
+
+                        #SA_review_wrapper .SA__more_review svg {
+                            max-width: 25px !important;
+                        }
+                    </style>
+
+                    <div id="SA_review_wrapper" role="region" tabindex="-1" aria-label="<?= $escaper->escapeHtmlAttr(__('Customer reviews widget')) ?>"></div>
+
+                    <script type="text/javascript">
+                        (function () {
+                            var sa_interval = 5000;
+
+                            if (typeof saLoadScript !== 'function') {
+                                function saLoadScript(src) {
+                                    var js = window.document.createElement('script');
+                                    js.src = src;
+                                    js.type = 'text/javascript';
+                                    document.getElementsByTagName('head')[0].appendChild(js);
+                                }
+                            }
+
+                            function loadShopperApprovedReviews() {
+                                if (typeof shopper_first === 'undefined') {
+                                    saLoadScript('https://www.shopperapproved.com/widgets/42172/merchant/review-page/default.js');
+                                }
+                                shopper_first = true;
+                            }
+
+                            if ('requestIdleCallback' in window) {
+                                requestIdleCallback(loadShopperApprovedReviews, { timeout: 2000 });
+                            } else {
+                                setTimeout(loadShopperApprovedReviews, 1);
+                            }
+                        })();
+                    </script>
+                </div>
+            </template>
+        </div>
+    </div>
+</section>
