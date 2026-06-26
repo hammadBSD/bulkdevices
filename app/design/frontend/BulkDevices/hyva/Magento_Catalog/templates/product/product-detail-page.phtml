@@ -31,18 +31,8 @@ use Magento\Framework\Escaper;
                 <?= $block->getChildHtml('product.info.details'); ?>
             </div>
         </div>
-        <div
-            class="bb-pdp-sidebar-defer"
-            x-data="{
-                visible: window.matchMedia('(min-width: 1200px)').matches
-            }"
-            x-intersect.once.margin.500px="if (!window.matchMedia('(min-width: 1200px)').matches) visible = true"
-        >
-            <template x-if="visible">
-                <div>
-                    <?= $block->getChildHtml('product.detail.sidebar') ?>
-                </div>
-            </template>
+        <div class="bb-pdp-sidebar-defer">
+            <?= $block->getChildHtml('product.detail.sidebar') ?>
         </div>
     </div>
 

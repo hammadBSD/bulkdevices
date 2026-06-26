@@ -87,7 +87,7 @@ $productName = $block->getProduct()->getName();
                     alt="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
                     title="<?= $mainImage ? $escaper->escapeHtmlAttr($mainImage->getData('label')) : '' ?>"
                     class="object-contain object-center w-full h-auto"
-                    :class="fullscreen ? (activeImageLoaded ? 'invisible max-h-[75vh]' : 'max-h-[75vh]') : (activeImageLoaded ? 'invisible' : '')"
+                    :class="fullscreen ? (activeImageLoaded ? 'invisible max-h-[75vh]' : 'max-h-[75vh]') : (activeImageLoaded && window.matchMedia('(min-width: 1200px)').matches ? 'invisible' : '')"
                     src="<?= /* @noEscape */ $mainImageData ?>"
                     width="<?= /* @noEscape */ $mediumWidth ?>"
                     height="<?= /* @noEscape */ $mediumHeight ?>"
