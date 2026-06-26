@@ -12,27 +12,55 @@ use Magento\Framework\View\Element\Template;
             return;
         }
 
-        var deferPatterns = ['footer-top', 'footer-middle', 'popup'];
-        var deferredLinks = [];
+        var earlyDeferPatterns = ['top-bar'];
+        var lateDeferPatterns = ['footer-top', 'footer-middle', 'popup'];
+        var earlyDeferredLinks = [];
+        var lateDeferredLinks = [];
 
         document.querySelectorAll('link[rel="stylesheet"]').forEach(function (link) {
             var href = link.getAttribute('href') || '';
-            var shouldDefer = deferPatterns.some(function (pattern) {
-                return href.indexOf(pattern) !== -1;
-            });
 
-            if (!shouldDefer) {
+            if (earlyDeferPatterns.some(function (pattern) {
+                return href.indexOf(pattern) !== -1;
+            })) {
+                link.media = 'not all';
+                earlyDeferredLinks.push(link);
                 return;
             }
 
-            link.media = 'not all';
-            deferredLinks.push(link);
+            if (lateDeferPatterns.some(function (pattern) {
+                return href.indexOf(pattern) !== -1;
+            })) {
+                link.media = 'not all';
+                lateDeferredLinks.push(link);
+            }
         });
 
-        var pageReady = document.readyState === 'complete';
+        function enableStyles(links) {
+            links.forEach(function (link) {
+                link.media = 'all';
+            });
+        }
+
+        function afterFirstPaint(callback) {
+            if ('requestAnimationFrame' in window) {
+                requestAnimationFrame(function () {
+                    requestAnimationFrame(callback);
+                });
+                return;
+            }
+
+            window.setTimeout(callback, 0);
+        }
+
+        if (earlyDeferredLinks.length) {
+            afterFirstPaint(function () {
+                enableStyles(earlyDeferredLinks);
+            });
+        }
 
         function onPageReady(callback) {
-            if (pageReady) {
+            if (document.readyState === 'complete') {
                 callback();
                 return;
             }
@@ -40,28 +68,38 @@ use Magento\Framework\View\Element\Template;
             window.addEventListener('load', callback, { once: true });
         }
 
-        function enableDeferredStyles() {
-            deferredLinks.forEach(function (link) {
-                link.media = 'all';
-            });
-        }
-
         document.querySelectorAll('.catalog-product-view .site-footer-top, .catalog-product-view .site-footer-middle').forEach(function (el) {
             el.setAttribute('data-pdp-defer-paint', '');
         });
 
         var paintTargets = document.querySelectorAll('[data-pdp-defer-paint]');
-        var canRevealPaint = false;
+        var paintGateOpen = false;
+        var scrollUnlocked = window.scrollY > 120;
+        var loadSettled = document.readyState === 'complete';
 
         function revealPaintTarget(el) {
             el.classList.add('pdp-paint-ready');
         }
 
-        function targetIsNearViewport(el) {
-            var rect = el.getBoundingClientRect();
+        function maybeOpenPaintGate() {
+            if (paintGateOpen || !loadSettled || !scrollUnlocked) {
+                return;
+            }
 
-            return rect.top < window.innerHeight + 80 && rect.bottom > -80;
+            paintGateOpen = true;
+            startPaintObserver();
         }
+
+        function onScrollUnlock() {
+            if (window.scrollY <= 120) {
+                return;
+            }
+
+            scrollUnlocked = true;
+            maybeOpenPaintGate();
+        }
+
+        window.addEventListener('scroll', onScrollUnlock, { passive: true });
 
         function startPaintObserver() {
             if (!paintTargets.length) {
@@ -74,35 +112,37 @@ use Magento\Framework\View\Element\Template;
             }
 
             var observer = new IntersectionObserver(function (entries) {
-                if (!canRevealPaint) {
-                    return;
-                }
-
                 entries.forEach(function (entry) {
-                    if (!entry.isIntersecting) {
+                    if (!entry.isIntersecting || entry.intersectionRatio < 0.05) {
                         return;
                     }
 
                     revealPaintTarget(entry.target);
                     observer.unobserve(entry.target);
                 });
-            }, { rootMargin: '80px 0px' });
+            }, {
+                root: null,
+                rootMargin: '0px 0px',
+                threshold: [0, 0.05, 0.1]
+            });
 
             paintTargets.forEach(function (el) {
-                if (targetIsNearViewport(el)) {
-                    revealPaintTarget(el);
-                    return;
-                }
-
                 observer.observe(el);
             });
         }
 
         onPageReady(function () {
-            pageReady = true;
-            enableDeferredStyles();
-            canRevealPaint = true;
-            startPaintObserver();
+            loadSettled = true;
+            enableStyles(lateDeferredLinks);
+
+            window.setTimeout(function () {
+                scrollUnlocked = true;
+                maybeOpenPaintGate();
+            }, 2200);
+
+            maybeOpenPaintGate();
         });
+
+        onScrollUnlock();
     })();
 </script>

@@ -262,6 +262,18 @@
 
 /* --- pdp-mobile-critical.css (max-width: 1199px only) --- */
 @media (max-width: 1199px) {
+    .catalog-product-view .bdus-top-bar {
+        background-color: #f4f4f4;
+        border-bottom: 1px solid #e7e7e7;
+        color: #222529;
+        font-size: 0.875rem;
+        line-height: 1.3;
+    }
+
+    .catalog-product-view .bdus-top-bar__inner {
+        padding-block: 0.625rem;
+    }
+
     .bb-pdp-page__details .card {
         border: 1px solid #e5e7eb;
         border-radius: 12px;
@@ -380,7 +392,12 @@
     .catalog-product-view .site-footer-top[data-pdp-defer-paint]:not(.pdp-paint-ready),
     .catalog-product-view .site-footer-middle[data-pdp-defer-paint]:not(.pdp-paint-ready) {
         content-visibility: hidden;
-        contain-intrinsic-size: auto 64px;
+        contain-intrinsic-size: auto 48px;
+    }
+
+    .bb-pdp-page__details[data-pdp-defer-paint]:not(.pdp-paint-ready) #description {
+        content-visibility: hidden;
+        contain-intrinsic-size: auto 48px;
     }
 
     .bb-pdp-page__details.pdp-paint-ready,
@@ -391,7 +408,7 @@
 
     #description {
         content-visibility: auto;
-        contain-intrinsic-size: auto 120px;
+        contain-intrinsic-size: auto 80px;
     }
 
     .catalog-product-view .site-footer-top.pdp-paint-ready,
