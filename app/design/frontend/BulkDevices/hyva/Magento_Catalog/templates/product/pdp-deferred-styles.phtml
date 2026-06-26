@@ -12,10 +12,6 @@ $deferredStylesUrl = $block->getViewFileUrl('css/pdp-deferred.css');
 $deferredStylesUrlEscaped = $escaper->escapeUrl($deferredStylesUrl);
 $deferredStylesUrlJs = $escaper->escapeJs($deferredStylesUrl);
 ?>
-<link rel="preload"
-      href="<?= $deferredStylesUrlEscaped ?>"
-      as="style"
-      media="screen and (max-width: 1199px)">
 <link rel="stylesheet"
       id="pdp-deferred-stylesheet"
       href="<?= $deferredStylesUrlEscaped ?>"

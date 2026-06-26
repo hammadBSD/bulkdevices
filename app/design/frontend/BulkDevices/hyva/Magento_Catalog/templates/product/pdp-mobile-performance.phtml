@@ -1,0 +1,108 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+?>
+<script>
+    (function () {
+        if (!window.matchMedia('(max-width: 1199px)').matches) {
+            return;
+        }
+
+        var deferPatterns = ['footer-top', 'footer-middle', 'popup'];
+        var deferredLinks = [];
+
+        document.querySelectorAll('link[rel="stylesheet"]').forEach(function (link) {
+            var href = link.getAttribute('href') || '';
+            var shouldDefer = deferPatterns.some(function (pattern) {
+                return href.indexOf(pattern) !== -1;
+            });
+
+            if (!shouldDefer) {
+                return;
+            }
+
+            link.media = 'not all';
+            deferredLinks.push(link);
+        });
+
+        var pageReady = document.readyState === 'complete';
+
+        function onPageReady(callback) {
+            if (pageReady) {
+                callback();
+                return;
+            }
+
+            window.addEventListener('load', callback, { once: true });
+        }
+
+        function enableDeferredStyles() {
+            deferredLinks.forEach(function (link) {
+                link.media = 'all';
+            });
+        }
+
+        document.querySelectorAll('.catalog-product-view .site-footer-top, .catalog-product-view .site-footer-middle').forEach(function (el) {
+            el.setAttribute('data-pdp-defer-paint', '');
+        });
+
+        var paintTargets = document.querySelectorAll('[data-pdp-defer-paint]');
+        var canRevealPaint = false;
+
+        function revealPaintTarget(el) {
+            el.classList.add('pdp-paint-ready');
+        }
+
+        function targetIsNearViewport(el) {
+            var rect = el.getBoundingClientRect();
+
+            return rect.top < window.innerHeight + 80 && rect.bottom > -80;
+        }
+
+        function startPaintObserver() {
+            if (!paintTargets.length) {
+                return;
+            }
+
+            if (!('IntersectionObserver' in window)) {
+                paintTargets.forEach(revealPaintTarget);
+                return;
+            }
+
+            var observer = new IntersectionObserver(function (entries) {
+                if (!canRevealPaint) {
+                    return;
+                }
+
+                entries.forEach(function (entry) {
+                    if (!entry.isIntersecting) {
+                        return;
+                    }
+
+                    revealPaintTarget(entry.target);
+                    observer.unobserve(entry.target);
+                });
+            }, { rootMargin: '80px 0px' });
+
+            paintTargets.forEach(function (el) {
+                if (targetIsNearViewport(el)) {
+                    revealPaintTarget(el);
+                    return;
+                }
+
+                observer.observe(el);
+            });
+        }
+
+        onPageReady(function () {
+            pageReady = true;
+            enableDeferredStyles();
+            canRevealPaint = true;
+            startPaintObserver();
+        });
+    })();
+</script>

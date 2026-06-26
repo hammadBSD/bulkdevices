@@ -116,32 +116,38 @@
         color: #374151;
     }
 
-    /* Speed Index: defer paint until sections approach the viewport */
-    .bb-pdp-page__details {
-        content-visibility: auto;
-        contain-intrinsic-size: auto 220px;
+    .bb-pdp-page__details[data-pdp-defer-paint]:not(.pdp-paint-ready),
+    .bb-pdp-sidebar-defer[data-pdp-defer-paint]:not(.pdp-paint-ready),
+    .bb-pdp-reviews[data-pdp-defer-paint]:not(.pdp-paint-ready),
+    .catalog-product-view .site-footer-top[data-pdp-defer-paint]:not(.pdp-paint-ready),
+    .catalog-product-view .site-footer-middle[data-pdp-defer-paint]:not(.pdp-paint-ready) {
+        content-visibility: hidden;
+        contain-intrinsic-size: auto 64px;
+    }
+
+    .bb-pdp-page__details.pdp-paint-ready,
+    .bb-pdp-sidebar-defer.pdp-paint-ready,
+    .bb-pdp-reviews.pdp-paint-ready {
+        content-visibility: visible;
     }
 
     #description {
         content-visibility: auto;
-        contain-intrinsic-size: auto 180px;
+        contain-intrinsic-size: auto 120px;
     }
 
-    .bb-pdp-sidebar-defer,
-    .bb-pdp-reviews {
-        content-visibility: auto;
-        contain-intrinsic-size: auto 260px;
-    }
-
-    .catalog-product-view .site-footer-top,
-    .catalog-product-view .site-footer-middle {
-        content-visibility: auto;
-        contain-intrinsic-size: auto 260px;
+    .catalog-product-view .site-footer-top.pdp-paint-ready,
+    .catalog-product-view .site-footer-middle.pdp-paint-ready {
+        content-visibility: visible;
     }
 
     .bb-pdp-reviews__placeholder,
     .bb-pdp-reviews__defer:not(.bb-pdp-reviews__defer--loaded) {
         min-height: 0;
+    }
+
+    .bb-pdp-reviews__defer:not(.bb-pdp-reviews__defer--loaded) {
+        min-height: 0 !important;
     }
 
     #gallery #gallery-main img {

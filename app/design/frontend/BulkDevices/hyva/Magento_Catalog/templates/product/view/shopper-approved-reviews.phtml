@@ -11,14 +11,70 @@ use Magento\Framework\View\Element\Template;
 
 <section
     class="bb-pdp-reviews"
+    data-pdp-defer-paint
     aria-label="<?= $escaper->escapeHtmlAttr(__('Customer reviews')) ?>"
 >
     <div class="bb-pdp-reviews__container">
         <div
             class="bb-pdp-reviews__defer"
-            x-data="{ visible: false }"
-            x-intersect.once="if (window.matchMedia('(max-width: 1199px)').matches) visible = true"
-            x-intersect.once.margin.300px="if (window.matchMedia('(min-width: 1200px)').matches) visible = true"
+            x-data="{
+                visible: false,
+                inView: false,
+                scrolled: false,
+                heroSettled: window.matchMedia('(min-width: 1200px)').matches,
+                tryReveal() {
+                    if (window.matchMedia('(min-width: 1200px)').matches) {
+                        if (this.inView) {
+                            this.visible = true;
+                        }
+                        return;
+                    }
+
+                    if (this.heroSettled && this.inView && this.scrolled) {
+                        this.visible = true;
+                    }
+                }
+            }"
+            x-init="
+                if (!heroSettled) {
+                    const onScroll = () => {
+                        if (window.scrollY > 60) {
+                            scrolled = true;
+                            tryReveal();
+                        }
+                    };
+
+                    window.addEventListener('scroll', onScroll, { passive: true });
+                    onScroll();
+
+                    const settle = () => {
+                        heroSettled = true;
+                        tryReveal();
+                        window.setTimeout(() => {
+                            scrolled = true;
+                            tryReveal();
+                        }, 2500);
+                    };
+
+                    if (document.readyState === 'complete') {
+                        settle();
+                    } else {
+                        window.addEventListener('load', settle, { once: true });
+                    }
+                }
+            "
+            x-intersect.once="
+                if (window.matchMedia('(max-width: 1199px)').matches) {
+                    inView = true;
+                    tryReveal();
+                }
+            "
+            x-intersect.once.margin.300px="
+                if (window.matchMedia('(min-width: 1200px)').matches) {
+                    inView = true;
+                    visible = true;
+                }
+            "
             :class="{ 'bb-pdp-reviews__defer--loaded': visible }"
         >
             <div
@@ -115,10 +171,34 @@ use Magento\Framework\View\Element\Template;
                                 shopper_first = true;
                             }
 
-                            if ('requestIdleCallback' in window) {
-                                requestIdleCallback(loadShopperApprovedReviews, { timeout: 2000 });
+                            function scheduleShopperApprovedLoad() {
+                                var run = function () {
+                                    if ('requestIdleCallback' in window) {
+                                        requestIdleCallback(loadShopperApprovedReviews, { timeout: 3000 });
+                                    } else {
+                                        window.setTimeout(loadShopperApprovedReviews, 100);
+                                    }
+                                };
+
+                                if (window.matchMedia('(max-width: 1199px)').matches) {
+                                    window.setTimeout(run, 800);
+                                } else {
+                                    var preconnect = document.createElement('link');
+                                    preconnect.rel = 'preconnect';
+                                    preconnect.href = 'https://www.shopperapproved.com';
+                                    document.head.appendChild(preconnect);
+                                    run();
+                                }
+                            }
+
+                            if (window.matchMedia('(max-width: 1199px)').matches) {
+                                if (document.readyState === 'complete') {
+                                    scheduleShopperApprovedLoad();
+                                } else {
+                                    window.addEventListener('load', scheduleShopperApprovedLoad, { once: true });
+                                }
                             } else {
-                                setTimeout(loadShopperApprovedReviews, 1);
+                                scheduleShopperApprovedLoad();
                             }
                         })();
                     </script>

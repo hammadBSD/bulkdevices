@@ -12,15 +12,15 @@
     <update handle="hyva_quotation_modal"/>
     <head>
         <css src="css/pdp-critical.css"/>
-        <link src="https://www.shopperapproved.com"
-              src_type="url"
-              rel="preconnect"/>
     </head>
     <body>
         <referenceBlock name="head.additional">
+            <block name="pdp.mobile.performance"
+                   template="Magento_Catalog::product/pdp-mobile-performance.phtml"
+                   before="-"/>
             <block name="pdp.deferred.styles"
                    template="Magento_Catalog::product/pdp-deferred-styles.phtml"
-                   before="-"/>
+                   after="pdp.mobile.performance"/>
         </referenceBlock>
         <referenceBlock name="custom.text" remove="true"/>
         <referenceBlock name="related" remove="true"/>

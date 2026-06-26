@@ -27,11 +27,11 @@ use Magento\Framework\Escaper;
 
             <?= $block->getChildHtml('product_options_wrapper_bottom') ?>
 
-            <div class="bb-pdp-page__details">
+            <div class="bb-pdp-page__details" data-pdp-defer-paint>
                 <?= $block->getChildHtml('product.info.details'); ?>
             </div>
         </div>
-        <div class="bb-pdp-sidebar-defer">
+        <div class="bb-pdp-sidebar-defer" data-pdp-defer-paint>
             <?= $block->getChildHtml('product.detail.sidebar') ?>
         </div>
     </div>
