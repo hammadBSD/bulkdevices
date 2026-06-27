@@ -56,6 +56,7 @@ $isGrid = $viewMode === 'grid';
                         <?= $cardBlock
                             ->setData('product', $product)
                             ->setData('view_mode', $viewMode)
+                            ->setData('hide_qty_selector', true)
                             ->setData('defer_qty_alpine', $i >= $eagerLoadImagesCount)
                             ->toHtml() ?>
                     </li>

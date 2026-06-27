@@ -51,6 +51,7 @@ $cardBlock = $block->getChildBlock('product.card');
                 <li class="bb-product-grid__item home-product-tabs__item">
                     <?= $cardBlock
                         ?->setData('product', $product)
+                        ->setData('hide_qty_selector', true)
                         ->toHtml() ?>
                 </li>
             <?php endforeach; ?>
