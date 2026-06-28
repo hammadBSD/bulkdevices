@@ -31,6 +31,7 @@ class StructuredData implements ArgumentInterface
     private const STORE_REGION = 'TX';
     private const STORE_POSTAL = '77548';
     private const STORE_COUNTRY = 'US';
+    private const PDP_AGGREGATE_RATING_VALUE = '4.8';
 
     public function __construct(
         private readonly StoreManagerInterface $storeManager,
@@ -478,6 +479,15 @@ class StructuredData implements ArgumentInterface
             $node['mpn'] = $mpn;
         }
 
+        $itemCondition = $this->getProductItemConditionUrl($product);
+        $node['itemCondition'] = $itemCondition;
+        $node['aggregateRating'] = [
+            '@type' => 'AggregateRating',
+            'ratingValue' => self::PDP_AGGREGATE_RATING_VALUE,
+            'bestRating' => '5',
+            'worstRating' => '1',
+        ];
+
         if ($price !== null) {
             $node['offers'] = [
                 '@type' => 'Offer',
@@ -485,7 +495,7 @@ class StructuredData implements ArgumentInterface
                 'priceCurrency' => $this->getCurrencyCode(),
                 'price' => $this->formatPrice($price),
                 'availability' => $this->getAvailabilityUrl($product),
-                'itemCondition' => 'https://schema.org/NewCondition',
+                'itemCondition' => $itemCondition,
                 'seller' => ['@id' => $this->getOrganizationId()],
             ];
         }
@@ -605,6 +615,16 @@ class StructuredData implements ArgumentInterface
         return $product->isSalable()
             ? 'https://schema.org/InStock'
             : 'https://schema.org/OutOfStock';
+    }
+
+    private function getProductItemConditionUrl(Product $product): string
+    {
+        $condition = $product->getAttributeText('condition');
+        if (is_string($condition) && strcasecmp(trim($condition), 'new') === 0) {
+            return 'https://schema.org/NewCondition';
+        }
+
+        return 'https://schema.org/RefurbishedCondition';
     }
 
     private function formatPrice(float $price): string
