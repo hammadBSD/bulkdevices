@@ -26,9 +26,16 @@
             <block name="home.deferred.styles"
                    template="Magento_Theme::html/home/deferred-styles.phtml"
                    before="-"/>
+            <block name="home.schema.jsonld"
+                   template="BSD_Storefront::schema/json-ld.phtml"
+                   after="home.deferred.styles">
+                <arguments>
+                    <argument name="page_type" xsi:type="string">homepage</argument>
+                </arguments>
+            </block>
             <block name="home.promotional.preloads"
                    template="Magento_Theme::html/home/head-preloads.phtml"
-                   after="home.deferred.styles"/>
+                   after="home.schema.jsonld"/>
         </referenceBlock>
         <referenceContainer name="content">
             <block name="home-content"
@@ -63,7 +70,7 @@
         <referenceBlock name="hero" remove="true"/>
         <referenceBlock name="slider-1" remove="true"/>
         <referenceBlock name="slider-2" remove="true"/>
-        <referenceBlock name="cms_page" remove="true"/>
+        <referenceBlock name="cms_page" display="false"/>
         <referenceBlock name="page.main.title" remove="true"/>
 
         <referenceBlock name="script-alpine-js">

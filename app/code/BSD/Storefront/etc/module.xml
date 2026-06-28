@@ -4,6 +4,7 @@
     <module name="BSD_Storefront">
         <sequence>
             <module name="Magento_Catalog"/>
+            <module name="Aalogics_CategoryText"/>
         </sequence>
     </module>
 </config>

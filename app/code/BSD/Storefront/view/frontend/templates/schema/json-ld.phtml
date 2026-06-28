@@ -1,0 +1,46 @@
+<?php
+
+declare(strict_types=1);
+
+use BSD\Storefront\ViewModel\Schema\StructuredData;
+use Hyva\Theme\Model\ViewModelRegistry;
+use Magento\Catalog\Block\Product\ListProduct;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var StructuredData $structuredData */
+$structuredData = $viewModels->require(StructuredData::class);
+
+$pageType = (string) $block->getData('page_type');
+$json = '';
+
+switch ($pageType) {
+    case 'homepage':
+        $json = $structuredData->toJson($structuredData->getHomepageGraph());
+        break;
+
+    case 'category':
+        $listBlock = $block->getLayout()->getBlock('category.products.list');
+        $collection = $listBlock instanceof ListProduct
+            ? $listBlock->getLoadedProductCollection()
+            : null;
+        $graph = $structuredData->getCategoryGraph($collection);
+        $json = $graph !== null ? $structuredData->toJson($graph) : '';
+        break;
+
+    case 'product':
+        $graph = $structuredData->getProductGraph();
+        $json = $graph !== null ? $structuredData->toJson($graph) : '';
+        break;
+}
+
+if ($json === '') {
+    return;
+}
+
+?>
+<script type="application/ld+json"><?= /* @noEscape */ $json ?></script>

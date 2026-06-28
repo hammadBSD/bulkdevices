@@ -15,9 +15,16 @@
     </head>
     <body>
         <referenceBlock name="head.additional">
+            <block name="pdp.schema.jsonld"
+                   template="BSD_Storefront::schema/json-ld.phtml"
+                   before="-">
+                <arguments>
+                    <argument name="page_type" xsi:type="string">product</argument>
+                </arguments>
+            </block>
             <block name="pdp.mobile.performance"
                    template="Magento_Catalog::product/pdp-mobile-performance.phtml"
-                   before="-"/>
+                   after="pdp.schema.jsonld"/>
             <block name="pdp.deferred.styles"
                    template="Magento_Catalog::product/pdp-deferred-styles.phtml"
                    after="pdp.mobile.performance"/>
@@ -31,9 +38,6 @@
         <referenceBlock name="recently_viewed_products.default_widget_pdp" remove="true"/>
         <referenceBlock name="recently_viewed_products.register_view" remove="true"/>
 
-        <attribute name="itemtype" value="https://schema.org/Product"/>
-        <attribute name="itemscope" value="itemscope"/>
-
         <referenceContainer name="head.additional">
             <block
                 name="catalog.preload.product.gallery"
@@ -45,14 +49,13 @@
         <referenceBlock name="page.main.title">
             <arguments>
                 <argument name="css_classes" xsi:type="string">text-3xl font-semibold my-6 text-center md:sr-only</argument>
-                <argument name="add_base_attribute" xsi:type="string">itemprop=name</argument>
+                <argument name="add_base_attribute" xsi:type="string"></argument>
             </arguments>
         </referenceBlock>
 
         <referenceBlock name="root">
             <arguments>
-                <argument name="add_attribute" xsi:type="string">itemscope itemtype="https://schema.org/Product"
-                </argument>
+                <argument name="add_attribute" xsi:type="string"></argument>
             </arguments>
         </referenceBlock>
 
@@ -210,6 +213,12 @@
                     <argument name="client_side_rendered_crumbs_template" xsi:type="string">Magento_Catalog::product/view/breadcrumbs.phtml</argument>
                 </arguments>
             </block>
+        </referenceBlock>
+
+        <referenceBlock name="breadcrumbs">
+            <arguments>
+                <argument name="skip_ld_json_schema" xsi:type="boolean">true</argument>
+            </arguments>
         </referenceBlock>
     </body>
 </page>

@@ -18,6 +18,12 @@
         <referenceBlock name="custom.block" remove="true"/>
         <referenceBlock name="getaquote_index_index" remove="true"/>
 
+        <referenceBlock name="breadcrumbs">
+            <arguments>
+                <argument name="skip_ld_json_schema" xsi:type="boolean">true</argument>
+            </arguments>
+        </referenceBlock>
+
         <referenceBlock name="category.products.list">
             <arguments>
                 <argument name="eager_load_images_count" xsi:type="number">4</argument>
@@ -38,6 +44,13 @@
         </referenceContainer>
 
         <referenceContainer name="before.body.end">
+            <block name="plp.schema.jsonld"
+                   template="BSD_Storefront::schema/json-ld.phtml"
+                   before="-">
+                <arguments>
+                    <argument name="page_type" xsi:type="string">category</argument>
+                </arguments>
+            </block>
             <block name="product.card.qty.script"
                    template="Magento_Theme::html/product/card-qty-script.phtml"/>
             <block name="plp.ajax.layer"
