@@ -13,7 +13,6 @@
     --bb-header-border: #e5e7eb;
     --bb-header-input-border: #d1d5db;
     --bb-header-surface: #ffffff;
-    --bb-header-container: 96rem;
 
     position: relative;
     z-index: 30;
@@ -26,7 +25,6 @@
 
 .bdus-header__container {
     width: 100%;
-    max-width: var(--bb-header-container);
     margin-inline: auto;
     padding-inline: 1.5rem;
     box-sizing: border-box;

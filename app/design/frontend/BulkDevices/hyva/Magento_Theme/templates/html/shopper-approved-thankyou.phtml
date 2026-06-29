@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+?>
+<script>
+    var sa_values = { site: 42172, token: '948wL7YF' };
+
+    function saLoadScript(src) {
+        var js = window.document.createElement('script');
+        js.src = src;
+        js.type = 'text/javascript';
+        document.getElementsByTagName('head')[0].appendChild(js);
+    }
+
+    saLoadScript('https://www.shopperapproved.com/thankyou/rate/42172.js');
+</script>

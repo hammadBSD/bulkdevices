@@ -9,6 +9,42 @@ use Magento\Framework\View\Element\Template;
 /** @var Escaper $escaper */
 
 $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
+
+$homeBrandLinks = static function (Template $block, string $query, int $manufacturerId): string {
+    return $block->getUrl('catalogsearch/result', [
+        '_query' => [
+            'q' => $query,
+            'manufacturer' => $manufacturerId,
+        ],
+    ]);
+};
+
+$homeFeaturedBrands = [
+    ['label' => 'Dell', 'query' => 'dell', 'manufacturer' => 5596, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-dell.webp', 'width' => 120, 'height' => 48],
+    ['label' => 'HP', 'query' => 'hp', 'manufacturer' => 5434, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-hp.webp', 'width' => 120, 'height' => 48],
+    ['label' => 'Lenovo', 'query' => 'lenovo', 'manufacturer' => 5605, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-lenovo.webp', 'width' => 120, 'height' => 48],
+    ['label' => 'Cisco', 'query' => 'cisco', 'manufacturer' => 5597, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-cisco.webp', 'width' => 120, 'height' => 48],
+];
+
+$homeBrandsRowTwo = [
+    ['label' => 'D-Link', 'query' => 'd-link', 'manufacturer' => 5480, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-d-link.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'ASUS', 'query' => 'asus', 'manufacturer' => 5455, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-asus.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'NETGEAR', 'query' => 'netgear', 'manufacturer' => 5544, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-netgear.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'Intel', 'query' => 'intel', 'manufacturer' => 5517, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-intel.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'NVIDIA', 'query' => 'nvidia', 'manufacturer' => 5546, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-nvidia.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'Sun', 'query' => 'sun', 'manufacturer' => 5573, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-sun.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'TP-LINK', 'query' => 'tp-link', 'manufacturer' => 5667, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-tp-link.webp', 'width' => 100, 'height' => 36],
+];
+
+$homeBrandsRowThree = [
+    ['label' => 'IBM', 'query' => 'ibm', 'manufacturer' => 5594, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-ibm.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'Seagate', 'query' => 'seagate', 'manufacturer' => 5563, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-seagate.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'Juniper', 'query' => 'juniper', 'manufacturer' => 5600, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-juniper.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'Ruckus', 'query' => 'ruckus', 'manufacturer' => 5767, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-ruckus.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'Polycom', 'query' => 'polycom', 'manufacturer' => 5631, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-polycom.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'Broadcom', 'query' => 'broadcom', 'manufacturer' => 5645, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-broadcom.webp', 'width' => 100, 'height' => 36],
+    ['label' => 'VMware', 'query' => 'vmware', 'manufacturer' => null, 'image' => 'https://bulkdevices.com/media/wysiwyg/home-vmware.webp', 'width' => 100, 'height' => 36],
+];
 ?>
 <section class="home-banner-slider" aria-label="Homepage hero banner">
     <div class="home-banner-slider__slide">
@@ -101,90 +137,72 @@ $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
 </section>
 <?= $block->getChildHtml('home_promotional_products') ?>
 
-<div x-data="{ visible: false }" x-intersect.once.margin.800px="visible = true">
-    <template x-if="visible">
-        <div>
-<section class="home-industries" aria-labelledby="home-industries-heading">
-    <div class="container home-industries__container">
-        <header class="home-industries__header">
-            <h2 id="home-industries-heading" class="home-industries__title">Industries We Serve</h2>
-            <p class="home-industries__intro">
-                Power any industry with our versatile IT hardware solutions, from processors to servers and peripherals.
-            </p>
+<section class="home-brands" aria-labelledby="home-brands-heading">
+    <div class="home-brands__container">
+        <header class="home-brands__header">
+            <h2 id="home-brands-heading" class="home-brands__title">Powered By The World's Leading IT Brands</h2>
+            <hr class="home-brands__divider" aria-hidden="true">
         </header>
-        <ul class="home-industries__grid">
-            <li class="home-industries__item">
-                <article class="home-industries__card">
-                    <div class="home-industries__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/icon-enterprise-business.webp" alt="" width="64" height="64" loading="lazy">
-                    </div>
-                    <div class="home-industries__body">
-                        <h3 class="home-industries__name">Enterprise Business</h3>
-                        <p class="home-industries__text">Empower your enterprise with top-tier IT products from renowned manufacturers.</p>
-                    </div>
-                </article>
-            </li>
-            <li class="home-industries__item">
-                <article class="home-industries__card">
-                    <div class="home-industries__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/icon-federal-government.webp" alt="" width="64" height="64" loading="lazy">
-                    </div>
-                    <div class="home-industries__body">
-                        <h3 class="home-industries__name">Government</h3>
-                        <p class="home-industries__text">IT solutions tailored for government agencies across multiple sectors.</p>
-                    </div>
-                </article>
-            </li>
-            <li class="home-industries__item">
-                <article class="home-industries__card">
-                    <div class="home-industries__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/icon-healthcare.webp" alt="" width="64" height="64" loading="lazy">
-                    </div>
-                    <div class="home-industries__body">
-                        <h3 class="home-industries__name">Healthcare</h3>
-                        <p class="home-industries__text">Elevate healthcare excellence with our tailored IT solutions.</p>
-                    </div>
-                </article>
-            </li>
-            <li class="home-industries__item">
-                <article class="home-industries__card">
-                    <div class="home-industries__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/icon-government.webp" alt="" width="64" height="64" loading="lazy">
-                    </div>
-                    <div class="home-industries__body">
-                        <h3 class="home-industries__name">Education</h3>
-                        <p class="home-industries__text">Enhance learning standards and revolutionize the classroom experience.</p>
-                    </div>
-                </article>
-            </li>
-            <li class="home-industries__item">
-                <article class="home-industries__card">
-                    <div class="home-industries__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/icon-finance.webp" alt="" width="64" height="64" loading="lazy">
-                    </div>
-                    <div class="home-industries__body">
-                        <h3 class="home-industries__name">Finance</h3>
-                        <p class="home-industries__text">Boost financial and banking excellence with specialized IT solutions.</p>
-                    </div>
-                </article>
-            </li>
-            <li class="home-industries__item">
-                <article class="home-industries__card">
-                    <div class="home-industries__icon">
-                        <img src="https://bulkdevices.com/media/wysiwyg/icon-retail.webp" alt="" width="64" height="64" loading="lazy">
-                    </div>
-                    <div class="home-industries__body">
-                        <h3 class="home-industries__name">Retail</h3>
-                        <p class="home-industries__text">Transform the retail landscape with specialized IT solutions.</p>
-                    </div>
-                </article>
-            </li>
-        </ul>
+
+        <div class="home-brands__rows">
+            <ul class="home-brands__row home-brands__row--featured">
+                <?php foreach ($homeFeaturedBrands as $brand): ?>
+                    <li class="home-brands__logo">
+                        <a class="home-brands__link"
+                           href="<?= $escaper->escapeUrl($homeBrandLinks($block, $brand['query'], $brand['manufacturer'])) ?>"
+                           aria-label="<?= $escaper->escapeHtmlAttr(__('Shop %1 products', $brand['label'])) ?>">
+                            <img src="<?= $escaper->escapeUrl($brand['image']) ?>"
+                                 alt="<?= $escaper->escapeHtmlAttr($brand['label']) ?>"
+                                 width="<?= (int) $brand['width'] ?>"
+                                 height="<?= (int) $brand['height'] ?>"
+                                 loading="lazy"
+                                 decoding="async">
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+            <ul class="home-brands__row">
+                <?php foreach ($homeBrandsRowTwo as $brand): ?>
+                    <li class="home-brands__logo">
+                        <a class="home-brands__link"
+                           href="<?= $escaper->escapeUrl($homeBrandLinks($block, $brand['query'], $brand['manufacturer'])) ?>"
+                           aria-label="<?= $escaper->escapeHtmlAttr(__('Shop %1 products', $brand['label'])) ?>">
+                            <img src="<?= $escaper->escapeUrl($brand['image']) ?>"
+                                 alt="<?= $escaper->escapeHtmlAttr($brand['label']) ?>"
+                                 width="<?= (int) $brand['width'] ?>"
+                                 height="<?= (int) $brand['height'] ?>"
+                                 loading="lazy"
+                                 decoding="async">
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+
+            <ul class="home-brands__row">
+                <?php foreach ($homeBrandsRowThree as $brand): ?>
+                    <li class="home-brands__logo">
+                        <?php
+                        $brandUrl = $brand['manufacturer'] !== null
+                            ? $homeBrandLinks($block, $brand['query'], $brand['manufacturer'])
+                            : $block->getUrl('catalogsearch/result', ['_query' => ['q' => $brand['query']]]);
+                        ?>
+                        <a class="home-brands__link"
+                           href="<?= $escaper->escapeUrl($brandUrl) ?>"
+                           aria-label="<?= $escaper->escapeHtmlAttr(__('Shop %1 products', $brand['label'])) ?>">
+                            <img src="<?= $escaper->escapeUrl($brand['image']) ?>"
+                                 alt="<?= $escaper->escapeHtmlAttr($brand['label']) ?>"
+                                 width="<?= (int) $brand['width'] ?>"
+                                 height="<?= (int) $brand['height'] ?>"
+                                 loading="lazy"
+                                 decoding="async">
+                        </a>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
     </div>
 </section>
-        </div>
-    </template>
-</div>
 
 <?= $block->getChildHtml('home_top_categories') ?>
 <section class="home-whyus" aria-labelledby="home-whyus-heading" x-data="{ expanded: false }">

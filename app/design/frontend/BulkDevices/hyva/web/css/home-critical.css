@@ -10,7 +10,6 @@
     --bb-banner-accent-hover: #c96a18;
     --bb-banner-text: #ffffff;
     --bb-banner-cta-text: #333333;
-    --bb-banner-container-max: 96rem;
 
     width: 100vw;
     max-width: 100vw;
@@ -59,9 +58,8 @@
 .home-banner-slider__container {
     pointer-events: auto;
     width: 100%;
-    max-width: var(--bb-banner-container-max);
     margin-inline: auto;
-    
+
     box-sizing: border-box;
 }
 
@@ -358,35 +356,33 @@
 @media (max-width: 639px) {
     .home-product-tabs__grid {
         grid-template-columns: 1fr;
-        max-width: 20rem;
-        margin-inline: auto;
+        gap: 1rem;
     }
 }
 
-/* Defer paint for below-fold featured product cards (Speed Index) */
-.home-product-tabs__item:nth-child(n+6) {
-    content-visibility: auto;
-    contain-intrinsic-size: auto 22rem;
+/* Defer paint for below-fold product cards — scoped per column count */
+.home-product-tabs__item {
+    content-visibility: visible;
 }
 
-@media (max-width: 1279px) {
-    .home-product-tabs__item:nth-child(n+4) {
+@media (min-width: 1024px) and (max-width: 1279px) {
+    .home-product-tabs__item:nth-child(n + 4) {
         content-visibility: auto;
         contain-intrinsic-size: auto 22rem;
     }
 }
 
-@media (max-width: 1023px) {
-    .home-product-tabs__item:nth-child(n+3) {
+@media (min-width: 1280px) {
+    .home-product-tabs__item:nth-child(n + 6) {
         content-visibility: auto;
         contain-intrinsic-size: auto 22rem;
     }
 }
 
-@media (max-width: 639px) {
-    .home-product-tabs__item:nth-child(n+2) {
+@media (min-width: 640px) and (max-width: 1023px) {
+    .home-product-tabs__item:nth-child(n + 3) {
         content-visibility: auto;
-        contain-intrinsic-size: auto 24rem;
+        contain-intrinsic-size: auto 22rem;
     }
 }
 

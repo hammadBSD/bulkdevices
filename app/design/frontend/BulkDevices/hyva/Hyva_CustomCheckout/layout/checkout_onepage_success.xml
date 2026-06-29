@@ -29,7 +29,11 @@
                    name="checkout.success"
                    template="Hyva_CustomCheckout::success.phtml"
                    cacheable="false">
-                <container name="order.success.additional.info" label="Order Success Additional Info"/>
+                <container name="order.success.additional.info" label="Order Success Additional Info">
+                    <block class="Magento\Framework\View\Element\Template"
+                           name="shopper.approved.thankyou"
+                           template="Magento_Theme::html/shopper-approved-thankyou.phtml"/>
+                </container>
             </block>
         </referenceContainer>
 

@@ -324,6 +324,132 @@
     }
 }
 
+/* --- home-brands.css --- */
+/**
+ * Homepage — Powered By The World's Leading IT Brands
+ */
+
+.home-brands {
+    --bb-brands-text: #111827;
+    --bb-brands-divider: #d1d5db;
+    --bb-brands-container-max: 96rem;
+
+    padding: clamp(2.5rem, 5vw, 3.5rem) 0;
+}
+
+.home-brands__container {
+    width: 100%;
+    max-width: var(--bb-brands-container-max);
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    box-sizing: border-box;
+}
+
+.home-brands__header {
+    margin-bottom: clamp(1.75rem, 3vw, 2.25rem);
+    text-align: center;
+}
+
+.home-brands__title {
+    margin: 0 0 1rem;
+    font-size: clamp(1.375rem, 2.5vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--bb-brands-text);
+    letter-spacing: -0.01em;
+}
+
+.home-brands__divider {
+    width: 100%;
+    height: 1px;
+    margin: 0;
+    border: 0;
+    background: var(--bb-brands-divider);
+}
+
+.home-brands__rows {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(1.5rem, 3vw, 2rem);
+}
+
+.home-brands__row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(1.25rem, 3vw, 2.5rem) clamp(1.5rem, 4vw, 3rem);
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.home-brands__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 1 auto;
+}
+
+.home-brands__link {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+
+.home-brands__link:focus-visible {
+    outline: 2px solid #eb7d1e;
+    outline-offset: 3px;
+    border-radius: 0.25rem;
+}
+
+.home-brands__logo img {
+    display: block;
+    width: auto;
+    height: auto;
+    max-height: 2.25rem;
+    max-width: 7.5rem;
+    object-fit: contain;
+    filter: none;
+}
+
+.home-brands__row--featured .home-brands__logo img {
+    max-height: 3rem;
+    max-width: 9.5rem;
+}
+
+@media (max-width: 767px) {
+    .home-brands__row {
+        gap: 1.25rem 1.75rem;
+    }
+
+    .home-brands__logo img {
+        max-height: 1.875rem;
+        max-width: 6.5rem;
+    }
+
+    .home-brands__row--featured .home-brands__logo img {
+        max-height: 2.5rem;
+        max-width: 8rem;
+    }
+}
+
+@media (max-width: 479px) {
+    .home-brands__row {
+        gap: 1rem 1.25rem;
+    }
+
+    .home-brands__logo {
+        flex-basis: calc(33.333% - 1rem);
+    }
+
+    .home-brands__row--featured .home-brands__logo {
+        flex-basis: calc(50% - 0.75rem);
+    }
+}
+
 /* --- home-top-categories.css --- */
 /**
  * Homepage — Top Categories (8 cards, 4×2 grid, image left / links right)
