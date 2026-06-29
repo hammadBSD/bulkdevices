@@ -15,5 +15,5 @@ use Magento\Framework\View\Element\Template;
 $preloadViewModel = $viewModels->require(CategoryProductPreload::class);
 
 foreach ($preloadViewModel->getPreloadImageUrls() as $imageUrl): ?>
-<link rel="preload" as="image" href="<?= $escaper->escapeUrl($imageUrl) ?>" fetchpriority="high">
+<link rel="preload" as="image" href="<?= $escaper->escapeUrl($imageUrl) ?>" fetchpriority="high" media="(max-width: 1199px)">
 <?php endforeach; ?>

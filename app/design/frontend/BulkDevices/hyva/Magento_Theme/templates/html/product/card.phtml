@@ -54,6 +54,9 @@ $imageLoading = (string) ($imageCustomAttributes['loading'] ?? 'lazy');
 $imageFetchPriority = isset($imageCustomAttributes['fetchpriority'])
     ? (string) $imageCustomAttributes['fetchpriority']
     : null;
+$imageExtraClass = (string) ($imageCustomAttributes['class'] ?? '');
+$imageClass = 'bb-product-card__img home-product-tabs__img'
+    . ($imageExtraClass !== '' ? ' ' . $imageExtraClass : '');
 $defaultQty = max(1, (int) $stockItemViewModel->getMinSaleQty($product));
 $minSalesQty = (int) $defaultQty;
 $maxSalesQty = (int) $stockItemViewModel->getMaxSaleQty($product);
@@ -79,7 +82,7 @@ $imageLabel = $image->getLabel() ?: $productName;
 
 <article class="<?= $escaper->escapeHtmlAttr($cardClass) ?>">
     <a class="bb-product-card__media home-product-tabs__media" href="<?= $escaper->escapeUrl($productUrl) ?>">
-        <img class="bb-product-card__img home-product-tabs__img"
+        <img class="<?= $escaper->escapeHtmlAttr($imageClass) ?>"
              src="<?= $escaper->escapeUrl($imageUrl) ?>"
              width="250"
              height="250"

@@ -5,22 +5,18 @@ declare(strict_types=1);
 namespace BSD\Storefront\ViewModel;
 
 use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Catalog\Model\Layer\Resolver as LayerResolver;
 use Magento\Catalog\Model\Product;
-use Magento\Catalog\Model\Product\Attribute\Source\Status;
-use Magento\Catalog\Model\Product\Visibility;
-use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 use Magento\Framework\DataObject\IdentityInterface;
 use Magento\Framework\Registry;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
-use Magento\Store\Model\StoreManagerInterface;
 
 class CategoryProductPreload implements ArgumentInterface, IdentityInterface
 {
     private const PRELOAD_COUNT = 2;
 
     public function __construct(
-        private readonly CollectionFactory $productCollectionFactory,
-        private readonly StoreManagerInterface $storeManager,
+        private readonly LayerResolver $layerResolver,
         private readonly ProductPage $productPageViewModel,
         private readonly Registry $registry,
     ) {
@@ -71,20 +67,20 @@ class CategoryProductPreload implements ArgumentInterface, IdentityInterface
             return [];
         }
 
-        $storeId = (int) $this->storeManager->getStore()->getId();
-        $collection = $this->productCollectionFactory->create();
-        $collection->addCategoryFilter($category);
-        $collection->addAttributeToSelect(['name', 'small_image', 'thumbnail', 'image']);
-        $collection->addStoreFilter($storeId);
-        $collection->addAttributeToFilter('status', Status::STATUS_ENABLED);
-        $collection->addAttributeToFilter(
-            'visibility',
-            ['in' => [Visibility::VISIBILITY_IN_CATALOG, Visibility::VISIBILITY_BOTH]]
-        );
-        $collection->setPageSize(self::PRELOAD_COUNT);
+        try {
+            $layerCollection = $this->layerResolver->get()->getProductCollection();
+            /** @var \Magento\Catalog\Model\ResourceModel\Product\Collection $preloadCollection */
+            $preloadCollection = clone $layerCollection;
+            $preloadCollection->clear();
+            $preloadCollection->setPageSize(self::PRELOAD_COUNT);
+            $preloadCollection->setCurPage(1);
+            $preloadCollection->addAttributeToSelect(['small_image', 'thumbnail', 'image']);
+        } catch (\Throwable) {
+            return [];
+        }
 
         $products = [];
-        foreach ($collection as $product) {
+        foreach ($preloadCollection as $product) {
             if ($product instanceof Product) {
                 $products[] = $product;
             }

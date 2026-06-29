@@ -108,6 +108,28 @@
     height: 100%;
 }
 
+/* Mobile PLP — defer paint for product cards below the first row */
+@media (max-width: 639px) {
+    .bb-plp-grid:not(.bb-plp-grid--list) .bb-plp-grid__item:nth-child(n + 2) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 22rem;
+    }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+    .bb-plp-grid:not(.bb-plp-grid--list) .bb-plp-grid__item:nth-child(n + 3) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 22rem;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 1199px) {
+    .bb-plp-grid:not(.bb-plp-grid--list) .bb-plp-grid__item:nth-child(n + 4) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 22rem;
+    }
+}
+
 @media (min-width: 640px) {
     .bb-plp-grid:not(.bb-plp-grid--list) {
         grid-template-columns: repeat(2, minmax(0, 1fr));

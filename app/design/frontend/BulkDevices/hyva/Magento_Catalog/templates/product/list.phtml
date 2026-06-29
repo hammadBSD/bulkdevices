@@ -19,7 +19,8 @@ use Magento\Framework\Escaper;
 
 $currentCategoryViewModel = $viewModels->require(CurrentCategory::class);
 
-$eagerLoadImagesCount = (int) ($block->getData('eager_load_images_count') ?? 3);
+$mobilePriorityImageCount = 2;
+$desktopEagerImageCount = (int) ($block->getData('eager_load_images_count') ?? 4);
 $productCollection = $block->getLoadedProductCollection();
 $cardBlock = $block->getChildBlock('product.card');
 $viewMode = $block->getMode() === 'grid' ? 'grid' : 'list';
@@ -46,8 +47,16 @@ $isGrid = $viewMode === 'grid';
                 <?php
                 /** @var \Magento\Catalog\Model\Product $product */
                 foreach (array_values($productCollection->getItems()) as $i => $product):
-                    if ($i < $eagerLoadImagesCount) {
-                        $product->setData('image_custom_attributes', ['loading' => 'eager', 'fetchpriority' => 'high']);
+                    if ($i < $mobilePriorityImageCount) {
+                        $product->setData('image_custom_attributes', [
+                            'loading' => 'eager',
+                            'fetchpriority' => 'high',
+                        ]);
+                    } elseif ($i < $desktopEagerImageCount) {
+                        $product->setData('image_custom_attributes', [
+                            'loading' => 'lazy',
+                            'class' => 'bb-plp-img--desktop-eager',
+                        ]);
                     } else {
                         $product->unsetData('image_custom_attributes');
                     }
@@ -57,11 +66,22 @@ $isGrid = $viewMode === 'grid';
                             ->setData('product', $product)
                             ->setData('view_mode', $viewMode)
                             ->setData('hide_qty_selector', true)
-                            ->setData('defer_qty_alpine', $i >= $eagerLoadImagesCount)
+                            ->setData('defer_qty_alpine', $i >= $mobilePriorityImageCount)
                             ->toHtml() ?>
                     </li>
                 <?php endforeach; ?>
             </ul>
+            <script>
+                (function () {
+                    if (!window.matchMedia('(min-width: 1200px)').matches) {
+                        return;
+                    }
+
+                    document.querySelectorAll('.bb-plp-img--desktop-eager').forEach(function (img) {
+                        img.loading = 'eager';
+                    });
+                })();
+            </script>
         </div>
         <?= $block->getChildBlock('toolbar')->setIsBottom(true)->toHtml() ?>
     </section>
