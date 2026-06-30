@@ -166,7 +166,18 @@
                         class="Magento\Framework\View\Element\Template"
                         name="product.detail.sidebar"
                         template="Magento_Catalog::product/view/sidebar.phtml"
-                    />
+                    >
+                        <block
+                            class="Magento\Catalog\Block\Product\View"
+                            name="sidebar.related.products"
+                            as="sidebar.related.products"
+                            template="Magento_Catalog::product/view/sidebar-related-products.phtml"
+                        >
+                            <arguments>
+                                <argument name="page_size" xsi:type="number">6</argument>
+                            </arguments>
+                        </block>
+                    </block>
 
                     <block class="Magento\Catalog\Block\Product\View\Details"
                            name="product.info.details"
@@ -191,6 +202,11 @@
                                 <argument name="sort_order" xsi:type="number">-20</argument>
                             </arguments>
                         </block>
+
+                        <block
+                            name="product.details.expert.support"
+                            template="Magento_Catalog::product/view/expert-support.phtml"
+                        />
 
                     </block>
 

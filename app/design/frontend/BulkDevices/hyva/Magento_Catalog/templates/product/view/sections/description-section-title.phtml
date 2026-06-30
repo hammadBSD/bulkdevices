@@ -7,19 +7,12 @@
 
 declare(strict_types=1);
 
-/** @var Escaper $escaper */
-/** @var ViewModelRegistry $viewModels */
-/** @var ProductPage $productViewModel */
-
-use Hyva\Theme\Model\ViewModelRegistry;
-use Hyva\Theme\ViewModel\ProductPage;
 use Magento\Framework\Escaper;
 
-$productViewModel = $viewModels->require(ProductPage::class);
-$product = $productViewModel->getProduct();
+/** @var Escaper $escaper */
 
 ?>
 
-<h2 class="mb-6 text-2xl text-center md:text-left">
+<h2 class="bb-pdp-details__heading">
     <?= $escaper->escapeHtml(__('Product Description')) ?>
 </h2>

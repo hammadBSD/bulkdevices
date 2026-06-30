@@ -26,7 +26,7 @@ if (!$product->getDescription()) {
     return;
 }
 
-$cssClasses = $block->getData('css_classes') ?? 'prose';
+$cssClasses = $block->getData('css_classes') ?? 'bb-pdp-details__description prose';
 
 ?>
 <div class="<?= $escaper->escapeHtmlAttr($cssClasses) ?>">

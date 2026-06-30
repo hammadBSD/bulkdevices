@@ -63,7 +63,7 @@ class TopCategories implements ArgumentInterface
             ],
             [
                 'name' => 'Power Supply',
-                'image' => self::MEDIA_BASE . 'tc-power-wb.webp',
+                'image' => self::MEDIA_BASE . 'tc-powersupply.webp',
                 'see_all_path' => 'power/power-classification',
                 'links' => [
                     ['label' => 'Power Supplies', 'path' => 'power/power-classification/power-supplies'],
@@ -73,7 +73,7 @@ class TopCategories implements ArgumentInterface
             ],
             [
                 'name' => 'SSD',
-                'image' => self::MEDIA_BASE . 'tc-ssd-wb.webp',
+                'image' => self::MEDIA_BASE . 'tc-ssd.webp',
                 'see_all_path' => 'storage-devices/internal-storage/solid-state-drives',
                 'links' => [
                     ['label' => 'Solid State Drives', 'path' => 'storage-devices/internal-storage/solid-state-drives'],
@@ -83,7 +83,7 @@ class TopCategories implements ArgumentInterface
             ],
             [
                 'name' => 'Networking',
-                'image' => self::MEDIA_BASE . 'tc-networking-wb.webp',
+                'image' => self::MEDIA_BASE . 'tc-networking.webp',
                 'see_all_path' => 'networking-devices',
                 'links' => [
                     ['label' => 'Network Products', 'path' => 'networking-devices/network-products'],
@@ -93,7 +93,7 @@ class TopCategories implements ArgumentInterface
             ],
             [
                 'name' => 'Printers',
-                'image' => self::MEDIA_BASE . 'tc-printer-wb.webp',
+                'image' => self::MEDIA_BASE . 'tc-printers.webp',
                 'see_all_path' => 'printers-scanners/printers',
                 'links' => [
                     ['label' => 'Laser Printers', 'path' => 'printers-scanners/printers/laser-printers'],

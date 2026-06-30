@@ -28,12 +28,12 @@ $buttonLabel = $block->getData('is_cart_configure')
     type="submit"
     form="product_addtocart_form"
     aria-label="<?= $escaper->escapeHtmlAttr($buttonLabel) ?>"
-    class="btn btn-primary"
+    class="btn btn-primary bb-pdp-info__addtocart"
     id="product-addtocart-button"
     data-addto="cart"
 >
     <?= $lucideIcons->shoppingCartHtml('', 24, 24, ['aria-hidden' => 'true']); ?>
-    <span><?= $escaper->escapeHtml($buttonLabel) ?></span>
+    <?= $escaper->escapeHtml($buttonLabel) ?>
 </button>
 
 <?= $block->getChildHtml('', true) ?>

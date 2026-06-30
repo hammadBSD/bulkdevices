@@ -16,27 +16,84 @@ use Magento\Framework\Escaper;
 $titleRenderer = $block->getChildBlock('product.section.title.renderer');
 $defaultTitleTemplate = $titleRenderer->getTemplate();
 
-?>
-<div class="grid lg:grid-cols-2 gap-8">
-<?php
-foreach ($block->getGroupSortedChildNames('detailed_info', '') as $sectionName) {
-    $sectionBlock  = $block->getLayout()->getBlock($sectionName);
-    $sectionHtml   = (string) $sectionBlock->toHtml();
-    $titleTemplate = $sectionBlock->getData('title_template') ?? $defaultTitleTemplate;
+$overviewBlock = $block->getLayout()->getBlock('product.overview.specs');
+$descriptionBlock = $block->getLayout()->getBlock('description');
+$supportBlock = $block->getLayout()->getBlock('product.details.expert.support');
 
-    if (empty(trim($sectionHtml))) {
-        continue;
+$overviewHtml = $overviewBlock ? (string) $overviewBlock->toHtml() : '';
+$descriptionHtml = $descriptionBlock ? (string) $descriptionBlock->toHtml() : '';
+$supportHtml = $supportBlock ? (string) $supportBlock->toHtml() : '';
+
+if ($overviewHtml === '' && $descriptionHtml === '' && $supportHtml === '') {
+    return;
+}
+
+$renderSectionCard = static function (
+    $sectionBlock,
+    string $sectionHtml,
+    string $titleTemplate,
+    $titleRenderer,
+    string $modifierClass = ''
+) use ($escaper): string {
+    if ($sectionHtml === '') {
+        return '';
     }
+
+    $sectionId = $escaper->escapeHtmlAttr($sectionBlock->getNameInLayout());
+    $modifierClass = $modifierClass ? ' ' . $modifierClass : '';
+
+    ob_start();
     ?>
-    <section id="<?= $escaper->escapeHtmlAttr($sectionBlock->getNameInLayout()) ?>">
-        <?=
-            $titleRenderer->setTemplate($titleTemplate)
-                          ->assign('sectionBlock', $sectionBlock)
-                          ->toHtml()
-        ?>
-        <div class="card w-full">
-            <?= /** @noEscape  */ $sectionHtml ?>
+    <section class="bb-pdp-details__section<?= $escaper->escapeHtmlAttr($modifierClass) ?>" id="<?= $sectionId ?>">
+        <div class="bb-pdp-details__card">
+            <?=
+                $titleRenderer->setTemplate($titleTemplate)
+                    ->assign('sectionBlock', $sectionBlock)
+                    ->toHtml()
+            ?>
+            <div class="bb-pdp-details__card-body">
+                <?= /** @noEscape */ $sectionHtml ?>
+            </div>
         </div>
     </section>
-<?php } ?>
+    <?php
+
+    return (string) ob_get_clean();
+};
+
+$overviewSection = $overviewBlock && $overviewHtml !== ''
+    ? $renderSectionCard(
+        $overviewBlock,
+        $overviewHtml,
+        $overviewBlock->getData('title_template') ?? $defaultTitleTemplate,
+        $titleRenderer,
+        'bb-pdp-details__section--overview'
+    )
+    : '';
+
+$descriptionSection = $descriptionBlock && $descriptionHtml !== ''
+    ? $renderSectionCard(
+        $descriptionBlock,
+        $descriptionHtml,
+        $descriptionBlock->getData('title_template') ?? $defaultTitleTemplate,
+        $titleRenderer,
+        'bb-pdp-details__section--description bb-pdp-details__section--full'
+    )
+    : '';
+
+$supportSection = $supportHtml !== ''
+    ? '<section class="bb-pdp-details__section bb-pdp-details__section--support" id="product.details.expert.support">'
+        . $supportHtml
+        . '</section>'
+    : '';
+?>
+<div class="bb-pdp-details">
+    <?php if ($overviewSection !== '' || $supportSection !== ''): ?>
+        <div class="bb-pdp-details__top">
+            <?= /** @noEscape */ $overviewSection ?>
+            <?= /** @noEscape */ $supportSection ?>
+        </div>
+    <?php endif; ?>
+
+    <?= /** @noEscape */ $descriptionSection ?>
 </div>

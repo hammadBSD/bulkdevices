@@ -16,22 +16,30 @@
         padding-block: 0.625rem;
     }
 
+    .bb-pdp-details__top {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    .bb-pdp-details__card,
     .bb-pdp-page__details .card {
         border: 1px solid #e5e7eb;
         border-radius: 12px;
         padding: clamp(1.25rem, 2.5vw, 1.75rem);
+        background: #ffffff;
     }
 
     .bb-pdp-overview__lead {
         margin: 0 0 1rem;
-        font-size: 0.9375rem;
-        line-height: 1.6;
-        color: #4b5563;
+        font-size: 0.875rem;
+        line-height: 1.55;
+        color: #9ca3af;
     }
 
-    .bb-pdp-overview__table th,
-    .bb-pdp-overview__table td {
-        font-size: 0.9375rem;
+    .bb-pdp-overview__label,
+    .bb-pdp-overview__value {
+        font-size: 0.875rem;
     }
 
     .bb-pdp-sidebar {
@@ -104,28 +112,13 @@
         text-transform: uppercase;
     }
 
-    .bb-pdp-sidebar__notice.pdp-noticebox {
+    .bb-pdp-notice.bb-pdp-sidebar__notice {
         padding: 1rem 1.25rem;
-        border-bottom: 1px solid #e5e7eb;
     }
 
-    .pdp-noticebox .item {
-        display: flex;
-        align-items: flex-start;
-        gap: 0.75rem;
-        padding: 0.5rem 0;
-    }
-
-    .pdp-noticebox .figure img {
-        width: 32px;
-        height: 32px;
-    }
-
-    .pdp-noticebox .detail p {
-        margin: 0;
+    .bb-pdp-notice__text {
         font-size: 0.8125rem;
         line-height: 1.45;
-        color: #374151;
     }
 
     .bb-pdp-page__details[data-pdp-defer-paint]:not(.pdp-paint-ready),

@@ -7,217 +7,94 @@
 
 declare(strict_types=1);
 
-use Hyva\Theme\Model\ViewModelRegistry;
-use Hyva\Theme\ViewModel\ProductPage;
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
 /** @var Template $block */
 /** @var Escaper $escaper */
-/** @var ViewModelRegistry $viewModels */
-
-/** @var ProductPage $productViewModel */
-$productViewModel = $viewModels->require(ProductPage::class);
-
-$product = $productViewModel->getProduct();
-$productSku = (string) $product->getSku();
-$contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
 ?>
 
 <aside class="bb-pdp-sidebar pb-6 md:py-6" aria-labelledby="bb-pdp-sidebar-heading">
     <div class="bb-pdp-sidebar__inner">
+        <?php
+        $mediaBase = 'https://bulkdevices.com/media/wysiwyg';
+        $deliveryOptions = [
+            __('Fast Shipping Across USA'),
+            __('Express Delivery Available (1-3 Business Days)'),
+            __('Free Shipping on Eligible Orders'),
+            __('International Shipping Available'),
+            __('Real-Time Order Tracking'),
+            __('Bulk & Business Orders Supported'),
+            __('Same-Day Order Processing'),
+            __('Multiple Shipping Carriers (UPS, FedEx)'),
+        ];
+        $returnWarrantyOptions = [
+            __('30-Day Easy Returns'),
+            __('Manufacturer Warranty Available'),
+            __('Genuine Product Guarantee'),
+            __('Warranty Support Assistance'),
+            __('Satisfaction Guaranteed'),
+            __('Damaged Item Replacement'),
+            __('Dedicated After-Sales Support'),
+        ];
+        ?>
+        <div class="bb-pdp-notice bb-pdp-sidebar__notice" aria-label="<?= $escaper->escapeHtmlAttr(__('Product assurances')) ?>">
+            <section class="bb-pdp-notice__section">
+                <ul class="bb-pdp-notice__rows">
+                    <li class="bb-pdp-notice__row bb-pdp-notice__row--feature">
+                        <span class="bb-pdp-notice__icon bb-pdp-notice__icon--solid" aria-hidden="true">
+                            <img src="<?= $escaper->escapeUrl($mediaBase . '/dollar-icon.webp') ?>" alt="" width="28" height="28" loading="lazy" decoding="async">
+                        </span>
+                        <p class="bb-pdp-notice__text"><?= $escaper->escapeHtml(__('Pay with MasterCard, Visa, AMEX & Discover Cards')) ?></p>
+                    </li>
+                    <li class="bb-pdp-notice__row bb-pdp-notice__row--feature">
+                        <span class="bb-pdp-notice__icon bb-pdp-notice__icon--solid" aria-hidden="true">
+                            <img src="<?= $escaper->escapeUrl($mediaBase . '/tick-icon.webp') ?>" alt="" width="28" height="28" loading="lazy" decoding="async">
+                        </span>
+                        <p class="bb-pdp-notice__text"><?= $escaper->escapeHtml(__('PO Accepted from Government Agencies & SMBs')) ?></p>
+                    </li>
+                </ul>
+            </section>
 
-        
+            <section class="bb-pdp-notice__section">
+                <div class="bb-pdp-notice__heading">
+                    <span class="bb-pdp-notice__icon bb-pdp-notice__icon--solid" aria-hidden="true">
+                        <img src="<?= $escaper->escapeUrl($mediaBase . '/delivery-icon.webp') ?>" alt="" width="28" height="28" loading="lazy" decoding="async">
+                    </span>
+                    <h3 class="bb-pdp-notice__title"><?= $escaper->escapeHtml(__('Delivery options:')) ?></h3>
+                </div>
+                <ul class="bb-pdp-notice__rows bb-pdp-notice__rows--list">
+                    <?php foreach ($deliveryOptions as $option): ?>
+                        <li class="bb-pdp-notice__row">
+                            <span class="bb-pdp-notice__icon bb-pdp-notice__icon--line" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+                            </span>
+                            <span class="bb-pdp-notice__text"><?= $escaper->escapeHtml($option) ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </section>
 
-        
-        
-        <div class="pdp-noticebox bb-pdp-sidebar__notice">
-            <div class="item">
-                <div class="figure">
-                    <img src="https://bulkdevices.com/media/wysiwyg/dollar-icon.webp" alt="" width="32" height="32" loading="lazy" decoding="async">
+            <section class="bb-pdp-notice__section">
+                <div class="bb-pdp-notice__heading">
+                    <span class="bb-pdp-notice__icon bb-pdp-notice__icon--solid" aria-hidden="true">
+                        <img src="<?= $escaper->escapeUrl($mediaBase . '/return-icon.webp') ?>" alt="" width="28" height="28" loading="lazy" decoding="async">
+                    </span>
+                    <h3 class="bb-pdp-notice__title"><?= $escaper->escapeHtml(__('Return & Warranty:')) ?></h3>
                 </div>
-                <div class="detail">
-                    <p><?= $escaper->escapeHtml(__('Pay with MasterCard, Visa, AMEX & Discover Cards')) ?></p>
-                </div>
-            </div>
-            <div class="item">
-                <div class="figure">
-                    <img src="https://bulkdevices.com/media/wysiwyg/tick-icon.webp" alt="" width="32" height="32" loading="lazy" decoding="async">
-                </div>
-                <div class="detail">
-                    <p><?= $escaper->escapeHtml(__('PO Accepted from Government Agencies & SMBs')) ?></p>
-                </div>
-            </div>
-            <div class="item">
-                <div class="figure">
-                    <img src="https://bulkdevices.com/media/wysiwyg/delivery-icon.webp" alt="" width="32" height="32" loading="lazy" decoding="async">
-                </div>
-                <div class="detail">
-                    <h3><?= $escaper->escapeHtml(__('Delivery options:')) ?></h3>
-                    <p><?= $escaper->escapeHtml(__('Free ground shipping')) ?></p>
-                    <p><?= $escaper->escapeHtml(__('Overnight shipping - Cutoff time 1 PM PST')) ?></p>
-                    <p><?= $escaper->escapeHtml(__('2-day expedite shipping')) ?></p>
-                </div>
-            </div>
-            <div class="item">
-                <div class="figure">
-                    <img src="https://bulkdevices.com/media/wysiwyg/return-icon.webp" alt="" width="32" height="32" loading="lazy" decoding="async">
-                </div>
-                <div class="detail">
-                    <h3><?= $escaper->escapeHtml(__('Return & Warranty:')) ?></h3>
-                    <p><?= $escaper->escapeHtml(__('As per policy')) ?></p>
-                    <p><?= $escaper->escapeHtml(__('Please refer our policies page')) ?></p>
-                </div>
-            </div>
+                <ul class="bb-pdp-notice__rows bb-pdp-notice__rows--list">
+                    <?php foreach ($returnWarrantyOptions as $option): ?>
+                        <li class="bb-pdp-notice__row">
+                            <span class="bb-pdp-notice__icon bb-pdp-notice__icon--line" aria-hidden="true">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                            </span>
+                            <span class="bb-pdp-notice__text"><?= $escaper->escapeHtml($option) ?></span>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            </section>
         </div>
-
-        <div class="bb-pdp-sidebar__support">
-            <img
-                class="bb-pdp-sidebar__support-avatar"
-                src="https://bulkdevices.com/static/frontend/BulkDevices/BSD/en_US/Magento_Catalog/images/support-men.webp"
-                width="85"
-                height="85"
-                alt="<?= $escaper->escapeHtmlAttr(__('Expert Team Support')) ?>"
-                loading="lazy"
-                decoding="async"
-            >
-            <div class="bb-pdp-sidebar__support-body">
-                <p class="bb-pdp-sidebar__support-heading"><?= $escaper->escapeHtml(__('Expert Team Support')) ?></p>
-                <div class="bb-pdp-sidebar__support-links">
-                    <button
-                        type="button"
-                        class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--chat"
-                        onclick="window.bdusOpenZendeskChat && window.bdusOpenZendeskChat(true)"
-                    ><?= $escaper->escapeHtml(__('Chat')) ?></button>
-                    <a
-                        class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--whatsapp bb-pdp-sidebar__support-link--desktop"
-                        href="https://web.whatsapp.com/send?phone=+921xxxxxxxxx&amp;text=Enter Default Message for general Whatsapp Chat"
-                        onclick="gtag('event', 'WhatsApp', {'event_action': 'whatsapp_chat', 'event_category': 'Chat', 'event_label': 'Chat_WhatsApp'});"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    ><?= $escaper->escapeHtml(__('Whatsapp')) ?></a>
-                    <a
-                        class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--whatsapp bb-pdp-sidebar__support-link--mobile"
-                        href="https://wa.me/+921xxxxxxxxx&amp;text=Enter Default Message for general Whatsapp Chat"
-                        onclick="gtag('event', 'WhatsApp', {'event_action': 'whatsapp_chat', 'event_category': 'Chat', 'event_label': 'Chat_WhatsApp'});"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    ><?= $escaper->escapeHtml(__('Whatsapp')) ?></a>
-                    <a
-                        class="bb-pdp-sidebar__support-link bb-pdp-sidebar__support-link--email"
-                        href="mailto:support@bulkdevices.com"
-                    ><?= $escaper->escapeHtml(__('Email')) ?></a>
-                </div>
-                <p class="bb-pdp-sidebar__support-note"><?= $escaper->escapeHtml(__('Looking for a quote for special price or bulk quantity')) ?></p>
-            </div>
-        </div>
-
-        <form
-            class="bb-pdp-sidebar__form form contact"
-            action="<?= $escaper->escapeUrl($contactFormAction) ?>"
-            id="pdp-contact-form"
-            method="post"
-            data-hasrequired="<?= $escaper->escapeHtmlAttr(__('* Required Fields')) ?>"
-        >
-            <?= $block->getBlockHtml('formkey') ?>
-            <input type="hidden" name="comment" value="<?= $escaper->escapeHtmlAttr(__('Request for quote: %1', $productSku)) ?>">
-            <input type="hidden" name="rfq_submission" value="1">
-            <input type="hidden" name="rfq_source" value="pdp_sidebar">
-            <fieldset class="bb-pdp-sidebar__fieldset">
-                <legend class="sr-only"><?= $escaper->escapeHtml(__('Write Us')) ?></legend>
-                <div class="bb-pdp-sidebar__fields">
-                    <div class="field name required">
-                        <label class="sr-only" for="pdp-contact-name"><?= $escaper->escapeHtml(__('Full Name')) ?></label>
-                        <input
-                            name="name"
-                            id="pdp-contact-name"
-                            class="bb-pdp-sidebar__input"
-                            type="text"
-                            placeholder="<?= $escaper->escapeHtmlAttr(__('Full Name')) ?>"
-                            title="<?= $escaper->escapeHtmlAttr(__('Full Name')) ?>"
-                            required
-                        >
-                    </div>
-                    <div class="field email required">
-                        <label class="sr-only" for="pdp-contact-email"><?= $escaper->escapeHtml(__('Email Address')) ?></label>
-                        <input
-                            name="email"
-                            id="pdp-contact-email"
-                            class="bb-pdp-sidebar__input"
-                            type="email"
-                            placeholder="<?= $escaper->escapeHtmlAttr(__('Email Address')) ?>"
-                            title="<?= $escaper->escapeHtmlAttr(__('Email Address')) ?>"
-                            required
-                        >
-                    </div>
-                    <div class="field telephone">
-                        <label class="sr-only" for="pdp-contact-telephone"><?= $escaper->escapeHtml(__('Phone Number')) ?></label>
-                        <input
-                            name="telephone"
-                            id="pdp-contact-telephone"
-                            class="bb-pdp-sidebar__input"
-                            type="text"
-                            placeholder="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
-                            title="<?= $escaper->escapeHtmlAttr(__('Phone Number')) ?>"
-                        >
-                    </div>
-                    <!-- <div class="field company">
-                        <label class="sr-only" for="pdp-contact-company"><?= $escaper->escapeHtml(__('Company')) ?></label>
-                        <input
-                            name="company"
-                            id="pdp-contact-company"
-                            class="bb-pdp-sidebar__input"
-                            type="text"
-                            placeholder="<?= $escaper->escapeHtmlAttr(__('Company')) ?>"
-                            title="<?= $escaper->escapeHtmlAttr(__('Company')) ?>"
-                        >
-                    </div>
-                    <div class="field requiredqty">
-                        <label class="sr-only" for="pdp-contact-requiredqty"><?= $escaper->escapeHtml(__('Required Quantity')) ?></label>
-                        <input
-                            name="requiredqty"
-                            id="pdp-contact-requiredqty"
-                            class="bb-pdp-sidebar__input"
-                            type="text"
-                            placeholder="<?= $escaper->escapeHtmlAttr(__('Required Quantity')) ?>"
-                            title="<?= $escaper->escapeHtmlAttr(__('Required Quantity')) ?>"
-                        >
-                    </div> -->
-                    <div class="field partnum">
-                        <label class="sr-only" for="pdp-contact-partnum"><?= $escaper->escapeHtml(__('Part Number')) ?></label>
-                        <input
-                            name="partnum"
-                            id="pdp-contact-partnum"
-                            class="bb-pdp-sidebar__input"
-                            type="text"
-                            value="<?= $escaper->escapeHtmlAttr($productSku) ?>"
-                            placeholder="<?= $escaper->escapeHtmlAttr(__('Part Number')) ?>"
-                            title="<?= $escaper->escapeHtmlAttr(__('Part Number')) ?>"
-                        >
-                    </div>
-                    <!-- <div class="field comment required">
-                        <label class="sr-only" for="pdp-contact-comment"><?= $escaper->escapeHtml(__('Message')) ?></label>
-                        <textarea
-                            name="comment"
-                            id="pdp-contact-comment"
-                            class="bb-pdp-sidebar__textarea"
-                            placeholder="<?= $escaper->escapeHtmlAttr(__('Message')) ?>"
-                            title="<?= $escaper->escapeHtmlAttr(__('Message')) ?>"
-                            rows="4"
-                            required
-                        ></textarea>
-                    </div> -->
-                </div>
-            </fieldset>
-            <div class="bb-pdp-sidebar__actions">
-                <input type="hidden" name="hideit" value="">
-                <button type="submit" class="bb-pdp-sidebar__submit" title="<?= $escaper->escapeHtmlAttr(__('Submit')) ?>">
-                    <span><?= $escaper->escapeHtml(__('Submit Now')) ?></span>
-                </button>
-            </div>
-        </form>
-        
-
-       
     </div>
+
+    <?= $block->getChildHtml('sidebar.related.products') ?>
 </aside>

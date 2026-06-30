@@ -35,8 +35,7 @@ $percentOff = $originalPrice != 0 ? (int) round(($savingsAmount / $originalPrice
 ?>
 
 <div class="bb-pdp-savings old_prices" role="group" aria-label="<?= $escaper->escapeHtmlAttr(__('Price savings')) ?>">
-    <p class="bb-pdp-savings__list">
-        <!-- <span class="bb-pdp-savings__list-label"></span> -->
+    <p class="bb-pdp-savings__was-wrap">
         <s class="bb-pdp-savings__was old-price cut-price"><?= /** @noEscape */ $productViewModel->format($cutPrice) ?></s>
     </p>
     <div class="bb-pdp-savings__highlights">
@@ -46,7 +45,7 @@ $percentOff = $originalPrice != 0 ? (int) round(($savingsAmount / $originalPrice
         </span>
         <?php if ($originalPrice != 0): ?>
             <span class="bb-pdp-savings__percent percent">
-                <?= $escaper->escapeHtml(__('%1% off', $percentOff)) ?>
+                <?= $escaper->escapeHtml(__('%1%% OFF', $percentOff)) ?>
             </span>
         <?php else: ?>
             <span class="bb-pdp-savings__quote"><?= $escaper->escapeHtml(__('Get a Quote')) ?></span>

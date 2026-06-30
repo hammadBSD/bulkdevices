@@ -107,7 +107,7 @@ $maxSalesQtyLength = ($maxSalesQty ? strlen((string) $maxSalesQty) : 4)
             name="qty"
             form="product_addtocart_form"
             value="<?= $block->getProductDefaultQty() * 1 ?>"
-            class="form-input px-2 py-2 w-20 text-center invalid:ring-2 invalid:ring-red-500"
+            class="form-input bb-pdp-info__qty-input px-2 py-2 w-20 text-center invalid:ring-2 invalid:ring-red-500"
             <?php if ($stockItemViewModel->isQtyDecimal($product)): ?>
                 type="text"
                 pattern="[0-9]+(\.[0-9]{1,<?= /** @noEscape */ $maxSalesQtyLength ?>})?"

@@ -1,0 +1,100 @@
+<?php
+/**
+ * PDP sidebar — related products list
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductList;
+use Hyva\Theme\ViewModel\ProductPage;
+use Hyva\Theme\ViewModel\ProductPrice;
+use Hyva\Theme\ViewModel\Store;
+use Magento\Catalog\Model\Product;
+use Magento\Catalog\Model\Product\Visibility as ProductVisibility;
+use Magento\Catalog\Pricing\Price\FinalPrice;
+use Magento\Framework\Escaper;
+use Magento\Framework\Pricing\Helper\Data as PricingHelper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productPageViewModel */
+$productPageViewModel = $viewModels->require(ProductPage::class);
+
+/** @var ProductList $productListViewModel */
+$productListViewModel = $viewModels->require(ProductList::class);
+
+/** @var ProductPrice $productPriceViewModel */
+$productPriceViewModel = $viewModels->require(ProductPrice::class);
+
+/** @var Store $storeViewModel */
+$storeViewModel = $viewModels->require(Store::class);
+
+/** @var PricingHelper $pricingHelper */
+$pricingHelper = $this->helper(PricingHelper::class);
+
+$currentProduct = $productPageViewModel->getProduct();
+$pageSize = (int) ($block->getData('page_size') ?: 6);
+
+$productListViewModel->setPageSize($pageSize);
+$productListViewModel->addFilter('website_id', $storeViewModel->getWebsiteId());
+$productListViewModel->addFilter(
+    'visibility',
+    [ProductVisibility::VISIBILITY_IN_CATALOG, ProductVisibility::VISIBILITY_BOTH],
+    'in'
+);
+
+$relatedProducts = $productListViewModel->getLinkedItems('related', $currentProduct);
+
+if (!$relatedProducts) {
+    return;
+}
+?>
+<section class="bb-pdp-related bb-pdp-sidebar__related" aria-labelledby="bb-pdp-related-heading">
+    <h2 id="bb-pdp-related-heading" class="bb-pdp-related__title">
+        <?= $escaper->escapeHtml(__('Related Products')) ?>
+    </h2>
+
+    <ul class="bb-pdp-related__list">
+        <?php foreach ($relatedProducts as $relatedProduct): ?>
+            <?php
+            if (!$relatedProduct instanceof Product) {
+                continue;
+            }
+            $productUrl = parse_url($relatedProduct->getProductUrl(), PHP_URL_PATH) ?: $relatedProduct->getProductUrl();
+            $sku = (string) $relatedProduct->getSku();
+            $productName = (string) $relatedProduct->getName();
+            $label = $sku !== '' ? $sku . ' - ' . $productName : $productName;
+            $image = $productPageViewModel->getImage($relatedProduct, 'product_small_image');
+            $imageUrl = $image->getImageUrl();
+            $imageLabel = $image->getLabel() ?: $productName;
+            $finalPrice = (float) $productPriceViewModel->getPriceValue(FinalPrice::PRICE_CODE, $relatedProduct);
+            $priceLabel = $finalPrice > 0
+                ? $pricingHelper->currency($finalPrice, true, false)
+                : __('Call for Price');
+            ?>
+            <li class="bb-pdp-related__item">
+                <a class="bb-pdp-related__link" href="<?= $escaper->escapeUrl($productUrl) ?>">
+                    <span class="bb-pdp-related__media">
+                        <img
+                            class="bb-pdp-related__image"
+                            src="<?= $escaper->escapeUrl($imageUrl) ?>"
+                            alt="<?= $escaper->escapeHtmlAttr($imageLabel) ?>"
+                            width="72"
+                            height="72"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </span>
+                    <span class="bb-pdp-related__body">
+                        <span class="bb-pdp-related__name"><?= $escaper->escapeHtml($label) ?></span>
+                        <span class="bb-pdp-related__price"><?= $escaper->escapeHtml($priceLabel) ?></span>
+                    </span>
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</section>

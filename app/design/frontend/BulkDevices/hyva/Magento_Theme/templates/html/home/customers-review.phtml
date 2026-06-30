@@ -24,6 +24,17 @@ use Magento\Framework\View\Element\Template;
             <hr class="home-customers-review__divider" aria-hidden="true">
         </header>
 
+        <?php
+        /*
+        |--------------------------------------------------------------------------
+        | Shopper Approved widget (commented out — using static carousel for now)
+        |--------------------------------------------------------------------------
+        |
+        | To restore: change `if (false)` below to `if (true)`, and set the static
+        | block's `if (true)` to `if (false)`.
+        */
+        ?>
+        <?php if (false): ?>
         <div class="home-customers-review__widget home-customers-review__widget--sa">
             <style>
                 /* Shopper Approved footer — Hyvä/Tailwind sets svg { display: block } */
@@ -76,15 +87,16 @@ use Magento\Framework\View\Element\Template;
                 })();
             </script>
         </div>
+        <?php endif; ?>
 
         <?php
         /*
         |--------------------------------------------------------------------------
-        | Static carousel (commented out while testing Shopper Approved)
+        | Static carousel (active)
         |--------------------------------------------------------------------------
         |
-        | To restore: remove this block comment wrapper and delete the widget
-        | block above, or move this section back outside the comment.
+        | To disable: change `if (true)` below to `if (false)`, and enable the
+        | Shopper Approved block above (`if (false)` → `if (true)`).
         |
         | @var CustomerReviews $customerReviews
         | $customerReviews = $viewModels->require(CustomerReviews::class);
@@ -93,7 +105,7 @@ use Magento\Framework\View\Element\Template;
         | $starPath = 'M10 1.5l2.47 5.01 5.53.8-4 3.9.94 5.5L10 14.77l-4.94 2.6.94-5.5-4-3.9 5.53-.8L10 1.5z';
         */
         ?>
-        <?php if (false): ?>
+        <?php if (true): ?>
         <?php
         /** @var CustomerReviews $customerReviews */
         $customerReviews = $viewModels->require(CustomerReviews::class);

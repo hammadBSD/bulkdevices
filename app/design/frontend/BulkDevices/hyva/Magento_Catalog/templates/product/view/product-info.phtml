@@ -66,7 +66,7 @@ $isCallForPrice = $finalPrice <= 0;
 
     <?= $block->getChildHtml('product.info.form') ?>
 
-    <div class="flex flex-col sm:flex-row items-end my-4 bb-pdp-info__purchase">
+    <div class="bb-pdp-info__purchase">
 
         <?php if ($productType === 'bundle'): ?>
             <span class="sr-only">
@@ -81,7 +81,7 @@ $isCallForPrice = $finalPrice <= 0;
             </div>
         <?php endif; ?>
 
-        <div class="flex gap-2 mt-4 <?= $isCallForPrice ? '' : 'ml-auto' ?> sm:mt-0 bb-pdp-info__actions<?= $isCallForPrice ? ' bb-pdp-info__actions--call-for-price' : '' ?>">
+        <div class="bb-pdp-info__actions<?= $isCallForPrice ? ' bb-pdp-info__actions--call-for-price' : '' ?>">
             <?php if ($isCallForPrice): ?>
                 <button
                     type="button"

@@ -22,8 +22,8 @@ $product = $productViewModel->getProduct();
 $warrantyDefault = (string) ($block->getData('warranty_default') ?: '30-days');
 
 $specRows = [
-    ['code' => 'manufacturer', 'label' => (string) __('Brand')],
-    ['code' => 'sku', 'label' => (string) __('Part No.')],
+    ['code' => 'manufacturer', 'label' => (string) __('Manufacturer')],
+    ['code' => 'sku', 'label' => (string) __('Manufacturer Part No.')],
     ['code' => 'condition', 'label' => (string) __('Condition')],
 ];
 
@@ -69,16 +69,16 @@ $overviewTitle = $brand && $sku
             )
         ) ?>
     </p>
-    <div class="table-wrapper max-w-prose overflow-x-auto" id="product-attributes">
-        <table class="additional-attributes bb-pdp-overview__table w-full">
+    <div class="bb-pdp-overview__table-wrap" id="product-attributes">
+        <table class="bb-pdp-overview__table">
+            <tbody>
             <?php foreach ($rows as $row): ?>
-                <tr class="border-b border-gray-300 last:border-b-0 bb-pdp-overview__row attribute-<?= $escaper->escapeHtmlAttr($row['code']) ?>">
-                    <th class="col label w-1/2 py-2 text-left text-fg-secondary font-normal product-attribute-label"
-                        scope="row"><?= $escaper->escapeHtml($row['label']) ?></th>
-                    <td class="col data w-1/2 py-2 pl-2 text-left product-attribute-value"
-                        data-th="<?= $escaper->escapeHtmlAttr($row['label']) ?>"><?= $escaper->escapeHtml($row['value']) ?></td>
+                <tr class="bb-pdp-overview__row attribute-<?= $escaper->escapeHtmlAttr($row['code']) ?>">
+                    <th class="bb-pdp-overview__label" scope="row"><?= $escaper->escapeHtml($row['label']) ?></th>
+                    <td class="bb-pdp-overview__value"><?= $escaper->escapeHtml($row['value']) ?></td>
                 </tr>
             <?php endforeach; ?>
+            </tbody>
         </table>
     </div>
 </div>

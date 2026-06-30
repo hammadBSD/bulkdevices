@@ -1,0 +1,90 @@
+<?php
+/**
+ * PDP details — Expert Team Support card
+ */
+
+declare(strict_types=1);
+
+use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\ProductPage;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var ViewModelRegistry $viewModels */
+
+/** @var ProductPage $productViewModel */
+$productViewModel = $viewModels->require(ProductPage::class);
+
+$productSku = (string) $productViewModel->getProduct()->getSku();
+?>
+
+<div class="bb-pdp-details__card bb-pdp-expert">
+    <h2 class="bb-pdp-details__heading bb-pdp-details__heading--center">
+        <?= $escaper->escapeHtml(__('Expert Team Support')) ?>
+    </h2>
+
+    <div class="bb-pdp-expert__body">
+        <div class="bb-pdp-expert__links">
+            <button
+                type="button"
+                class="bb-pdp-expert__link bb-pdp-expert__link--chat"
+                onclick="window.bdusOpenZendeskChat && window.bdusOpenZendeskChat(true)"
+            ><?= $escaper->escapeHtml(__('Chat')) ?></button>
+            <a
+                class="bb-pdp-expert__link bb-pdp-expert__link--whatsapp bb-pdp-expert__link--desktop"
+                href="https://web.whatsapp.com/send?phone=+921xxxxxxxxx&amp;text=Enter Default Message for general Whatsapp Chat"
+                onclick="gtag('event', 'WhatsApp', {'event_action': 'whatsapp_chat', 'event_category': 'Chat', 'event_label': 'Chat_WhatsApp'});"
+                target="_blank"
+                rel="noopener noreferrer"
+            ><?= $escaper->escapeHtml(__('Whatsapp')) ?></a>
+            <a
+                class="bb-pdp-expert__link bb-pdp-expert__link--whatsapp bb-pdp-expert__link--mobile"
+                href="https://wa.me/+921xxxxxxxxx&amp;text=Enter Default Message for general Whatsapp Chat"
+                onclick="gtag('event', 'WhatsApp', {'event_action': 'whatsapp_chat', 'event_category': 'Chat', 'event_label': 'Chat_WhatsApp'});"
+                target="_blank"
+                rel="noopener noreferrer"
+            ><?= $escaper->escapeHtml(__('Whatsapp')) ?></a>
+            <a
+                class="bb-pdp-expert__link bb-pdp-expert__link--email"
+                href="mailto:support@bulkdevices.com"
+            ><?= $escaper->escapeHtml(__('Email')) ?></a>
+        </div>
+
+        <p class="bb-pdp-expert__quote-note">
+            <?= $escaper->escapeHtml(__('Looking for a quote for special price or bulk quantity')) ?>
+        </p>
+
+        <button
+            type="button"
+            class="bb-pdp-expert__quote-btn bb-pdp-quotation-trigger"
+            aria-haspopup="dialog"
+            data-sku="<?= $escaper->escapeHtmlAttr($productSku) ?>"
+            data-request-type="<?= $escaper->escapeHtmlAttr(__('Request For Quotation')) ?>"
+        >
+            <?= $escaper->escapeHtml(__('Request a Quote')) ?>
+        </button>
+
+        <div class="bb-pdp-expert__features">
+            <article class="bb-pdp-expert__feature">
+                <span class="bb-pdp-expert__feature-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="40" height="40" focusable="false"><circle cx="24" cy="24" r="23" fill="#fff5eb" stroke="#eb7d1e" stroke-width="1.5"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M30 16H18l-4 8h20l-4-8zM14 24h20v6a2 2 0 0 1-2 2H16a2 2 0 0 1-2-2v-6z"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" d="M20 20v-2a4 4 0 0 1 8 0v2"/></svg>
+                </span>
+                <div class="bb-pdp-expert__feature-body">
+                    <h3 class="bb-pdp-expert__feature-title"><?= $escaper->escapeHtml(__('Easy Return')) ?></h3>
+                    <p class="bb-pdp-expert__feature-text"><?= $escaper->escapeHtml(__('Enjoy hassle-free returns on all purchases.')) ?></p>
+                </div>
+            </article>
+            <article class="bb-pdp-expert__feature">
+                <span class="bb-pdp-expert__feature-icon" aria-hidden="true">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="40" height="40" focusable="false"><circle cx="24" cy="24" r="23" fill="#fff5eb" stroke="#eb7d1e" stroke-width="1.5"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M24 14l8 4v8c0 5-3.5 8.5-8 10-4.5-1.5-8-5-8-10v-8l8-4z"/><path fill="none" stroke="#eb7d1e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M19 24l3 3 7-7"/></svg>
+                </span>
+                <div class="bb-pdp-expert__feature-body">
+                    <h3 class="bb-pdp-expert__feature-title"><?= $escaper->escapeHtml(__('Secure Payment')) ?></h3>
+                    <p class="bb-pdp-expert__feature-text"><?= $escaper->escapeHtml(__('Shop confidently with our secure payment options.')) ?></p>
+                </div>
+            </article>
+        </div>
+    </div>
+</div>
