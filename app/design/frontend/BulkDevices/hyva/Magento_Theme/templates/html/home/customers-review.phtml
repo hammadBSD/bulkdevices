@@ -115,7 +115,6 @@ use Magento\Framework\View\Element\Template;
         ?>
         <div
             class="home-customers-review__track"
-            role="list"
             x-data="{ activeSlide: 0 }"
             @scroll.debounce.100ms="
                 const card = $el.querySelector('.home-customers-review__card');
@@ -127,9 +126,10 @@ use Magento\Framework\View\Element\Template;
             "
         >
                 <?php foreach ($reviews as $review): ?>
-                    <article class="home-customers-review__card" role="listitem">
+                    <article class="home-customers-review__card">
                         <div
                             class="home-customers-review__stars"
+                            role="img"
                             aria-label="<?= $escaper->escapeHtmlAttr(__('%1 out of 5 stars', $review['rating'])) ?>"
                         >
                             <?php for ($i = 0; $i < $review['rating']; $i++): ?>

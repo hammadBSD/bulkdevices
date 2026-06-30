@@ -215,14 +215,14 @@
     flex: 0 0 4.25rem;
     width: 4.25rem;
     min-width: 4.25rem;
-    height: 3rem;
+    minheight: 3rem;
     margin: 0;
     padding: 0;
     border: 1px solid #d1d5db;
     border-radius: 8px;
     background: #ffffff;
     color: #111827;
-    font-size: 1rem;
+    font-size: 1.375rem;
     font-weight: 600;
     text-align: center;
     box-shadow: none;
@@ -497,12 +497,12 @@
     .bb-pdp-reviews[data-pdp-defer-paint]:not(.pdp-paint-ready),
     .catalog-product-view .site-footer-top[data-pdp-defer-paint]:not(.pdp-paint-ready),
     .catalog-product-view .site-footer-middle[data-pdp-defer-paint]:not(.pdp-paint-ready) {
-        content-visibility: hidden;
+        content-visibility: auto;
         contain-intrinsic-size: auto 48px;
     }
 
     .bb-pdp-page__details[data-pdp-defer-paint]:not(.pdp-paint-ready) #description {
-        content-visibility: hidden;
+        content-visibility: auto;
         contain-intrinsic-size: auto 48px;
     }
 
