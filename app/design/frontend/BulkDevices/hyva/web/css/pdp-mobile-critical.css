@@ -55,63 +55,6 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
-    .bb-pdp-sidebar__form {
-        margin: 0;
-        padding: 1.25rem;
-        background: #f9fafb;
-    }
-
-    .bb-pdp-sidebar__fields {
-        display: flex;
-        flex-direction: column;
-        gap: 0.875rem;
-    }
-
-    .bb-pdp-sidebar__input,
-    .bb-pdp-sidebar__textarea {
-        width: 100%;
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0.5rem 0.875rem;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        background: #ffffff;
-        color: #111827;
-        font-size: 0.875rem;
-        line-height: 1;
-    }
-
-    .bb-pdp-sidebar__input[readonly] {
-        background: #f3f4f6;
-        color: #6b7280;
-    }
-
-    .bb-pdp-sidebar__textarea {
-        min-height: 5.5rem;
-        resize: vertical;
-    }
-
-    .bb-pdp-sidebar__actions {
-        margin-top: 1rem;
-        text-align: center;
-    }
-
-    .bb-pdp-sidebar__submit {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        background: var(--bb-pdp-accent, #eb7d1e);
-        color: #111111;
-        font-size: 0.8125rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-    }
-
     .bb-pdp-notice.bb-pdp-sidebar__notice {
         padding: 1rem 1.25rem;
     }
@@ -119,6 +62,11 @@
     .bb-pdp-notice__text {
         font-size: 0.8125rem;
         line-height: 1.45;
+    }
+
+    .bb-pdp-notice__section:nth-child(n + 2) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 12rem;
     }
 
     .bb-pdp-page__details[data-pdp-defer-paint]:not(.pdp-paint-ready),
@@ -149,6 +97,11 @@
     .catalog-product-view .site-footer-top.pdp-paint-ready,
     .catalog-product-view .site-footer-middle.pdp-paint-ready {
         content-visibility: visible;
+    }
+
+    .bb-pdp-reviews.pdp-paint-ready .home-customers-review__card:nth-child(n + 2) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 18rem;
     }
 
     .bb-pdp-reviews__placeholder,

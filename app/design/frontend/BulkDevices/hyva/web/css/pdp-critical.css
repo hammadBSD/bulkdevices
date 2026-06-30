@@ -426,63 +426,6 @@
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
     }
 
-    .bb-pdp-sidebar__form {
-        margin: 0;
-        padding: 1.25rem;
-        background: #f9fafb;
-    }
-
-    .bb-pdp-sidebar__fields {
-        display: flex;
-        flex-direction: column;
-        gap: 0.875rem;
-    }
-
-    .bb-pdp-sidebar__input,
-    .bb-pdp-sidebar__textarea {
-        width: 100%;
-        box-sizing: border-box;
-        margin: 0;
-        padding: 0.5rem 0.875rem;
-        border: 1px solid #d1d5db;
-        border-radius: 8px;
-        background: #ffffff;
-        color: #111827;
-        font-size: 0.875rem;
-        line-height: 1;
-    }
-
-    .bb-pdp-sidebar__input[readonly] {
-        background: #f3f4f6;
-        color: #6b7280;
-    }
-
-    .bb-pdp-sidebar__textarea {
-        min-height: 5.5rem;
-        resize: vertical;
-    }
-
-    .bb-pdp-sidebar__actions {
-        margin-top: 1rem;
-        text-align: center;
-    }
-
-    .bb-pdp-sidebar__submit {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        width: 100%;
-        padding: 0.75rem 1.5rem;
-        border: none;
-        border-radius: 4px;
-        background: var(--bb-pdp-accent, #eb7d1e);
-        color: #111111;
-        font-size: 0.8125rem;
-        font-weight: 700;
-        letter-spacing: 0.06em;
-        text-transform: uppercase;
-    }
-
     .bb-pdp-notice.bb-pdp-sidebar__notice {
         padding: 1rem 1.25rem;
     }
@@ -492,17 +435,22 @@
         line-height: 1.45;
     }
 
+    .bb-pdp-notice__section:nth-child(n + 2) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 12rem;
+    }
+
     .bb-pdp-page__details[data-pdp-defer-paint]:not(.pdp-paint-ready),
     .bb-pdp-sidebar-defer[data-pdp-defer-paint]:not(.pdp-paint-ready),
     .bb-pdp-reviews[data-pdp-defer-paint]:not(.pdp-paint-ready),
     .catalog-product-view .site-footer-top[data-pdp-defer-paint]:not(.pdp-paint-ready),
     .catalog-product-view .site-footer-middle[data-pdp-defer-paint]:not(.pdp-paint-ready) {
-        content-visibility: auto;
+        content-visibility: hidden;
         contain-intrinsic-size: auto 48px;
     }
 
     .bb-pdp-page__details[data-pdp-defer-paint]:not(.pdp-paint-ready) #description {
-        content-visibility: auto;
+        content-visibility: hidden;
         contain-intrinsic-size: auto 48px;
     }
 
@@ -520,6 +468,11 @@
     .catalog-product-view .site-footer-top.pdp-paint-ready,
     .catalog-product-view .site-footer-middle.pdp-paint-ready {
         content-visibility: visible;
+    }
+
+    .bb-pdp-reviews.pdp-paint-ready .home-customers-review__card:nth-child(n + 2) {
+        content-visibility: auto;
+        contain-intrinsic-size: auto 18rem;
     }
 
     .bb-pdp-reviews__placeholder,
@@ -548,63 +501,4 @@
     .bb-pdp-reviews__placeholder {
         min-height: clamp(200px, 28vw, 280px);
     }
-}
-
-/* Shopper Approved review page — override Hyvä/Tailwind svg { display: block } */
-#SA_review_wrapper svg {
-    display: inline !important;
-    vertical-align: middle !important;
-    width: auto !important;
-    height: auto !important;
-    max-width: none !important;
-}
-
-#SA_review_wrapper .SA__review_widget {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    justify-content: space-between !important;
-    align-items: center !important;
-    gap: 10px !important;
-    width: 100% !important;
-}
-
-#SA_review_wrapper .SA__review_widget .SA__review_widget_item.middle {
-    flex: 1 1 auto !important;
-    min-width: 240px !important;
-}
-
-#SA_review_wrapper .SA__review_widget .SA__review_widget_item .SA__review_content .SA__review_bar {
-    display: flex !important;
-    flex-direction: row !important;
-    align-items: center !important;
-    position: relative !important;
-}
-
-#SA_review_wrapper .SA__review_widget .SA__review_widget_item .SA__review_content .SA__review_bar_label {
-    display: inline-flex !important;
-    align-items: center !important;
-    flex: 0 0 50px !important;
-    position: absolute !important;
-    left: 0 !important;
-    white-space: nowrap !important;
-    line-height: 13px !important;
-}
-
-#SA_review_wrapper .SA__review_widget .SA__review_widget_item .SA__review_content .SA__review_bar_label svg {
-    height: 13px !important;
-}
-
-#SA_review_wrapper .SA__more_review {
-    text-align: right !important;
-}
-
-#SA_review_wrapper .SA__more_review a,
-#SA_review_wrapper .SA__more_review .sa-bottom-logo,
-#SA_review_wrapper .SA__more_review .sa-bottom-arrow {
-    display: inline !important;
-    vertical-align: middle !important;
-}
-
-#SA_review_wrapper .SA__more_review svg {
-    max-width: 25px !important;
 }
