@@ -10,13 +10,8 @@ use Magento\Framework\View\Element\Template;
 
 $contactFormAction = $block->getUrl('contact/index/post', ['_secure' => true]);
 
-$homeBrandLinks = static function (Template $block, string $query, int $manufacturerId): string {
-    return $block->getUrl('catalogsearch/result', [
-        '_query' => [
-            'q' => $query,
-            'manufacturer' => $manufacturerId,
-        ],
-    ]);
+$homeBrandLinks = static function (Template $block, string $slug): string {
+    return $block->getUrl('', ['_direct' => 'brand/' . $slug]);
 };
 
 $homeFeaturedBrands = [
@@ -149,7 +144,7 @@ $homeBrandsRowThree = [
                 <?php foreach ($homeFeaturedBrands as $brand): ?>
                     <li class="home-brands__logo">
                         <a class="home-brands__link"
-                           href="<?= $escaper->escapeUrl($homeBrandLinks($block, $brand['query'], $brand['manufacturer'])) ?>"
+                           href="<?= $escaper->escapeUrl($homeBrandLinks($block, $brand['query'])) ?>"
                            aria-label="<?= $escaper->escapeHtmlAttr(__('Shop %1 products', $brand['label'])) ?>">
                             <img src="<?= $escaper->escapeUrl($brand['image']) ?>"
                                  alt="<?= $escaper->escapeHtmlAttr($brand['label']) ?>"
@@ -166,7 +161,7 @@ $homeBrandsRowThree = [
                 <?php foreach ($homeBrandsRowTwo as $brand): ?>
                     <li class="home-brands__logo">
                         <a class="home-brands__link"
-                           href="<?= $escaper->escapeUrl($homeBrandLinks($block, $brand['query'], $brand['manufacturer'])) ?>"
+                           href="<?= $escaper->escapeUrl($homeBrandLinks($block, $brand['query'])) ?>"
                            aria-label="<?= $escaper->escapeHtmlAttr(__('Shop %1 products', $brand['label'])) ?>">
                             <img src="<?= $escaper->escapeUrl($brand['image']) ?>"
                                  alt="<?= $escaper->escapeHtmlAttr($brand['label']) ?>"
@@ -184,7 +179,7 @@ $homeBrandsRowThree = [
                     <li class="home-brands__logo">
                         <?php
                         $brandUrl = $brand['manufacturer'] !== null
-                            ? $homeBrandLinks($block, $brand['query'], $brand['manufacturer'])
+                            ? $homeBrandLinks($block, $brand['query'])
                             : $block->getUrl('catalogsearch/result', ['_query' => ['q' => $brand['query']]]);
                         ?>
                         <a class="home-brands__link"

@@ -25,51 +25,13 @@ $defaultOpenFilters = ['cat', 'price'];
 ?>
 <?php if ($block->canShowBlock()): ?>
     <div
-        x-data="initLayeredNavigation()"
-        x-init="checkIsMobileResolution()"
-        @resize.window.debounce="checkIsMobileResolution()"
-        @visibilitychange.window.debounce="checkIsMobileResolution()"
         class="bb-plp-filters block"
         role="region"
         aria-label="<?= $escaper->escapeHtmlAttr(__('Product filters')) ?>"
     >
-        <h2
-            id="filters-heading"
-            class="bb-plp-filters__heading block-title"
-        >
-            <button
-                type="button"
-                @click="blockOpen = !blockOpen"
-                class="bb-plp-filters__heading-btn block-title flex items-center justify-between w-full text-start"
-                aria-controls="filters-content"
-                :aria-expanded="blockOpen"
-                :aria-disabled="!isMobile"
-                :disabled="!isMobile ? '' : null"
-            >
-                <span class="text-md md:text-3xl font-medium uppercase">
-                    <?= $escaper->escapeHtml(__('Filters')) ?>
-                </span>
-                <span
-                    class="py-1 px-1 bg-white rounded border border-gray-300 md:hidden"
-                    x-ref="LayeredNavigationMobileToggleIcon"
-                >
-                    <?= $heroicons->chevronDownHtml(
-                        'transition-transform transform duration-300 ease-in-out',
-                        24,
-                        24,
-                        [
-                            ":class" => "{ 'rotate-180': blockOpen }",
-                            "aria-hidden" => "true",
-                            "focusable" => "false"
-                        ]
-                    ); ?>
-                </span>
-            </button>
-        </h2>
         <div
             id="filters-content"
-            class="bb-plp-filters__content block-content filter-content hidden md:block"
-            :class="{ 'hidden': isMobile && !blockOpen }"
+            class="bb-plp-filters__content block-content filter-content"
         >
             <?= $block->getChildHtml('state') ?>
             <a
@@ -101,7 +63,11 @@ $defaultOpenFilters = ['cat', 'price'];
                                 :aria-expanded="open"
                             >
                                 <span class="title text-md md:text-lg font-semibold">
-                                    <?= $escaper->escapeHtml(__($filter->getName())) ?>
+                                    <?= $escaper->escapeHtml(__(
+                                        $filter->getRequestVar() === 'price'
+                                            ? 'Price Range'
+                                            : $filter->getName()
+                                    )) ?>
                                     <span class="sr-only"> <?= $escaper->escapeHtml(__('filter')) ?></span>
                                 </span>
                                     <span class="py-1 px-1 rounded border border-gray-300">
@@ -141,21 +107,4 @@ $defaultOpenFilters = ['cat', 'price'];
             <?php endforeach; ?>
         </div>
     </div>
-    <script>
-        function initLayeredNavigation() {
-            return {
-                isMobile: false,
-                blockOpen: false,
-                checkIsMobileResolution() {
-                    const mobileElement = this.$refs.LayeredNavigationMobileToggleIcon;
-                    this.isMobile = mobileElement
-                        ? getComputedStyle(mobileElement).display !== "none"
-                        : window.matchMedia('(max-width: 767px)').matches;
-                    if (!this.isMobile) {
-                        this.blockOpen = true;
-                    }
-                }
-            }
-        }
-    </script>
 <?php endif; ?>

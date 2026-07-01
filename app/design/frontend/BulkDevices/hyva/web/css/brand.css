@@ -1,0 +1,10 @@
+/**
+ * Brand PLP (/brand/{slug}) — same design as category PLP.
+ * Shares plp-critical.css, plp-deferred.css, and product-card.css.
+ * Selectors also include .brand-view-index in plp-*.css for full parity.
+ */
+
+.brand-view-index.page-with-filter .page-title-wrapper,
+.brand-view-index.page-with-filter .page-title {
+    margin-bottom: 1rem;
+}

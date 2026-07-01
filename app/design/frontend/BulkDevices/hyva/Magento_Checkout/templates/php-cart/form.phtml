@@ -45,9 +45,14 @@ $mergedCells = ($cartItemOutputViewModel->isItemPriceDisplayBoth() ? 2 : 1);
             <legend class="sr-only">
                 <h2><?= $escaper->escapeHtml(__('Shopping Cart Items')) ?></h2>
             </legend>
+            <div class="cart-table-header" aria-hidden="true">
+                <span class="cart-table-header-product"><?= $escaper->escapeHtml(__('Product Name')) ?></span>
+                <span class="cart-table-header-price"><?= $escaper->escapeHtml(__('Price')) ?></span>
+                <span class="cart-table-header-qty"><?= $escaper->escapeHtml(__('Quantity')) ?></span>
+            </div>
             <ul>
                 <?php foreach ($block->getItems() as $item): ?>
-                    <li class="py-6 border-b border-gray-300 first:pt-0 last:pb-0 last:border-b-0">
+                    <li>
                         <?= $block->getItemHtml($item) ?>
                     </li>
                 <?php endforeach ?>

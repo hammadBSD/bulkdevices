@@ -1,4 +1,11 @@
 <?php
+/**
+ * Production — https://bulkdevices.com/
+ * Hyvä revamp module map. Copy to app/etc/config.php after composer install (before setup:upgrade).
+ *
+ * Live-specific: 2FA enabled, Mageplaza_Seo disabled (BSD_Storefront handles JSON-LD).
+ * Legacy Porto/Luma modules and packages not in the revamp codebase are disabled/omitted.
+ */
 return [
     'modules' => [
         'Magento_Store' => 1,
@@ -64,7 +71,7 @@ return [
         'Magento_Contact' => 1,
         'Magento_Cookie' => 1,
         'Magento_Cron' => 1,
-        'Magento_Csp' => 0,
+        'Magento_Csp' => 1,
         'Magento_Widget' => 1,
         'Magento_Robots' => 1,
         'Magento_Analytics' => 1,
@@ -304,10 +311,10 @@ return [
         'Magento_Tax' => 1,
         'Magento_TaxGraphQl' => 1,
         'Magento_TaxImportExport' => 1,
-        'Magento_TwoFactorAuth' => 0,
+        'Magento_TwoFactorAuth' => 1,
         'Magento_ThemeGraphQl' => 1,
         'Magento_Translation' => 1,
-        'Magento_AdminAdobeImsTwoFactorAuth' => 0,
+        'Magento_AdminAdobeImsTwoFactorAuth' => 1,
         'Magento_GoogleOptimizer' => 1,
         'Magento_Ups' => 1,
         'Magento_SampleData' => 1,
@@ -334,13 +341,26 @@ return [
         'Aitoc_Core' => 1,
         'Aitoc_Smtp' => 1,
         'BSD_Banner' => 1,
-        'BSD_EmailMarketing' => 1,
+        'BSD_CSPWhitelist' => 1,
         'BSD_ExpertSupportTeamTab' => 1,
         'BSD_Getaquote' => 1,
         'BSD_GoHighLevel' => 1,
         'BSD_QuickBuy' => 1,
-        'Bss_OneStepCheckout' => 1,
+        'Hyva_Theme' => 1,
+        'BSD_Storefront' => 1,
+        'BSD_Theme' => 1,
+        'Bss_OneStepCheckout' => 0,
         'Hhennes_Cms' => 1,
+        'Hyva_BaseLayoutReset' => 1,
+        'Hyva_CompatModuleFallback' => 1,
+        'Magewirephp_Magewire' => 1,
+        'Hyva_Email' => 1,
+        'Hyva_GraphqlTokens' => 1,
+        'Hyva_GraphqlViewModel' => 1,
+        'Hyva_MollieThemeBundle' => 1,
+        'Hyva_OrderCancellationWebapi' => 1,
+        'BSD_RfqThankYou' => 1,
+        'Hyva_ThemeFallback' => 1,
         'KiwiCommerce_AdminActivity' => 1,
         'Magefan_AdminUserGuide' => 1,
         'Magefan_AutoRelatedProduct' => 1,
@@ -354,6 +374,13 @@ return [
         'Mageplaza_Sitemap' => 1,
         'Mageplaza_Smtp' => 1,
         'MagestyApps_WebImages' => 1,
+        'Magewirephp_MagewireCompatibilityWithHyva' => 1,
+        'Magewirephp_MagewireCompatibilityWithBackend' => 0,
+        'Magewirephp_MagewireCompatibilityWithBreeze' => 0,
+        'StripeIntegration_Payments' => 1,
+        'Magewirephp_MagewireCompatibilityWithLuma' => 0,
+        'Mollie_Payment' => 1,
+        'Mollie_HyvaCompatibility' => 1,
         'PayPal_Braintree' => 1,
         'PayPal_BraintreeGraphQl' => 1,
         'Pnp_CustomCacheType' => 1,
@@ -364,14 +391,15 @@ return [
         'RLTSquare_HomepageBlogs' => 1,
         'RLTSquare_RedirectToCheckout' => 1,
         'Sivaschenko_CleanMedia' => 1,
-        'Smartwave_Core' => 1,
+        'Smartwave_Core' => 0,
         'Smartwave_Dailydeals' => 0,
-        'Smartwave_Filterproducts' => 1,
-        'Smartwave_Megamenu' => 1,
-        'Smartwave_Porto' => 1,
+        'Smartwave_Filterproducts' => 0,
+        'Smartwave_Megamenu' => 0,
+        'Smartwave_Porto' => 0,
         'Smartwave_Socialfeeds' => 0,
         'Snowdog_CategoryAttributes' => 1,
+        'Hyva_CustomCheckout' => 1,
         'Temando_ShippingRemover' => 1,
-        'Yireo_GoogleTagManager2' => 1
-    ]
+        'Yireo_GoogleTagManager2' => 1,
+    ],
 ];

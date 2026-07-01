@@ -1,0 +1,48 @@
+<?php
+
+declare(strict_types=1);
+
+use BSD\Brand\ViewModel\BrandList;
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+/** @var BrandList $brandList */
+$brandList = $block->getData('brand_list');
+?>
+<section class="brand-index" aria-labelledby="brand-index-heading">
+    <div class="brand-index__container">
+        <header class="brand-index__header">
+            <h1 id="brand-index-heading" class="brand-index__title">
+                <?= $escaper->escapeHtml(__('Shop by Brand')) ?>
+            </h1>
+            <p class="brand-index__intro">
+                <?= $escaper->escapeHtml(__('Browse IT hardware and components from leading manufacturers.')) ?>
+            </p>
+        </header>
+
+        <ul class="brand-index__grid">
+            <?php foreach ($brandList->getBrands() as $brand): ?>
+                <li class="brand-index__item">
+                    <a class="brand-index__card"
+                       href="<?= $escaper->escapeUrl($brandList->getBrandUrl($brand)) ?>"
+                       title="<?= $escaper->escapeHtmlAttr(__('Shop %1 products', $brand->getLabel())) ?>">
+                        <?php if ($brand->getImageUrl()): ?>
+                            <span class="brand-index__logo-wrap">
+                                <img class="brand-index__logo"
+                                     src="<?= $escaper->escapeUrl($brand->getImageUrl()) ?>"
+                                     alt="<?= $escaper->escapeHtmlAttr($brand->getLabel()) ?>"
+                                     width="140"
+                                     height="56"
+                                     loading="lazy"
+                                     decoding="async"/>
+                            </span>
+                        <?php endif; ?>
+                        <span class="brand-index__name"><?= $escaper->escapeHtml($brand->getLabel()) ?></span>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </div>
+</section>

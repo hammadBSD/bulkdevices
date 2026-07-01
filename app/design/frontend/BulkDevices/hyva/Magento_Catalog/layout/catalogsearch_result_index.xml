@@ -27,10 +27,12 @@
                 <argument name="template" xsi:type="string">Magento_LayeredNavigation::layer/view.phtml</argument>
             </action>
         </referenceBlock>
-        <referenceBlock name="catalogsearch.navigation.renderer">
-            <action method="setTemplate">
-                <argument name="template" xsi:type="string">Magento_LayeredNavigation::layer/filter.phtml</argument>
-            </action>
+        <referenceBlock name="catalogsearch.navigation.renderer"
+                        class="BSD\Storefront\Block\Navigation\FilterRenderer"
+                        template="Magento_LayeredNavigation::layer/filter.phtml">
+            <arguments>
+                <argument name="plp_layer_filter" xsi:type="object">BSD\Storefront\ViewModel\PlpLayerFilter</argument>
+            </arguments>
         </referenceBlock>
 
         <referenceContainer name="before.body.end">

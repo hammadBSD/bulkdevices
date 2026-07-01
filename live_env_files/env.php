@@ -1,16 +1,20 @@
 <?php
+/**
+ * Production — https://bulkdevices.com/
+ * Copy to app/etc/env.php on the live server (do not commit app/etc/env.php).
+ */
 return [
     'backend' => [
-        'frontName' => 'admin_bulkuk'
+        'frontName' => 'admin_bulkuk',
     ],
     'remote_storage' => [
-        'driver' => 'file'
+        'driver' => 'file',
     ],
     'queue' => [
-        'consumers_wait_for_messages' => 1
+        'consumers_wait_for_messages' => 1,
     ],
     'crypt' => [
-        'key' => '70a1fcf0be48febeaba2b19c79f65d0f'
+        'key' => '70a1fcf0be48febeaba2b19c79f65d0f',
     ],
     'db' => [
         'table_prefix' => '',
@@ -25,23 +29,23 @@ return [
                 'initStatements' => 'SET NAMES utf8;',
                 'active' => '1',
                 'driver_options' => [
-                    1014 => false
-                ]
-            ]
-        ]
+                    1014 => false,
+                ],
+            ],
+        ],
     ],
     'resource' => [
         'default_setup' => [
-            'connection' => 'default'
-        ]
+            'connection' => 'default',
+        ],
     ],
     'x-frame-options' => 'SAMEORIGIN',
     'MAGE_MODE' => 'production',
     'lock' => [
-        'provider' => 'db'
+        'provider' => 'db',
     ],
     'directories' => [
-        'document_root_is_pub' => true
+        'document_root_is_pub' => true,
     ],
     'cache_types' => [
         'config' => 1,
@@ -58,25 +62,26 @@ return [
         'full_page' => 1,
         'config_webservice' => 1,
         'translate' => 1,
+        'magewire' => 1,
         'pnp_custom_cache_top_menu' => 1,
-        'pnp_custom_cache_google_seo' => 1
+        'pnp_custom_cache_google_seo' => 1,
     ],
     'downloadable_domains' => [
-        'bulkdevices.local',
         'bulkdevices.com',
-        'www.bulkdevices.com'
+        'www.bulkdevices.com',
+        'bulkdevices.local',
     ],
     'system' => [
         'default' => [
             'system' => [
                 'full_page_cache' => [
-                    'bfcache' => '1'
-                ]
-            ]
-        ]
+                    'bfcache' => '1',
+                ],
+            ],
+        ],
     ],
     'install' => [
-        'date' => 'Thu, 10 Apr 2025 16:54:26 +0000'
+        'date' => 'Thu, 10 Apr 2025 16:54:26 +0000',
     ],
     'session' => [
         'save' => 'redis',
@@ -102,8 +107,8 @@ return [
             'sentinel_master' => '',
             'sentinel_servers' => '',
             'sentinel_connect_retries' => '5',
-            'sentinel_verify_master' => '0'
-        ]
+            'sentinel_verify_master' => '0',
+        ],
     ],
     'cache' => [
         'frontend' => [
@@ -116,8 +121,8 @@ return [
                     'port' => '21364',
                     'password' => '',
                     'compress_data' => '1',
-                    'compression_lib' => 'gzip'
-                ]
+                    'compression_lib' => 'gzip',
+                ],
             ],
             'page_cache' => [
                 'id_prefix' => '5a4_',
@@ -128,21 +133,21 @@ return [
                     'port' => '21364',
                     'password' => '',
                     'compress_data' => '1',
-                    'compression_lib' => 'gzip'
-                ]
-            ]
+                    'compression_lib' => 'gzip',
+                ],
+            ],
         ],
         'allow_parallel_generation' => false,
         'graphql' => [
-            'id_salt' => 'QDP46L0kOIpynNNYPomAK0pIGc9QMQMf'
-        ]
+            'id_salt' => 'QDP46L0kOIpynNNYPomAK0pIGc9QMQMf',
+        ],
     ],
     'dev' => [
         'debug' => [
-            'debug_logging' => 0
-        ]
+            'debug_logging' => 0,
+        ],
     ],
     'db_logger' => [
-        'output' => 'disabled'
-    ]
+        'output' => 'disabled',
+    ],
 ];

@@ -13,6 +13,9 @@
 >
     <update handle="hyva_modal"/>
     <update handle="hyva_product_slider"/>
+    <head>
+        <css src="css/cart.css"/>
+    </head>
     <body>
         <block name="block-loader" template="Hyva_Theme::ui/loading-block.phtml"/>
 

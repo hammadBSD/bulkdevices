@@ -1,55 +1,120 @@
 <?php
 /**
- * Hyvä Themes - https://hyva.io
- * Copyright © Hyvä Themes. All rights reserved.
- * See COPYING.txt for license details.
+ * BulkDevices PLP layered navigation filter options.
  */
 
 declare(strict_types=1);
 
-use Hyva\Theme\Model\LocaleFormatter;
+use BSD\Storefront\ViewModel\PlpLayerFilter;
 use Magento\Catalog\Helper\Data;
+use Magento\Catalog\Model\Layer\Filter\FilterInterface;
 use Magento\Framework\Escaper;
 use Magento\LayeredNavigation\Block\Navigation\FilterRenderer;
 
-// phpcs:disable Magento2.Templates.ThisInTemplate.FoundThis
-// phpcs:disable Magento2.Templates.ThisInTemplate.FoundHelper
-
 /** @var FilterRenderer $block */
 /** @var Escaper $escaper */
-/** @var LocaleFormatter $localeFormatter */
+/** @var PlpLayerFilter $plpLayerFilter */
+/** @var FilterInterface|null $filter */
+/** @var array $filterItems */
 
+$plpLayerFilter = $block->getData('plp_layer_filter');
 $catalogHelper = $this->helper(Data::class);
 
-/** @var array $filterItems */
-?>
+if (!isset($filterItems)) {
+    $filterItems = [];
+}
 
-<ol role="list" class="items" aria-label="<?= $escaper->escapeHtmlAttr(__('%1 filter options', $block->getFilterTitle())) ?>">
-<?php foreach ($filterItems as $filterItem): ?>
-    <li>
-        <?php if ($filterItem->getCount() > 0): ?>
-            <a
-                href="<?= $escaper->escapeUrl($filterItem->getUrl()) ?>"
-                class="flex justify-between py-1 hover:text-black"
-                <?php if ((int) $filterItem->getCount() === 1): ?>
-                aria-label="<?= $escaper->escapeHtmlAttr(__('%1 filter, 1 available product', strip_tags((string)$filterItem->getLabel()))) ?>"
-                <?php else: ?>
-                aria-label="<?= $escaper->escapeHtmlAttr(__('%1 filter, %2 available products', strip_tags((string)$filterItem->getLabel()), $filterItem->getCount())) ?>"
-                <?php endif; ?>
-            >
-                <span><?= /* @noEscape */ $filterItem->getLabel() ?></span>
+if (!isset($filter) || !$filter instanceof FilterInterface || !$plpLayerFilter instanceof PlpLayerFilter) {
+    return;
+}
+
+if ($plpLayerFilter->isPriceFilter($filter)) {
+    $priceConfig = $plpLayerFilter->getPriceRangeConfig($filter);
+    $minValue = (int) ($priceConfig['minValue'] ?? 0);
+    $maxValue = (int) ($priceConfig['maxValue'] ?? 0);
+    $selectedFrom = (int) ($priceConfig['selectedFrom'] ?? $minValue);
+    $selectedTo = (int) ($priceConfig['selectedTo'] ?? $maxValue);
+    ?>
+    <div
+        class="bb-plp-price-range"
+        x-data="{
+            minValue: <?= (int) $minValue ?>,
+            maxValue: <?= (int) $maxValue ?>,
+            from: <?= (int) $selectedFrom ?>,
+            to: <?= (int) $selectedTo ?>,
+            applyPrice() {
+                const from = Math.max(this.minValue, Math.min(parseInt(this.from, 10) || 0, this.maxValue));
+                const to = Math.max(from, Math.min(parseInt(this.to, 10) || this.maxValue, this.maxValue));
+                const url = new URL(window.location.href);
+                url.searchParams.set('price', `${from}-${to}`);
+                url.searchParams.delete('p');
+                const next = url.toString();
+                if (typeof window.hyvaPlpAjaxNavigate === 'function') {
+                    window.hyvaPlpAjaxNavigate(next);
+                } else {
+                    window.location.href = next;
+                }
+            }
+        }"
+    >
+        <form class="bb-plp-price-range__form" @submit.prevent="applyPrice()">
+            <div class="bb-plp-price-range__fields">
+                <label class="bb-plp-price-range__field">
+                    <span class="bb-plp-price-range__label"><?= $escaper->escapeHtml(__('Min')) ?></span>
+                    <input
+                        type="number"
+                        class="bb-plp-price-range__input"
+                        x-model.number="from"
+                        :min="minValue"
+                        :max="maxValue"
+                        inputmode="numeric"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Minimum price')) ?>"
+                    />
+                </label>
+                <label class="bb-plp-price-range__field">
+                    <span class="bb-plp-price-range__label"><?= $escaper->escapeHtml(__('Max')) ?></span>
+                    <input
+                        type="number"
+                        class="bb-plp-price-range__input"
+                        x-model.number="to"
+                        :min="minValue"
+                        :max="maxValue"
+                        inputmode="numeric"
+                        aria-label="<?= $escaper->escapeHtmlAttr(__('Maximum price')) ?>"
+                    />
+                </label>
+                <button type="submit" class="bb-plp-price-range__submit">
+                    <?= $escaper->escapeHtml(__('GO')) ?>
+                </button>
+            </div>
+        </form>
+    </div>
+    <?php
+    return;
+}
+?>
+<ol role="list" class="items bb-plp-filter-checkboxes" aria-label="<?= $escaper->escapeHtmlAttr(__('%1 filter options', $block->getFilterTitle())) ?>">
+    <?php foreach ($filterItems as $filterItem): ?>
+        <?php
+        $isSelected = $plpLayerFilter->isSelected($filterItem);
+        $itemUrl = $plpLayerFilter->getItemUrl($filterItem);
+        $isDisabled = (int) $filterItem->getCount() === 0 && !$isSelected;
+        ?>
+        <li class="item bb-plp-filter-checkboxes__item">
+            <label class="bb-plp-filter-checkboxes__label<?= $isDisabled ? ' is-disabled' : '' ?>">
+                <input
+                    type="checkbox"
+                    class="bb-plp-filter-checkboxes__input"
+                    <?= $isSelected ? 'checked' : '' ?>
+                    <?= $isDisabled ? 'disabled' : '' ?>
+                    data-filter-url="<?= $escaper->escapeUrl($itemUrl) ?>"
+                    @change="if (!$event.target.disabled) { const url = $event.target.dataset.filterUrl; if (typeof window.hyvaPlpAjaxNavigate === 'function') { window.hyvaPlpAjaxNavigate(url); } else { window.location.href = url; } }"
+                />
+                <span class="bb-plp-filter-checkboxes__text"><?= /* @noEscape */ $filterItem->getLabel() ?></span>
                 <?php if ($catalogHelper->shouldDisplayProductCountOnLayer()): ?>
-                    <span class="count">(<?= /* @noEscape */ $localeFormatter->formatNumber((int)$filterItem->getCount()) ?>)</span>
+                    <span class="bb-plp-filter-checkboxes__count">(<?= (int) $filterItem->getCount() ?>)</span>
                 <?php endif; ?>
-            </a>
-        <?php else: ?>
-            <span class="flex justify-between py-1 hover:text-black">
-                    <span><?= /* @noEscape */ $filterItem->getLabel() ?></span>
-                <?php if ($catalogHelper->shouldDisplayProductCountOnLayer()): ?>
-                    <span class="count">(<?= /* @noEscape */ $localeFormatter->formatNumber((int)$filterItem->getCount()) ?>)</span>
-                <?php endif; ?>
-            </span>
-        <?php endif; ?>
-    </li>
-<?php endforeach ?>
+            </label>
+        </li>
+    <?php endforeach; ?>
 </ol>

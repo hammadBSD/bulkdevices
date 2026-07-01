@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <title>Shop by Brand</title>
+        <css src="BSD_Brand::css/brand-index.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="brand.index.list"
+                   template="BSD_Brand::brand/list.phtml">
+                <arguments>
+                    <argument name="brand_list" xsi:type="object">BSD\Brand\ViewModel\BrandList</argument>
+                </arguments>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

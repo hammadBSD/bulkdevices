@@ -385,75 +385,74 @@ $totalsOutput = $viewModels->require(TotalsOutput::class);
                 </p>
 
                 <div class="field mt-2" name="shippingAddress.country_id">
-
-                    <label class="label">
+                    <label class="sr-only" for="estimate-country">
                         <?= $escaper->escapeHtml(__('Country')) ?>
-
-                        <select class="form-select w-full"
-                                name="country_id"
-                                aria-invalid="false"
-                                @change.debounce="setCountry($event.target.value)"
-                        >
-                            <option value=""> </option>
-                            <template x-for="country in getSortedCountries()" :key="country.id">
-                                <option :value="country.id" x-text="country.name" :selected="cartData.address && country.id == cartData.address.countryId"></option>
-                            </template>
-                        </select>
-
                     </label>
+                    <select class="form-select w-full"
+                            id="estimate-country"
+                            name="country_id"
+                            aria-invalid="false"
+                            @change.debounce="setCountry($event.target.value)"
+                    >
+                        <option value=""><?= $escaper->escapeHtml(__('Country')) ?></option>
+                        <template x-for="country in getSortedCountries()" :key="country.id">
+                            <option :value="country.id" x-text="country.name" :selected="cartData.address && country.id == cartData.address.countryId"></option>
+                        </template>
+                    </select>
                 </div>
 
 
                 <div class="field mt-2" name="shippingAddress.region_id">
 
                     <template x-if="hasAvailableRegions()">
-
-                        <label class="label">
-                            <?= $escaper->escapeHtml(__('State/Province')) ?>
-
+                        <div>
+                            <label class="sr-only" for="region_id">
+                                <?= $escaper->escapeHtml(__('State/Province')) ?>
+                            </label>
                             <select class="form-select w-full"
                                     id="region_id"
                                     name="region_id"
                                     @change.debounce="setRegion($event.target.value, 'select')"
                             >
                                 <option value="">
-                                    <?= $escaper->escapeHtml(__('Please select a region, state or province.')) ?>
+                                    <?= $escaper->escapeHtml(__('State/Province')) ?>
                                 </option>
                                 <template x-for="region in getAvailableRegions()" :key="region.id">
                                     <option :data-code="region.code" :value="region.id" x-text="region.name" :selected="cartData.address && region.id == cartData.address.regionId"></option>
                                 </template>
                             </select>
-                        </label>
+                        </div>
                     </template>
 
                     <template x-if="directoryData && !hasAvailableRegions()">
-
-                        <label class="label">
-                            <?= $escaper->escapeHtml(__('State/Province')) ?>
-
+                        <div>
+                            <label class="sr-only" for="region">
+                                <?= $escaper->escapeHtml(__('State/Province')) ?>
+                            </label>
                             <input class="form-input w-full"
                                    id="region"
                                    type="text"
                                    name="region"
+                                   placeholder="<?= $escaper->escapeHtmlAttr(__('State/Province')) ?>"
                                    @change.debounce="setRegion($event.target.value)"
                                    :value="cartData.address && cartData.address.region"
                             >
-                        </label>
+                        </div>
                     </template>
                 </div>
 
                 <div class="field mt-2" name="shippingAddress.postcode">
-
-                    <label class="label">
-                        <?= $escaper->escapeHtml(__('Zip/Postal Code'))?>
-
-                        <input class="form-input w-full"
-                               type="text"
-                               name="postcode"
-                               @input.debounce.1000ms="setPostcode($event.target.value)"
-                               :value="cartData.address && cartData.address.postcode"
-                        >
+                    <label class="sr-only" for="estimate-postcode">
+                        <?= $escaper->escapeHtml(__('Zip/Postal Code')) ?>
                     </label>
+                    <input class="form-input w-full"
+                           id="estimate-postcode"
+                           type="text"
+                           name="postcode"
+                           placeholder="<?= $escaper->escapeHtmlAttr(__('Zip/Postal Code')) ?>"
+                           @input.debounce.1000ms="setPostcode($event.target.value)"
+                           :value="cartData.address && cartData.address.postcode"
+                    >
                 </div>
 
                 <template x-if="getEstimatedShippingRateCarriers().length > 0">

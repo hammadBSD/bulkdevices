@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="catalog_category_view"/>
+    <update handle="catalog_category_view_type_layered"/>
+    <body>
+        <referenceBlock name="category.image" remove="true"/>
+        <referenceBlock name="category.description" remove="true"/>
+        <referenceBlock name="category.cms" remove="true"/>
+        <referenceBlock name="category.text.bottom" remove="true"/>
+        <referenceBlock name="category.faqs.bottom" remove="true"/>
+        <referenceBlock name="plp.schema.jsonld" remove="true"/>
+    </body>
+</page>

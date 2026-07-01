@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\RouterList">
+        <arguments>
+            <argument name="routerList" xsi:type="array">
+                <item name="bsd_brand" xsi:type="array">
+                    <item name="class" xsi:type="string">BSD\Brand\Controller\Router</item>
+                    <item name="disable" xsi:type="boolean">false</item>
+                    <item name="sortOrder" xsi:type="string">60</item>
+                </item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="BSD\Brand\Controller\View\Index">
+        <plugin name="bsd_brand_ajax_layer"
+                type="BSD\Brand\Plugin\AjaxLayer\BrandView"
+                sortOrder="1"/>
+    </type>
+    <type name="Magento\Theme\Block\Html\Title">
+        <plugin name="bsd_brand_page_title"
+                type="BSD\Brand\Plugin\Theme\Block\Html\BrandTitle"
+                sortOrder="10"/>
+    </type>
+</config>

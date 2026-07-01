@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/plp-critical.css"/>
+        <css src="css/product-card.css"/>
+        <css src="css/brand.css"/>
+    </head>
+    <body>
+        <referenceBlock name="head.additional">
+            <block name="brand.plp.deferred.styles"
+                   template="Magento_Catalog::category/plp-deferred-styles.phtml"
+                   before="-"/>
+            <block name="brand.plp.product.preloads"
+                   template="Magento_Catalog::category/head-preloads.phtml"
+                   after="brand.plp.deferred.styles"/>
+        </referenceBlock>
+        <referenceBlock name="bdus.hyva.quotation.modal" remove="true"/>
+        <referenceBlock name="custom.block" remove="true"/>
+        <referenceBlock name="getaquote_index_index" remove="true"/>
+
+        <referenceBlock name="breadcrumbs">
+            <arguments>
+                <argument name="skip_ld_json_schema" xsi:type="boolean">true</argument>
+            </arguments>
+        </referenceBlock>
+
+        <referenceBlock name="category.products.list">
+            <arguments>
+                <argument name="eager_load_images_count" xsi:type="number">4</argument>
+            </arguments>
+        </referenceBlock>
+
+        <referenceContainer name="before.body.end">
+            <block name="brand.product.card.qty.script"
+                   template="Magento_Theme::html/product/card-qty-script.phtml"/>
+            <block name="brand.plp.ajax.layer"
+                   template="Magento_Catalog::product/list/ajax-layer.phtml"
+                   ifconfig="layered_navigation/general/ajax_enable"/>
+        </referenceContainer>
+    </body>
+</page>
