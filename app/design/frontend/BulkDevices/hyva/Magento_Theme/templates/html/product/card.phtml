@@ -5,10 +5,8 @@ declare(strict_types=1);
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\ProductPage;
 use Hyva\Theme\ViewModel\ProductPrice;
-use Hyva\Theme\ViewModel\ProductStockItem;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Pricing\Price\FinalPrice;
-use Magento\Catalog\ViewModel\Product\OptionsData as ProductOptionsData;
 use Magento\Framework\Escaper;
 use Magento\Framework\Pricing\Helper\Data as PricingHelper;
 use Magento\Framework\View\Element\Template;
@@ -29,26 +27,17 @@ $productViewModel = $viewModels->require(ProductPage::class);
 /** @var ProductPrice $productPriceViewModel */
 $productPriceViewModel = $viewModels->require(ProductPrice::class);
 
-/** @var ProductOptionsData $productOptionsViewModel */
-$productOptionsViewModel = $viewModels->require(ProductOptionsData::class);
-
-/** @var ProductStockItem $stockItemViewModel */
-$stockItemViewModel = $viewModels->require(ProductStockItem::class);
-
 /** @var PricingHelper $pricingHelper */
 $pricingHelper = $this->helper(PricingHelper::class);
 
 $productUrl = parse_url($product->getProductUrl(), PHP_URL_PATH) ?: $product->getProductUrl();
 $productName = (string) $product->getName();
 $sku = (string) $product->getSku();
-$productId = (int) $product->getId();
 $productType = $product->getTypeId();
-$isGroupedOrBundle = in_array($productType, ['bundle', 'grouped'], true);
 $finalPrice = (float) $productPriceViewModel->getPriceValue(FinalPrice::PRICE_CODE, $product);
 $isCallForPrice = $finalPrice <= 0;
 $showFromLabel = !$isCallForPrice && in_array($productType, ['configurable', 'bundle', 'grouped'], true);
 $formattedPrice = $pricingHelper->currency($product->getFinalPrice(), true, false);
-$options = $productOptionsViewModel->getOptionsData($product);
 $imageCustomAttributes = $product->getData('image_custom_attributes') ?? [];
 $imageLoading = (string) ($imageCustomAttributes['loading'] ?? 'lazy');
 $imageFetchPriority = isset($imageCustomAttributes['fetchpriority'])
@@ -57,22 +46,8 @@ $imageFetchPriority = isset($imageCustomAttributes['fetchpriority'])
 $imageExtraClass = (string) ($imageCustomAttributes['class'] ?? '');
 $imageClass = 'bb-product-card__img home-product-tabs__img'
     . ($imageExtraClass !== '' ? ' ' . $imageExtraClass : '');
-$defaultQty = max(1, (int) $stockItemViewModel->getMinSaleQty($product));
-$minSalesQty = (int) $defaultQty;
-$maxSalesQty = (int) $stockItemViewModel->getMaxSaleQty($product);
-$qtyStep = (int) ($stockItemViewModel->getQtyIncrements($product) ?: 1);
-if ($qtyStep > 1) {
-    $minSalesQty = (int) (ceil($minSalesQty / $qtyStep) * $qtyStep);
-    if ($maxSalesQty) {
-        $maxSalesQty = (int) (floor($maxSalesQty / $qtyStep) * $qtyStep);
-    }
-    $defaultQty = (int) (ceil($defaultQty / $qtyStep) * $qtyStep);
-}
-$qtyInputId = 'bb-card-qty-' . $productId;
 $viewMode = (string) ($block->getData('view_mode') ?? 'grid');
 $isListView = $viewMode === 'list';
-$hideQtySelector = (bool) $block->getData('hide_qty_selector');
-$deferQtyAlpine = !$hideQtySelector && (bool) $block->getData('defer_qty_alpine');
 $cardClass = 'bb-product-card home-product-tabs__card' . ($isListView ? ' bb-product-card--list' : '');
 $imageRole = $isListView ? 'category_page_list' : 'category_page_grid';
 $image = $productViewModel->getImage($product, $imageRole);
@@ -110,101 +85,21 @@ $imageLabel = $image->getLabel() ?: $productName;
             </p>
         <?php endif; ?>
         <?php if ($isCallForPrice): ?>
-            <button
-                type="button"
-                class="bb-product-card__cta home-product-tabs__cta bb-pdp-quotation-trigger"
-                aria-haspopup="dialog"
-                data-sku="<?= $escaper->escapeHtmlAttr($sku) ?>"
-                data-product-image="<?= $escaper->escapeHtmlAttr($imageUrl) ?>"
-                data-request-type="<?= $escaper->escapeHtmlAttr(__('Request For Quotation')) ?>"
+            <a
+                class="bb-product-card__cta home-product-tabs__cta"
+                href="<?= $escaper->escapeUrl($productUrl) ?>"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Request For Quotation %1', $sku)) ?>"
             >
                 <?= $escaper->escapeHtml(__('Request For Quotation')) ?>
-            </button>
+            </a>
         <?php elseif ($product->isSaleable()): ?>
-            <?php if ($isGroupedOrBundle): ?>
-                <a
-                    class="bb-product-card__cta home-product-tabs__cta"
-                    href="<?= $escaper->escapeUrl($productUrl) ?>"
-                    aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Cart %1', $sku)) ?>"
-                >
-                    <?= $escaper->escapeHtml(__('Add to Cart')) ?>
-                </a>
-            <?php else: ?>
-                <form
-                    method="post"
-                    action="<?= $escaper->escapeUrl($productViewModel->getAddToCartUrl($product, ['useUencPlaceholder' => true])) ?>"
-                    class="bb-product-card__atc-form product_addtocart_form"
-                    <?php if ($product->getOptions()): ?>
-                        enctype="multipart/form-data"
-                    <?php endif; ?>
-                >
-                    <?= /** @noEscape */ $block->getBlockHtml('formkey') ?>
-                    <input type="hidden" name="product" value="<?= $productId ?>">
-                    <?php foreach ($options as $optionItem): ?>
-                        <input type="hidden"
-                               name="<?= $escaper->escapeHtmlAttr($optionItem['name']) ?>"
-                               value="<?= $escaper->escapeHtmlAttr($optionItem['value']) ?>">
-                    <?php endforeach; ?>
-                    <div class="bb-product-card__actions">
-                        <?php if ($hideQtySelector): ?>
-                            <input type="hidden" name="qty" value="<?= (int) $defaultQty ?>">
-                        <?php else: ?>
-                        <label class="sr-only" for="<?= $escaper->escapeHtmlAttr($qtyInputId) ?>">
-                            <?= $escaper->escapeHtml(__('Quantity for %1', $sku)) ?>
-                        </label>
-                        <div
-                            class="bb-product-card__qty-selector"
-                            <?php if ($deferQtyAlpine): ?>
-                            x-defer="intersect"
-                            <?php endif; ?>
-                            x-data="initProductCardQty({
-                                defaultQty: <?= (int) $defaultQty ?>,
-                                minQty: <?= (int) $minSalesQty ?>,
-                                maxQty: <?= $maxSalesQty > 0 ? (int) $maxSalesQty : 'null' ?>,
-                                step: <?= (int) $qtyStep ?>
-                            })"
-                        >
-                            <button
-                                type="button"
-                                class="bb-product-card__qty-btn bb-product-card__qty-btn--decrement"
-                                @click="decrement()"
-                                :disabled="isMinQty()"
-                                aria-label="<?= $escaper->escapeHtmlAttr(__('Decrease quantity')) ?>"
-                            >−</button>
-                            <input type="number"
-                                   name="qty"
-                                   id="<?= $escaper->escapeHtmlAttr($qtyInputId) ?>"
-                                   class="bb-product-card__qty"
-                                   x-model.number="qty"
-                                   @change="clampQty()"
-                                   @blur="clampQty()"
-                                   min="<?= (int) $minSalesQty ?>"
-                                   <?php if ($maxSalesQty > 0): ?>
-                                   max="<?= (int) $maxSalesQty ?>"
-                                   <?php endif; ?>
-                                   step="<?= (int) $qtyStep ?>"
-                                   inputmode="numeric"
-                                   aria-label="<?= $escaper->escapeHtmlAttr(__('Quantity')) ?>">
-                            <button
-                                type="button"
-                                class="bb-product-card__qty-btn bb-product-card__qty-btn--increment"
-                                @click="increment()"
-                                :disabled="isMaxQty()"
-                                aria-label="<?= $escaper->escapeHtmlAttr(__('Increase quantity')) ?>"
-                            >+</button>
-                        </div>
-                        <?php endif; ?>
-                        <button
-                            type="submit"
-                            class="bb-product-card__cta home-product-tabs__cta"
-                            data-addto="cart"
-                            aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Cart %1', $sku)) ?>"
-                        >
-                            <?= $escaper->escapeHtml(__('Add to Cart')) ?>
-                        </button>
-                    </div>
-                </form>
-            <?php endif; ?>
+            <a
+                class="bb-product-card__cta home-product-tabs__cta"
+                href="<?= $escaper->escapeUrl($productUrl) ?>"
+                aria-label="<?= $escaper->escapeHtmlAttr(__('Add to Cart %1', $sku)) ?>"
+            >
+                <?= $escaper->escapeHtml(__('Add to Cart')) ?>
+            </a>
         <?php endif; ?>
     </div>
 </article>
