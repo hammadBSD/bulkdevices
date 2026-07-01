@@ -63,18 +63,22 @@
 }
 
 .site-footer-middle__extra {
-    margin-top: 1.5rem;
+    margin-top: auto;
     padding-top: 1.25rem;
     border-top: 1px solid rgb(255 255 255 / 0.08);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
 }
 
 .site-footer-middle__extra-title {
-    margin: 0 0 0.75rem;
-    font-size: 0.8125rem;
-    font-weight: 600;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: #9ca3af;
+    margin: 0;
+    flex: 0 0 auto;
+    font-size: 0.875rem;
+    font-weight: 700;
+    line-height: 1.3;
+    color: #ffffff;
 }
 
 .site-footer-middle__social {
@@ -105,12 +109,47 @@
 
 .site-footer-middle__figure {
     margin: 0;
+    flex: 1 1 auto;
+    min-width: 0;
 }
 
 .site-footer-middle__figure img {
     display: block;
     max-width: 100%;
     height: auto;
+}
+
+.site-footer-middle__column:first-child,
+.site-footer-middle__column:nth-child(2),
+.site-footer-middle__column:nth-child(3) {
+    display: flex;
+    flex-direction: column;
+}
+
+.site-footer-middle__shopper-approved {
+    margin-top: auto;
+    padding-top: 1.25rem;
+    border-top: 1px solid rgb(255 255 255 / 0.08);
+}
+
+.site-footer-middle__shopper-approved-link {
+    display: inline-block;
+    background: #ffffff;
+    padding: 0.5rem 0.75rem;
+    border-radius: 2px;
+    line-height: 0;
+    transition: opacity 0.2s ease;
+}
+
+.site-footer-middle__shopper-approved-link:hover {
+    opacity: 0.92;
+}
+
+.site-footer-middle__shopper-approved-link img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: 26px;
 }
 
 .site-footer-middle__contact {
@@ -194,5 +233,10 @@
     .site-footer-middle__grid {
         grid-template-columns: 1fr;
         gap: 2rem;
+    }
+
+    .site-footer-middle__extra {
+        flex-direction: column;
+        align-items: flex-start;
     }
 }

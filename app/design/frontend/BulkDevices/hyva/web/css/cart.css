@@ -318,6 +318,7 @@
 @media (min-width: 48rem) {
     .checkout-cart-index .column.main .cart-table-header {
         display: grid;
+        gap: 1rem 1.5rem;
     }
 }
 
@@ -543,8 +544,9 @@
     flex-wrap: wrap;
     gap: 0.75rem;
     margin-top: 1.25rem;
-    padding-top: 0;
-    border-top: none;
+    padding: 0;
+    border: none;
+    background: transparent;
 }
 
 /* Shared form controls */

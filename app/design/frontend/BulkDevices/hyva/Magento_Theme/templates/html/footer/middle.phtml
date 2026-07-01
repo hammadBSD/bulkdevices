@@ -56,6 +56,9 @@ $socialLinks = [
         'icon' => 'linkedin',
     ],
 ];
+
+$shopperApprovedReviewsUrl = 'https://www.shopperapproved.com/reviews/bulkdevices.com';
+$shopperApprovedLogoUrl = 'https://cdn.brandfetch.io/id_HuDfh7a/theme/dark/logo.svg?c=1bxid64Mup7aczewSAYMX&t=1781728415420';
 ?>
 <section class="site-footer-middle" aria-label="<?= $escaper->escapeHtmlAttr(__('Site footer')) ?>">
     <div class="site-footer-middle__container">
@@ -78,6 +81,24 @@ $socialLinks = [
                         </li>
                     <?php endforeach; ?>
                 </ul>
+                <div class="site-footer-middle__shopper-approved">
+                    <a
+                        href="<?= $escaper->escapeUrl($shopperApprovedReviewsUrl) ?>"
+                        class="site-footer-middle__shopper-approved-link"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title="<?= $escaper->escapeHtmlAttr(__('Shopper Approved Reviews')) ?>"
+                    >
+                        <img
+                            src="<?= $escaper->escapeUrl($shopperApprovedLogoUrl) ?>"
+                            alt="<?= $escaper->escapeHtmlAttr(__('Shopper Approved')) ?>"
+                            width="168"
+                            height="26"
+                            loading="lazy"
+                            decoding="async"
+                        >
+                    </a>
+                </div>
             </div>
 
             <div class="site-footer-middle__column">

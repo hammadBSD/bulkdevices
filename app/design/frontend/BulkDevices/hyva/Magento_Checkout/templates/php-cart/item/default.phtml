@@ -24,7 +24,6 @@ $stockItemViewModel = $viewModels->require(ProductStockItem::class);
 
 $item = $block->getItem();
 $product = $item->getProduct();
-$isVisibleProduct = $product->isVisibleInSiteVisibility();
 
 $minSalesQty = $stockItemViewModel->getMinSaleQty($product);
 $maxSalesQty = $stockItemViewModel->getMaxSaleQty($product);
@@ -50,7 +49,7 @@ $maxSalesQtyLength = ($maxSalesQty ? strlen((string) $maxSalesQty) : 4)
     + (/* add one if decimal for separator */ (int) $stockItemViewModel->isQtyDecimal($product));
 
 ?>
-<article class="cart item flex gap-4 md:gap-6"
+<article class="cart item cart-item-grid"
     <?php foreach ($block->getData('cart_item_data_attributes') ?? [] as $attribute => $include): ?>
         <?php if ($include): ?>
             <?php /** Append data-* attributes based on layout XML arguments */ ?>
@@ -58,61 +57,45 @@ $maxSalesQtyLength = ($maxSalesQty ? strlen((string) $maxSalesQty) : 4)
         <?php endif; ?>
     <?php endforeach; ?>
 >
-    <?php if ($block->hasProductUrl()): ?>
-        <a
-            href="<?= $escaper->escapeUrl($block->getProductUrl()) ?>"
-            tabindex="-1"
-            class="product-item-photo shrink-0"
-        >
-    <?php else: ?>
-        <div class="product-item-photo shrink-0">
-    <?php endif;?>
-        <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')
-            ->setTemplate('Magento_Catalog::product/image.phtml')
-            ->toHtml() ?>
-    <?php if ($block->hasProductUrl()): ?>
-        </a>
-    <?php else: ?>
-        </div>
-    <?php endif; ?>
-
-    <div class="flex flex-col grow">
-        <div class="product-item-details grow">
-            <div class="sm:flex sm:justify-between sm:gap-2">
-                <h3 class="product-item-name text-xl break-all">
-                    <?php if ($block->hasProductUrl()): ?>
-                        <a href="<?= $escaper->escapeUrl($block->getProductUrl()) ?>">
-                            <strong><?= $escaper->escapeHtml($block->getProductName()) ?></strong>
-                        </a>
-                    <?php else: ?>
-                        <strong><?= $escaper->escapeHtml($block->getProductName()) ?></strong>
-                    <?php endif; ?>
-                </h3>
-
-                <p class="price-box inline-flex gap-4">
-                    <?php if ($qty > 1): ?>
-                        <span><?= $escaper->escapeHtmlAttr(__('%1 x', $qty)) ?></span>
-                    <?php endif; ?>
-                    <span class="text-fg-secondary">
-                        <span class="sr-only"><?= $escaper->escapeHtml(__('Price')) ?></span>
-                        <span><?= $block->getUnitPriceHtml($item) ?></span>
-                    </span>
-                    <span class="font-medium">
-                        <span class="sr-only"><?= $escaper->escapeHtml(__('Subtotal')) ?></span>
-                        <span><?= $block->getRowTotalHtml($item) ?></span>
-                    </span>
-                </p>
+    <div class="cart-item-col-product">
+        <?php if ($block->hasProductUrl()): ?>
+            <a
+                href="<?= $escaper->escapeUrl($block->getProductUrl()) ?>"
+                tabindex="-1"
+                class="product-item-photo"
+            >
+        <?php else: ?>
+            <div class="product-item-photo">
+        <?php endif; ?>
+            <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')
+                ->setTemplate('Magento_Catalog::product/image.phtml')
+                ->toHtml() ?>
+        <?php if ($block->hasProductUrl()): ?>
+            </a>
+        <?php else: ?>
             </div>
+        <?php endif; ?>
+
+        <div class="product-item-details">
+            <h3 class="product-item-name">
+                <?php if ($block->hasProductUrl()): ?>
+                    <a href="<?= $escaper->escapeUrl($block->getProductUrl()) ?>">
+                        <?= $escaper->escapeHtml($block->getProductName()) ?>
+                    </a>
+                <?php else: ?>
+                    <?= $escaper->escapeHtml($block->getProductName()) ?>
+                <?php endif; ?>
+            </h3>
 
             <?php if ($options = $block->getOptionList()): ?>
-                <dl class="mt-4 item-options table text-sm">
+                <dl class="item-options">
                     <?php foreach ($options as $option): ?>
                         <?php $formatedOptionValue = $block->getFormatedOptionValue($option) ?>
                         <div class="table-row">
-                            <dt class="table-cell font-normal min-w-16 pe-2 pb-1 text-fg-secondary">
+                            <dt>
                                 <?= $escaper->escapeHtml($option['label']) ?>
                             </dt>
-                            <dd class="table-cell font-bold pb-1">
+                            <dd>
                                 <?php if (isset($formatedOptionValue['full_view'])): ?>
                                     <?= $escaper->escapeHtml($formatedOptionValue['full_view']) ?>
                                 <?php else: ?>
@@ -122,7 +105,7 @@ $maxSalesQtyLength = ($maxSalesQty ? strlen((string) $maxSalesQty) : 4)
                         </div>
                     <?php endforeach; ?>
                 </dl>
-            <?php endif;?>
+            <?php endif; ?>
 
             <?php if ($messages = $block->getMessages()): ?>
                 <?php foreach ($messages as $message): ?>
@@ -135,37 +118,46 @@ $maxSalesQtyLength = ($maxSalesQty ? strlen((string) $maxSalesQty) : 4)
             <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
             <?php if ($addInfoBlock): ?>
                 <?= $addInfoBlock->setItem($item)->toHtml() ?>
-            <?php endif;?>
+            <?php endif; ?>
         </div>
+    </div>
 
-        <div class="mt-4 flex flex-wrap md:justify-between gap-2">
-            <label class="control qty my-0">
-                <span class="sr-only"><?= $escaper->escapeHtml(__('Qty')) ?></span>
-                <input
-                    name="cart[<?= $escaper->escapeHtmlAttr($item->getId()) ?>][qty]"
-                    value="<?= $escaper->escapeHtmlAttr($qty) ?>"
-                    title="<?= $escaper->escapeHtmlAttr(__('Qty')) ?>"
-                    class="form-input qty"
-                    required
-                    <?php if ($stockItemViewModel->isQtyDecimal($product)): ?>
-                    type="text"
-                    pattern="[0-9]+(\.[0-9]{1,<?= /** @noEscape */ $maxSalesQtyLength ?>})?"
-                    inputmode="decimal"
-                    <?php else: ?>
-                    type="number"
-                    pattern="[0-9]{0,<?= /** @noEscape */ $maxSalesQtyLength ?>}"
-                    inputmode="numeric"
-                    <?php if ($minSalesQty): ?>min="<?= /** @noEscape */ $minSalesQty ?>"<?php endif; ?>
-                    <?php if ($maxSalesQty): ?>max="<?= /** @noEscape */ $maxSalesQty ?>"<?php endif; ?>
-                    <?php if ($step): ?>step="<?= /** @noEscape */ $step ?>"<?php endif; ?>
-                    <?php endif; ?>
-                    data-role="cart-item-qty"
-                >
-            </label>
+    <div class="cart-item-col-price">
+        <span class="cart-item-mobile-label"><?= $escaper->escapeHtml(__('Price')) ?></span>
+        <p class="price-box">
+            <span class="sr-only"><?= $escaper->escapeHtml(__('Price')) ?></span>
+            <span><?= $block->getUnitPriceHtml($item) ?></span>
+        </p>
+    </div>
 
-            <div class="item-actions inline-flex flex-wrap items-center gap-1">
-                <?= /* @noEscape */ $block->getActions($item) ?>
-            </div>
+    <div class="cart-item-col-qty">
+        <span class="cart-item-mobile-label"><?= $escaper->escapeHtml(__('Quantity')) ?></span>
+        <label class="control qty">
+            <span class="sr-only"><?= $escaper->escapeHtml(__('Qty')) ?></span>
+            <input
+                name="cart[<?= $escaper->escapeHtmlAttr($item->getId()) ?>][qty]"
+                value="<?= $escaper->escapeHtmlAttr($qty) ?>"
+                title="<?= $escaper->escapeHtmlAttr(__('Qty')) ?>"
+                class="form-input qty"
+                required
+                <?php if ($stockItemViewModel->isQtyDecimal($product)): ?>
+                type="text"
+                pattern="[0-9]+(\.[0-9]{1,<?= /** @noEscape */ $maxSalesQtyLength ?>})?"
+                inputmode="decimal"
+                <?php else: ?>
+                type="number"
+                pattern="[0-9]{0,<?= /** @noEscape */ $maxSalesQtyLength ?>}"
+                inputmode="numeric"
+                <?php if ($minSalesQty): ?>min="<?= /** @noEscape */ $minSalesQty ?>"<?php endif; ?>
+                <?php if ($maxSalesQty): ?>max="<?= /** @noEscape */ $maxSalesQty ?>"<?php endif; ?>
+                <?php if ($step): ?>step="<?= /** @noEscape */ $step ?>"<?php endif; ?>
+                <?php endif; ?>
+                data-role="cart-item-qty"
+            >
+        </label>
+
+        <div class="item-actions">
+            <?= /* @noEscape */ $block->getActions($item) ?>
         </div>
     </div>
 </article>
