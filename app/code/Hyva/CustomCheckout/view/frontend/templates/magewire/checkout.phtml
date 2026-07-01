@@ -219,19 +219,29 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
             <h2 id="hcc-summary-title" class="hcc-card__title"><?= $escaper->escapeHtml(__('Order Summary')) ?></h2>
 
             <?php if ($magewire->totals): ?>
-                <div class="hcc-summary-row">
-                    <span><?= $escaper->escapeHtml(__('Cart Subtotal')) ?></span>
-                    <span><?= $escaper->escapeHtml($magewire->totals['subtotal'] ?? '') ?></span>
-                </div>
-                <div class="hcc-summary-row">
-                    <span><?= $escaper->escapeHtml(__('Shipping')) ?></span>
-                    <span><?= $escaper->escapeHtml($magewire->totals['shipping'] ?? '') ?></span>
+                <div class="hcc-summary-rows">
+                    <div class="hcc-summary-row">
+                        <span><?= $escaper->escapeHtml(__('Product Subtotal')) ?></span>
+                        <span><?= $escaper->escapeHtml($magewire->totals['subtotal'] ?? '') ?></span>
+                    </div>
+                    <div class="hcc-summary-row">
+                        <span><?= $escaper->escapeHtml(__('Shipping & Handling')) ?></span>
+                        <span><?= $escaper->escapeHtml($magewire->totals['shipping'] ?? '') ?></span>
+                    </div>
+                    <div class="hcc-summary-row">
+                        <span><?= $escaper->escapeHtml(__('Discount')) ?></span>
+                        <span><?= $escaper->escapeHtml($magewire->totals['discount'] ?? '') ?></span>
+                    </div>
+                    <div class="hcc-summary-row">
+                        <span><?= $escaper->escapeHtml(__('Tax')) ?></span>
+                        <span><?= $escaper->escapeHtml($magewire->totals['tax'] ?? '') ?></span>
+                    </div>
                 </div>
                 <div class="hcc-summary-row hcc-summary-row--total">
                     <span><?= $escaper->escapeHtml(__('Order Total Incl. Tax')) ?></span>
                     <span><?= $escaper->escapeHtml($magewire->totals['grand_total'] ?? '') ?></span>
                 </div>
-                <div class="hcc-summary-row">
+                <div class="hcc-summary-row hcc-summary-row--excl-tax">
                     <span><?= $escaper->escapeHtml(__('Order Total Excl. Tax')) ?></span>
                     <span><?= $escaper->escapeHtml($magewire->totals['grand_total_excl_tax'] ?? '') ?></span>
                 </div>
@@ -256,9 +266,9 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                     <?php else: ?>
                         <div class="hcc-cart-item__img-wrap hcc-cart-placeholder" aria-hidden="true"></div>
                     <?php endif; ?>
-                    <div>
+                    <div class="hcc-cart-item__body">
                         <div class="hcc-item-name"><?= $escaper->escapeHtml($item['name']) ?></div>
-                        <div><?= $escaper->escapeHtml($item['row_total']) ?></div>
+                        <div class="hcc-cart-item__price"><?= $escaper->escapeHtml($item['row_total']) ?></div>
                         <div class="hcc-cart-item__qty">
                             <input type="number"
                                    min="1"
@@ -268,7 +278,13 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                                     class="hcc-remove"
                                     @click="removeItem"
                                     aria-label="<?= $escaper->escapeHtmlAttr(__('Remove item')) ?>">
-                                ✕
+                                <svg class="hcc-remove__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                    <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M4 7h16"/>
+                                    <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                                    <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M7 7l1 12a1 1 0 0 0 1 .9h6a1 1 0 0 0 1-.9L17 7"/>
+                                    <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M10 11v5"/>
+                                    <path fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" d="M14 11v5"/>
+                                </svg>
                             </button>
                         </div>
                     </div>

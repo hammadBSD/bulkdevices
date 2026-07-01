@@ -22,7 +22,7 @@
 .home-banner-slider__slide {
     position: relative;
     width: 100%;
-    min-height: clamp(220px, 32vw, 520px);
+    min-height: clamp(320px, 40vw, 500px);
 }
 
 .home-banner-slider__media {
@@ -70,7 +70,7 @@
 
 .home-banner-slider__title {
     margin: 0 0 0.75rem;
-    font-size: clamp(1.75rem, 4vw, 3.125rem);
+    font-size: clamp(1.5rem, 4vw, 3.125rem);
     font-weight: 700;
     line-height: 1.15;
 }
@@ -102,13 +102,11 @@
 
 @media (max-width: 576px) {
     .home-banner-slider__slide {
-        min-height: clamp(200px, 55vw, 360px);
+        min-height: clamp(340px, 65vw, 360px);
     }
 
     .home-banner-slider__inner {
         max-width: none;
-        margin-inline: auto;
-        text-align: center;
     }
 }
 
@@ -215,13 +213,16 @@
     }
 
     .home-features__grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 0.75rem;
     }
 
     .home-features__card {
         padding: 0.875rem 1rem;
+        flex-direction: column;
+        align-items: flex-start;
     }
+
 
     .home-features__title {
         font-size: 0.875rem;
@@ -248,7 +249,7 @@
     width: 100%;
     max-width: var(--bb-tabs-container-max);
     margin-inline: auto;
-    padding-inline: 1.5rem;
+    padding-inline: 0;
     box-sizing: border-box;
 }
 
@@ -329,15 +330,9 @@
     gap: 1.25rem;
 }
 
-@media (max-width: 1279px) {
+@media (max-width: 1300px) {
     .home-product-tabs__grid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-@media (max-width: 1023px) {
-    .home-product-tabs__grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
     .home-product-tabs__nav {
@@ -346,14 +341,26 @@
         flex-wrap: nowrap;
         -webkit-overflow-scrolling: touch;
         scrollbar-width: thin;
+        padding-bottom: 0.75rem;
     }
 
     .home-product-tabs__tab {
         flex-shrink: 0;
     }
 }
+@media (max-width: 991px) {
+    .home-product-tabs__grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
 
-@media (max-width: 639px) {
+@media (max-width: 767px) {
+    .home-product-tabs__grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+@media (max-width: 480px) {
     .home-product-tabs__grid {
         grid-template-columns: 1fr;
         gap: 1rem;
@@ -462,6 +469,7 @@
     font-size: 1.0625rem;
     font-weight: 700;
     color: #1f2937;
+    text-align: center;
 }
 
 .bb-product-card__price-label,

@@ -304,6 +304,11 @@
     height: 100%;
 }
 
+:is(.catalog-category-view, .catalogsearch-result-index) .bb-product-card__price,
+:is(.catalog-category-view, .catalogsearch-result-index) .home-product-tabs__price {
+    text-align: center;
+}
+
 /* Bottom toolbar / pagination */
 :is(.catalog-category-view, .catalogsearch-result-index) .toolbar-bottom,
 :is(.catalog-category-view, .catalogsearch-result-index) .bb-plp-toolbar-bottom {

@@ -58,15 +58,57 @@ a.hcc-header__logo {
     gap: 1rem;
 }
 
-.hcc-header__call,
+.hcc-header__phone {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.625rem;
+    text-decoration: none;
+    color: inherit;
+    transition: opacity 0.2s ease;
+}
+
+.hcc-header__phone:hover {
+    opacity: 0.85;
+}
+
+.hcc-header__phone-icon {
+    display: inline-flex;
+    flex-shrink: 0;
+    color: var(--hcc-accent);
+}
+
+.hcc-header__phone-icon svg {
+    display: block;
+    width: 2rem;
+    height: 2rem;
+}
+
+.hcc-header__phone-text {
+    display: flex;
+    flex-direction: column;
+    gap: 0.125rem;
+    line-height: 1.2;
+}
+
+.hcc-header__phone-label {
+    font-size: 0.75rem;
+    color: var(--hcc-muted);
+}
+
+.hcc-header__phone-number {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--hcc-text);
+    white-space: nowrap;
+}
+
 .hcc-header__signin {
     font-size: 0.875rem;
     color: var(--hcc-text-secondary);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
 }
 
-.hcc-header__call:hover,
 .hcc-header__signin:hover {
     color: var(--hcc-accent);
 }
@@ -333,34 +375,56 @@ a.hcc-header__logo {
 }
 
 /* Order summary */
+.hcc-summary-rows {
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid var(--hcc-border);
+}
+
 .hcc-summary-row {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
     gap: 1rem;
-    padding: 0.4375rem 0;
+    padding: 0.3125rem 0;
     font-size: 0.875rem;
     color: var(--hcc-text-secondary);
 }
 
 .hcc-summary-row span:last-child {
-    font-weight: 600;
+    font-weight: 700;
     color: var(--hcc-text);
     white-space: nowrap;
 }
 
 .hcc-summary-row--total {
-    font-size: 1rem;
+    font-size: 0.9375rem;
     font-weight: 700;
     color: var(--hcc-text);
-    border-top: 1px solid var(--hcc-border);
-    margin-top: 0.75rem;
-    padding-top: 0.875rem;
+    margin-top: 0.25rem;
+    padding-top: 0.25rem;
+}
+
+.hcc-summary-row--total span:first-child {
+    font-weight: 700;
 }
 
 .hcc-summary-row--total span:last-child {
     color: var(--hcc-accent);
-    font-size: 1.0625rem;
+    font-size: 1.125rem;
+    font-weight: 700;
+}
+
+.hcc-summary-row--excl-tax {
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.25rem;
+    border-bottom: 1px solid var(--hcc-border);
+    font-size: 0.8125rem;
+}
+
+.hcc-summary-row--excl-tax span:last-child {
+    font-weight: 600;
+    color: var(--hcc-text-secondary);
 }
 
 .hcc-cart-heading {
@@ -369,9 +433,9 @@ a.hcc-header__logo {
     letter-spacing: 0.05em;
     text-transform: uppercase;
     color: var(--hcc-muted);
-    margin: 1.25rem 0 0.75rem;
-    padding-top: 1rem;
-    border-top: 1px solid var(--hcc-border);
+    margin: 0.75rem 0;
+    padding-top: 0;
+    border-top: none;
 }
 
 .hcc-cart-item {
@@ -381,6 +445,16 @@ a.hcc-header__logo {
     padding: 0.875rem 0;
     border-bottom: 1px solid var(--hcc-border);
     font-size: 0.8125rem;
+}
+
+.hcc-cart-item__body {
+    min-width: 0;
+}
+
+.hcc-cart-item__price {
+    font-weight: 600;
+    color: var(--hcc-text);
+    margin-bottom: 0.25rem;
 }
 
 .hcc-cart-item:last-of-type {
@@ -408,7 +482,8 @@ a.hcc-header__logo {
 .hcc-cart-item__qty {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
+    justify-content: space-between;
+    gap: 0.75rem;
     margin-top: 0.5rem;
 }
 
@@ -432,21 +507,28 @@ a.hcc-header__logo {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 1.75rem;
-    min-height: 1.75rem;
-    color: #dc2626;
-    font-size: 0.875rem;
-    background: #fef2f2;
-    border: 1px solid #fecaca;
-    border-radius: 6px;
+    flex-shrink: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    margin-left: auto;
+    color: #9ca3af;
+    background: transparent;
+    border: none;
+    border-radius: 4px;
     cursor: pointer;
     padding: 0;
-    transition: background-color 0.2s ease, border-color 0.2s ease;
+    transition: color 0.2s ease, background-color 0.2s ease;
+}
+
+.hcc-remove__icon {
+    display: block;
+    width: 1.125rem;
+    height: 1.125rem;
 }
 
 .hcc-remove:hover {
-    background: #fee2e2;
-    border-color: #fca5a5;
+    color: #6b7280;
+    background: #f3f4f6;
 }
 
 /* Place order CTA */

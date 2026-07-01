@@ -20,7 +20,7 @@ class TotalsService
     }
 
     /**
-     * @return array{subtotal: string, shipping: string, shipping_label: string, grand_total: string, grand_total_excl_tax: string, stripe_amount: int, stripe_currency: string}
+     * @return array{subtotal: string, shipping: string, shipping_label: string, discount: string, tax: string, grand_total: string, grand_total_excl_tax: string, stripe_amount: int, stripe_currency: string, items_count: int}
      * @throws LocalizedException
      * @throws NoSuchEntityException
      */
@@ -35,13 +35,17 @@ class TotalsService
         $shippingAddress = $quote->getShippingAddress();
         $shippingMethod = $shippingAddress->getShippingDescription() ?: __('Shipping');
         $stripe = $this->getStripeElementsAmount($quote);
+        $discountAmount = abs((float) $shippingAddress->getDiscountAmount());
+        $taxAmount = (float) $shippingAddress->getTaxAmount();
 
         return [
             'subtotal' => $currency->format((float) $quote->getSubtotal(), [], false),
             'shipping' => $currency->format((float) $shippingAddress->getShippingAmount(), [], false),
             'shipping_label' => (string) $shippingMethod,
+            'discount' => $currency->format($discountAmount, [], false),
+            'tax' => $currency->format($taxAmount, [], false),
             'grand_total' => $currency->format((float) $quote->getGrandTotal(), [], false),
-            'grand_total_excl_tax' => $currency->format((float) $quote->getGrandTotal() - (float) $quote->getTaxAmount(), [], false),
+            'grand_total_excl_tax' => $currency->format((float) $quote->getGrandTotal() - $taxAmount, [], false),
             'items_count' => (int) $quote->getItemsQty(),
             'stripe_amount' => $stripe['amount'],
             'stripe_currency' => $stripe['currency'],
