@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<!--
+    Store 404 page (identifier: no-route-2).
+    Loads noroute.css and the custom 404 template.
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      layout="1column"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="css/noroute.css"/>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title" remove="true"/>
+        <referenceBlock name="breadcrumbs" remove="true"/>
+        <referenceBlock name="cms_page" remove="true"/>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template"
+                   name="cms.no.route.custom"
+                   template="Magento_Cms::default/no-route.phtml"/>
+        </referenceContainer>
+    </body>
+</page>

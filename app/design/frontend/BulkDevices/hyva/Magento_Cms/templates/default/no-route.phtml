@@ -1,0 +1,33 @@
+<?php
+/**
+ * BulkDevices — 404 page template (Hyvä child theme)
+ *
+ * Used when:
+ * - CMS "no-route" page is configured (via cms_page_view_id_no-route.xml), or
+ * - Fallback when no CMS 404 page exists (via cms_index_defaultnoroute.xml)
+ */
+
+declare(strict_types=1);
+
+use Magento\Framework\Escaper;
+use Magento\Framework\View\Element\Template;
+
+/** @var Template $block */
+/** @var Escaper $escaper */
+?>
+<section class="noroute" aria-labelledby="noroute-title">
+    <div class="noroute__inner">
+        <p class="noroute__code" aria-hidden="true">404</p>
+        <h1 id="noroute-title" class="noroute__title">
+            <?= $escaper->escapeHtml(__('Page Not Found')) ?>
+        </h1>
+        <p class="noroute__message">
+            <?= $escaper->escapeHtml(__('The page you are looking for might have been removed, had its name changed, or is temporarily unavailable.')) ?>
+        </p>
+        <div class="noroute__actions">
+            <a class="btn btn-primary noroute__home" href="<?= $escaper->escapeUrl($block->getUrl('')) ?>">
+                <?= $escaper->escapeHtml(__('Back to Home')) ?>
+            </a>
+        </div>
+    </div>
+</section>

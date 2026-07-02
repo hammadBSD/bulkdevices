@@ -48,7 +48,7 @@
 }
 
 :is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .page-title {
-    margin: 0;
+    margin: 0 0 1.25rem;
     font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     line-height: 1.25;
@@ -447,7 +447,7 @@
     justify-content: space-between;
     gap: 0.75rem;
     width: 100%;
-    padding: 0.875rem 1rem;
+    padding: 0.5rem 1rem;
     border: none;
     background: #f9fafb;
     font-size: 0.9375rem;
@@ -463,6 +463,24 @@
 
 .bb-plp-filters__group-title.border-b {
     border-bottom: 1px solid var(--bb-plp-border);
+}
+.filter-current #active-filtering-heading{
+    border-bottom: 1px solid var(--bb-plp-border);
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+    font-size: var(--text-lg);
+    font-weight: 600;
+    color: var(--bb-plp-text);
+}
+.filter-current .filter-options-title strong{
+    font-weight: 600;
+}
+
+.bb-plp-filters__group-title svg, .filter-current .filter-options-title svg {
+    width:1rem;
+    height:1rem;
+    fill: var(--bb-plp-text);
+    transition: transform 0.2s ease;
 }
 
 .bb-plp-filters__group-content {
@@ -494,6 +512,7 @@
     border: 1px solid var(--bb-plp-border);
     border-radius: 10px;
     background: #fffaf5;
+    margin-top: 0;
 }
 
 :is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .filter-current .items {
@@ -507,6 +526,7 @@
 
 :is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .filter-current .item {
     margin: 0;
+    flex: 1 0 100%;
 }
 
 :is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .filter-current .filter-label {
@@ -535,6 +555,34 @@
 :is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .filter-current .action.remove:hover {
     border-color: var(--bb-plp-accent);
     color: var(--bb-plp-accent);
+}
+
+:is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .filter-current .filter-actions {
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--bb-plp-border);
+}
+
+:is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .filter-current .filter-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.5rem 1rem;
+    border: 1px solid var(--bb-plp-border);
+    border-radius: 8px;
+    background: #ffffff;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--bb-plp-text);
+    text-decoration: none;
+    transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease;
+}
+
+:is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .filter-current .filter-actions a:hover {
+    border-color: var(--bb-plp-accent);
+    color: var(--bb-plp-accent);
+    background: #fffaf5;
 }
 
 :is(.catalog-category-view, .catalogsearch-result-index, .brand-view-index) .filter-options-content .items {
@@ -696,6 +744,7 @@
     color: #ffffff;
     cursor: pointer;
     transition: background-color 0.2s ease;
+    margin-bottom: 0.5rem;
 }
 
 .bb-plp-price-range__submit:hover {

@@ -2,7 +2,9 @@
 declare(strict_types=1);
 
 use Hyva\Theme\Model\ViewModelRegistry;
+use Hyva\Theme\ViewModel\Customer;
 use Hyva\Theme\ViewModel\LucideIcons;
+use Magento\Customer\Model\Account\Redirect;
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
 
@@ -11,8 +13,9 @@ use Magento\Framework\View\Element\Template;
 /** @var ViewModelRegistry $viewModels */
 
 $lucideIcons = $viewModels->require(LucideIcons::class);
+$customer = $viewModels->require(Customer::class);
 ?>
-<div class="bdus-top-bar" role="region" aria-label="<?= $escaper->escapeHtmlAttr(__('Store announcements')) ?>">
+<div class="bdus-top-bar" role="region" aria-label="<?= $escaper->escapeHtmlAttr(__('Store announcements and account')) ?>">
     <div class="bdus-top-bar__inner container mx-auto px-6">
         <ul class="bdus-top-bar__list">
             <li class="bdus-top-bar__item">
@@ -31,6 +34,42 @@ $lucideIcons = $viewModels->require(LucideIcons::class);
                     <?= $escaper->escapeHtml(__('Cheapest Worldwide Delivery Rates Anywhere')) ?>
                 </span>
             </li>
+            <?php if ($customer->customerLoggedIn()): ?>
+                <li class="bdus-top-bar__item">
+                    <a
+                        href="<?= $escaper->escapeUrl($block->getUrl('customer/account')) ?>"
+                        class="bdus-top-bar__link"
+                        title="<?= $escaper->escapeHtmlAttr(__('My Account')) ?>"
+                    >
+                        <span class="bdus-top-bar__icon" aria-hidden="true">
+                            <?= $lucideIcons->userHtml('', 20, 20) ?>
+                        </span>
+                        <span class="bdus-top-bar__text">
+                            <?= $escaper->escapeHtml(__('My Account')) ?>
+                        </span>
+                    </a>
+                </li>
+            <?php else: ?>
+                <li class="bdus-top-bar__item">
+                    <a
+                        href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login')) ?>"
+                        class="bdus-top-bar__link"
+                        title="<?= $escaper->escapeHtmlAttr(__('Sign in')) ?>"
+                        onclick="hyva.setCookie && hyva.setCookie(
+                            '<?= $escaper->escapeJs(Redirect::LOGIN_REDIRECT_URL) ?>',
+                            window.location.href,
+                            1
+                        )"
+                    >
+                        <span class="bdus-top-bar__icon" aria-hidden="true">
+                            <?= $lucideIcons->logInHtml('', 20, 20) ?>
+                        </span>
+                        <span class="bdus-top-bar__text">
+                            <?= $escaper->escapeHtml(__('Sign in')) ?>
+                        </span>
+                    </a>
+                </li>
+            <?php endif; ?>
         </ul>
     </div>
 </div>

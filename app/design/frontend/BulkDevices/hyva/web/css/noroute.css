@@ -1,0 +1,142 @@
+/**
+ * 404 page — BulkDevices Hyvä
+ * Scoped to 404 body classes — not header or footer
+ */
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) {
+    --bb-noroute-accent: #eb7d1e;
+    --bb-noroute-accent-hover: #c96a18;
+    --bb-noroute-text: #111827;
+    --bb-noroute-text-secondary: #374151;
+    --bb-noroute-muted: #6b7280;
+    --bb-noroute-border: #e5e7eb;
+    --bb-noroute-surface: #ffffff;
+    --bb-noroute-page-bg: #f9fafb;
+    --bb-noroute-radius: 12px;
+    --bb-noroute-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+}
+
+/* Responsive columns — matches Hyvä main .columns breakpoints */
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .page-main .columns {
+    width: 100%;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+    box-sizing: border-box;
+}
+
+@media (min-width: 40rem) {
+    :is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .page-main .columns {
+        max-width: 40rem;
+    }
+}
+
+@media (min-width: 48rem) {
+    :is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .page-main .columns {
+        max-width: 48rem;
+    }
+}
+
+@media (min-width: 64rem) {
+    :is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .page-main .columns {
+        max-width: 80rem;
+    }
+}
+
+@media (min-width: 80rem) {
+    :is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .page-main .columns {
+        max-width: 80rem;
+    }
+}
+
+@media (min-width: 96rem) {
+    :is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .page-main .columns {
+        max-width: 96rem;
+    }
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .column.main {
+    padding-block: clamp(2rem, 5vw, 3.5rem);
+    background: var(--bb-noroute-page-bg);
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute {
+    padding: clamp(1rem, 3vw, 2rem) 0;
+    text-align: center;
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__inner {
+    max-width: 36rem;
+    margin-inline: auto;
+    padding: clamp(2rem, 5vw, 3rem) clamp(1.5rem, 4vw, 2.5rem);
+    background: var(--bb-noroute-surface);
+    border: 1px solid var(--bb-noroute-border);
+    border-radius: var(--bb-noroute-radius);
+    box-shadow: var(--bb-noroute-shadow);
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__code {
+    margin: 0 0 0.75rem;
+    font-size: clamp(4rem, 14vw, 6.5rem);
+    font-weight: 800;
+    line-height: 1;
+    letter-spacing: -0.04em;
+    color: var(--bb-noroute-accent);
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__title {
+    margin: 0 0 1rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid var(--bb-noroute-accent);
+    font-size: clamp(1.375rem, 3.5vw, 1.75rem);
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--bb-noroute-text);
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__message {
+    margin: 0 0 1.75rem;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--bb-noroute-text-secondary);
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.75rem;
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__actions .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 2.75rem;
+    padding: 0.625rem 1.5rem;
+    border-radius: 4px;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__actions .btn-primary {
+    background: var(--bb-noroute-accent);
+    border: 1px solid var(--bb-noroute-accent);
+    color: #fff;
+}
+
+:is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__actions .btn-primary:hover {
+    background: var(--bb-noroute-accent-hover);
+    border-color: var(--bb-noroute-accent-hover);
+    color: #fff;
+    transform: translateY(-1px);
+}
+
+@media (max-width: 767px) {
+    :is(.cms-no-route, .cms-no-route-2, .cms-noroute-index, .cms-index-defaultnoroute) .noroute__actions .btn {
+        width: 100%;
+    }
+}
