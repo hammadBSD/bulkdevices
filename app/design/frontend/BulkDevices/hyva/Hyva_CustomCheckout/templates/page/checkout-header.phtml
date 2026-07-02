@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\Logo\LogoPathResolver;
+use Hyva\Theme\ViewModel\LucideIcons;
 use Hyva\Theme\ViewModel\StoreConfig;
 use Magento\Framework\Escaper;
 use Magento\Framework\View\Element\Template;
@@ -14,8 +15,10 @@ use Magento\Store\Model\Information as StoreInformation;
 
 $logoPathResolver = $viewModels->require(LogoPathResolver::class);
 $storeConfig = $viewModels->require(StoreConfig::class);
+$lucideIcons = $viewModels->require(LucideIcons::class);
 $storePhone = $storeConfig->getStoreConfig(StoreInformation::XML_PATH_STORE_INFO_PHONE) ?: '(903) 677-4333';
 $logoSrc = $logoPathResolver->getLogoSrc();
+$storePhoneDigits = preg_replace('/\D+/', '', $storePhone) ?: '';
 ?>
 <header class="hcc-header">
     <div class="hcc-header__inner">
@@ -28,9 +31,15 @@ $logoSrc = $logoPathResolver->getLogoSrc();
                  decoding="async"/>
         </a>
         <div class="hcc-header__actions">
-            <a href="tel:<?= $escaper->escapeUrl(preg_replace('/\D+/', '', $storePhone)) ?>"
-               class="hcc-header__call">
-                <?= $escaper->escapeHtml(__('Call Us')) ?> <?= $escaper->escapeHtml($storePhone) ?>
+            <a href="tel:<?= $escaper->escapeUrl($storePhoneDigits) ?>"
+               class="hcc-header__phone">
+                <span class="hcc-header__phone-icon" aria-hidden="true">
+                    <?= $lucideIcons->phoneHtml('', 32, 32) ?>
+                </span>
+                <span class="hcc-header__phone-text">
+                    <span class="hcc-header__phone-label"><?= $escaper->escapeHtml(__('Call Us at')) ?></span>
+                    <span class="hcc-header__phone-number"><?= $escaper->escapeHtml($storePhone) ?></span>
+                </span>
             </a>
             <?php if (!$block->getData('hide_sign_in')): ?>
                 <a href="<?= $escaper->escapeUrl($block->getUrl('customer/account/login', ['referer' => base64_encode($block->getUrl('*/*/*', ['_current' => true, '_use_rewrite' => true]))])) ?>"

@@ -394,39 +394,16 @@ $homeBrandsRowThree = [
                                 title="<?= $escaper->escapeHtmlAttr(__('Company')) ?>"
                             >
                         </div>
-                        <div class="field partnum">
-                            <label class="sr-only" for="home-contact-partnum"><?= $escaper->escapeHtml(__('Part Number')) ?></label>
-                            <input
-                                name="partnum"
-                                id="home-contact-partnum"
-                                class="home-get-started__input"
-                                type="text"
-                                placeholder="<?= $escaper->escapeHtmlAttr(__('Part Number')) ?>"
-                                title="<?= $escaper->escapeHtmlAttr(__('Part Number')) ?>"
-                            >
-                        </div>
-                        <div class="field requiredqty">
-                            <label class="sr-only" for="home-contact-requiredqty"><?= $escaper->escapeHtml(__('Required Quantity')) ?></label>
-                            <input
-                                name="requiredqty"
-                                id="home-contact-requiredqty"
-                                class="home-get-started__input"
-                                type="text"
-                                placeholder="<?= $escaper->escapeHtmlAttr(__('Required Quantity')) ?>"
-                                title="<?= $escaper->escapeHtmlAttr(__('Required Quantity')) ?>"
-                            >
-                        </div>
                         <div class="field comment required home-get-started__field--full">
                             <label class="sr-only" for="home-contact-comment"><?= $escaper->escapeHtml(__('Message')) ?></label>
-                            <textarea
+                            <input
                                 name="comment"
                                 id="home-contact-comment"
-                                class="home-get-started__textarea"
+                                class="home-get-started__input"
                                 placeholder="<?= $escaper->escapeHtmlAttr(__('Your Message...')) ?>"
-                                title="<?= $escaper->escapeHtmlAttr(__('Message')) ?>"
-                                rows="6"
+                                type="text"
                                 required
-                            ></textarea>
+                            ></input>
                         </div>
                     </div>
                 </fieldset>
