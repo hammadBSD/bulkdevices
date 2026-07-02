@@ -10,7 +10,7 @@
 }
 
 .site-footer-middle {
-    padding: clamp(2.5rem, 5vw, 3.5rem) 0;
+    padding: clamp(2rem, 5vw, 2.5rem) 0;
     border-bottom: 1px solid rgb(255 255 255 / 0.08);
 }
 
@@ -42,7 +42,7 @@
 
 .site-footer-middle__links {
     list-style: none;
-    margin: 0;
+    margin: 0 0 1rem;
     padding: 0;
 }
 
@@ -68,8 +68,10 @@
     border-top: 1px solid rgb(255 255 255 / 0.08);
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    align-items: flex-start;
+    flex-direction: column;
     gap: 0.75rem 1rem;
+    min-height: 85px;
 }
 
 .site-footer-middle__extra-title {
@@ -130,6 +132,11 @@
     margin-top: auto;
     padding-top: 1.25rem;
     border-top: 1px solid rgb(255 255 255 / 0.08);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1rem;
+    min-height: 85px;
 }
 
 .site-footer-middle__shopper-approved-link {

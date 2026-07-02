@@ -381,12 +381,17 @@
 
 .bb-pdp-notice__icon--line {
     color: #6b7280;
+    width: 2rem;
+    height: 2rem;
 }
 
-.bb-pdp-notice__icon--line svg {
+.bb-pdp-notice__icon--line svg,
+.bb-pdp-notice__icon--line img {
     display: block;
-    width: 1.375rem;
-    height: 1.375rem;
+    width: 1.75rem;
+    height: 1.75rem;
+    object-fit: contain;
+    flex-shrink: 0;
 }
 
 .bb-pdp-notice__row--feature .bb-pdp-notice__text {

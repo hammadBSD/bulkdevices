@@ -18,24 +18,70 @@ use Magento\Framework\View\Element\Template;
     <div class="bb-pdp-sidebar__inner">
         <?php
         $mediaBase = 'https://bulkdevices.com/media/wysiwyg';
+        $sidebarIconBase = 'images/pdp/sidebar/';
         $deliveryOptions = [
-            __('Fast Shipping Across USA'),
-            __('Express Delivery Available (1-3 Business Days)'),
-            __('Free Shipping on Eligible Orders'),
-            __('International Shipping Available'),
-            __('Real-Time Order Tracking'),
-            __('Bulk & Business Orders Supported'),
-            __('Same-Day Order Processing'),
-            __('Multiple Shipping Carriers (UPS, FedEx)'),
+            [
+                'label' => __('Fast Shipping Across USA'),
+                'icon' => $sidebarIconBase . 'delivery-fast-shipping.svg',
+            ],
+            [
+                'label' => __('Express Delivery Available (1-3 Business Days)'),
+                'icon' => $sidebarIconBase . 'delivery-express.svg',
+            ],
+            [
+                'label' => __('Free Shipping on Eligible Orders'),
+                'icon' => $sidebarIconBase . 'delivery-free-shipping.svg',
+            ],
+            [
+                'label' => __('International Shipping Available'),
+                'icon' => $sidebarIconBase . 'delivery-international.svg',
+            ],
+            [
+                'label' => __('Real-Time Order Tracking'),
+                'icon' => $sidebarIconBase . 'delivery-tracking.svg',
+            ],
+            [
+                'label' => __('Bulk & Business Orders Supported'),
+                'icon' => $sidebarIconBase . 'delivery-bulk-orders.svg',
+            ],
+            [
+                'label' => __('Same-Day Order Processing'),
+                'icon' => $sidebarIconBase . 'delivery-same-day.svg',
+            ],
+            [
+                'label' => __('Multiple Shipping Carriers (UPS, FedEx)'),
+                'icon' => $sidebarIconBase . 'delivery-carriers.svg',
+            ],
         ];
         $returnWarrantyOptions = [
-            __('30-Day Easy Returns'),
-            __('Manufacturer Warranty Available'),
-            __('Genuine Product Guarantee'),
-            __('Warranty Support Assistance'),
-            __('Satisfaction Guaranteed'),
-            __('Damaged Item Replacement'),
-            __('Dedicated After-Sales Support'),
+            [
+                'label' => __('30-Day Easy Returns'),
+                'icon' => $sidebarIconBase . 'return-easy-returns.svg',
+            ],
+            [
+                'label' => __('Manufacturer Warranty Available'),
+                'icon' => $sidebarIconBase . 'return-manufacturer-warranty.svg',
+            ],
+            [
+                'label' => __('Genuine Product Guarantee'),
+                'icon' => $sidebarIconBase . 'return-genuine-product.svg',
+            ],
+            [
+                'label' => __('Warranty Support Assistance'),
+                'icon' => $sidebarIconBase . 'return-warranty-support.svg',
+            ],
+            [
+                'label' => __('Satisfaction Guaranteed'),
+                'icon' => $sidebarIconBase . 'return-satisfaction.svg',
+            ],
+            [
+                'label' => __('Damaged Item Replacement'),
+                'icon' => $sidebarIconBase . 'return-damaged-replacement.svg',
+            ],
+            [
+                'label' => __('Dedicated After-Sales Support'),
+                'icon' => $sidebarIconBase . 'return-after-sales.svg',
+            ],
         ];
         ?>
         <div class="bb-pdp-notice bb-pdp-sidebar__notice" aria-label="<?= $escaper->escapeHtmlAttr(__('Product assurances')) ?>">
@@ -67,9 +113,16 @@ use Magento\Framework\View\Element\Template;
                     <?php foreach ($deliveryOptions as $option): ?>
                         <li class="bb-pdp-notice__row">
                             <span class="bb-pdp-notice__icon bb-pdp-notice__icon--line" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg>
+                                <img
+                                    src="<?= $escaper->escapeUrl($block->getViewFileUrl($option['icon'])) ?>"
+                                    alt=""
+                                    width="28"
+                                    height="28"
+                                    loading="lazy"
+                                    decoding="async"
+                                >
                             </span>
-                            <span class="bb-pdp-notice__text"><?= $escaper->escapeHtml($option) ?></span>
+                            <span class="bb-pdp-notice__text"><?= $escaper->escapeHtml($option['label']) ?></span>
                         </li>
                     <?php endforeach; ?>
                 </ul>
@@ -86,9 +139,16 @@ use Magento\Framework\View\Element\Template;
                     <?php foreach ($returnWarrantyOptions as $option): ?>
                         <li class="bb-pdp-notice__row">
                             <span class="bb-pdp-notice__icon bb-pdp-notice__icon--line" aria-hidden="true">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/><path d="m9 12 2 2 4-4"/></svg>
+                                <img
+                                    src="<?= $escaper->escapeUrl($block->getViewFileUrl($option['icon'])) ?>"
+                                    alt=""
+                                    width="28"
+                                    height="28"
+                                    loading="lazy"
+                                    decoding="async"
+                                >
                             </span>
-                            <span class="bb-pdp-notice__text"><?= $escaper->escapeHtml($option) ?></span>
+                            <span class="bb-pdp-notice__text"><?= $escaper->escapeHtml($option['label']) ?></span>
                         </li>
                     <?php endforeach; ?>
                 </ul>
