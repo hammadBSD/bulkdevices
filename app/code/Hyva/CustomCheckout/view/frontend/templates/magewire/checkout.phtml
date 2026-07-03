@@ -211,6 +211,14 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                     <div id="stripe-payment-element" wire:ignore></div>
                     <p x-show="stripeError" x-text="stripeError" class="hcc-error" style="display:none" x-cloak></p>
                 </div>
+
+                <button type="button"
+                        class="hcc-btn-place hcc-btn-place--mobile"
+                        @click="submitOrder"
+                        wire:loading.attr="disabled"
+                        :disabled="isSubmitting">
+                    <?= $escaper->escapeHtml(__('PLACE ORDER')) ?>
+                </button>
             </section>
         </div>
 
@@ -301,7 +309,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
             <?php endforeach; ?>
 
             <button type="button"
-                    class="hcc-btn-place"
+                    class="hcc-btn-place hcc-btn-place--desktop"
                     @click="submitOrder"
                     wire:loading.attr="disabled"
                     :disabled="isSubmitting">

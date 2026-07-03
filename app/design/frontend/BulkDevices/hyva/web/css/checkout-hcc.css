@@ -567,6 +567,28 @@ a.hcc-header__logo {
     cursor: not-allowed;
 }
 
+.hcc-btn-place--mobile {
+    display: none;
+}
+
+@media (max-width: 1023px) {
+    .hcc-btn-place--mobile {
+        display: block;
+        margin-top: 1rem;
+        margin-bottom: 1.25rem;
+    }
+
+    .hcc-summary-row--excl-tax {
+        margin-bottom: 0;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .hcc-btn-place--desktop {
+        display: none;
+    }
+}
+
 /* Messages */
 .hcc-error {
     background: #fef2f2;

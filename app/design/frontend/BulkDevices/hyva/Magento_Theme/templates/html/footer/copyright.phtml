@@ -10,13 +10,9 @@ use Magento\Theme\Block\Html\Footer;
 
 /** @var Footer $block */
 /** @var Escaper $escaper */
-
-$copyright = trim((string) $block->getCopyright());
 ?>
 <p class="site-footer__copyright">
-    <?php if ($copyright !== ''): ?>
-        <?= $escaper->escapeHtml($copyright) ?>
-    <?php else: ?>
-        <?= $escaper->escapeHtml(__('© %1 BulkDevices. All rights reserved.', date('Y'))) ?>
-    <?php endif; ?>
+    <?= $escaper->escapeHtml(
+        __('© Cube Devices Corp working as Bulk Devices , trademarks and tradenames are acknowledged. Bulk Devices hold no affiliation to any of the Trademark owners.')
+    ) ?>
 </p>
