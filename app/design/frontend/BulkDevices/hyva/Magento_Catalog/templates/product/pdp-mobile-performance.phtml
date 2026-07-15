@@ -68,11 +68,14 @@ use Magento\Framework\View\Element\Template;
             window.addEventListener('load', callback, { once: true });
         }
 
-        document.querySelectorAll('.catalog-product-view .site-footer-top, .catalog-product-view .site-footer-middle').forEach(function (el) {
-            el.setAttribute('data-pdp-defer-paint', '');
-        });
+        function collectPaintTargets() {
+            document.querySelectorAll('.catalog-product-view .site-footer-top, .catalog-product-view .site-footer-middle').forEach(function (el) {
+                el.setAttribute('data-pdp-defer-paint', '');
+            });
 
-        var paintTargets = document.querySelectorAll('[data-pdp-defer-paint]');
+            return document.querySelectorAll('[data-pdp-defer-paint]');
+        }
+
         var paintGateOpen = false;
         var scrollUnlocked = window.scrollY > 120;
         var loadSettled = document.readyState === 'complete';
@@ -102,6 +105,8 @@ use Magento\Framework\View\Element\Template;
         window.addEventListener('scroll', onScrollUnlock, { passive: true });
 
         function startPaintObserver() {
+            var paintTargets = collectPaintTargets();
+
             if (!paintTargets.length) {
                 return;
             }

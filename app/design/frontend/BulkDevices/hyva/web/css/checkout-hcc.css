@@ -2,7 +2,7 @@
  * Hyvä Custom Checkout (HCC) — BulkDevices theme
  */
 
-.hyva-custom-checkout {
+ .hyva-custom-checkout {
     --hcc-accent: #eb7d1e;
     --hcc-accent-hover: #c96a18;
     --hcc-text: #111827;
@@ -578,14 +578,12 @@ a.hcc-header__logo {
         margin-bottom: 1.25rem;
     }
 
-    .hcc-summary-row--excl-tax {
-        margin-bottom: 0;
-        border-bottom: none;
-        padding-bottom: 0;
-    }
-
     .hcc-btn-place--desktop {
         display: none;
+    }
+
+    .hcc-cart-heading {
+        margin-top: 0;
     }
 }
 

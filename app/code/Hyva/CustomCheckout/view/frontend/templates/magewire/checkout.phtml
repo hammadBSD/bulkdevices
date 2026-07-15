@@ -211,14 +211,6 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                     <div id="stripe-payment-element" wire:ignore></div>
                     <p x-show="stripeError" x-text="stripeError" class="hcc-error" style="display:none" x-cloak></p>
                 </div>
-
-                <button type="button"
-                        class="hcc-btn-place hcc-btn-place--mobile"
-                        @click="submitOrder"
-                        wire:loading.attr="disabled"
-                        :disabled="isSubmitting">
-                    <?= $escaper->escapeHtml(__('PLACE ORDER')) ?>
-                </button>
             </section>
         </div>
 
@@ -254,6 +246,14 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                     <span><?= $escaper->escapeHtml($magewire->totals['grand_total_excl_tax'] ?? '') ?></span>
                 </div>
             <?php endif; ?>
+
+            <button type="button"
+                    class="hcc-btn-place hcc-btn-place--mobile"
+                    @click="submitOrder"
+                    wire:loading.attr="disabled"
+                    :disabled="isSubmitting">
+                <?= $escaper->escapeHtml(__('PLACE ORDER')) ?>
+            </button>
 
             <p class="hcc-cart-heading">
                 <?= $escaper->escapeHtml(__('%1 ITEM(S) IN CART', (int) ($magewire->totals['items_count'] ?? count($magewire->cartItems)))) ?>
