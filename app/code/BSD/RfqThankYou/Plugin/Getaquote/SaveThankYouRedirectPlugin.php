@@ -9,6 +9,7 @@ use BSD\RfqThankYou\Model\RfqSubmissionRegistry;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\UrlInterface;
+use ReflectionObject;
 
 class SaveThankYouRedirectPlugin
 {
@@ -21,7 +22,7 @@ class SaveThankYouRedirectPlugin
 
     public function afterExecute(Save $subject, Json $result): Json
     {
-        $data = $result->getData();
+        $data = $this->readJsonPayload($result);
         if (!is_array($data) || empty($data['success'])) {
             return $result;
         }
@@ -36,8 +37,34 @@ class SaveThankYouRedirectPlugin
             'source' => 'quotation_modal',
         ]);
 
-        $data['redirectUrl'] = $this->urlBuilder->getUrl('rfq/index/thankyou');
+        return $result->setData([
+            'success' => true,
+            'redirectUrl' => $this->urlBuilder->getUrl('rfq/index/thankyou'),
+        ]);
+    }
 
-        return $result->setData($data);
+    /**
+     * Result\Json exposes setData() but not getData(); read the serialized payload instead.
+     *
+     * @return array<string, mixed>|null
+     */
+    private function readJsonPayload(Json $result): ?array
+    {
+        $reflection = new ReflectionObject($result);
+        if (!$reflection->hasProperty('json')) {
+            return null;
+        }
+
+        $property = $reflection->getProperty('json');
+        $property->setAccessible(true);
+        $json = $property->getValue($result);
+
+        if (!is_string($json) || $json === '') {
+            return null;
+        }
+
+        $decoded = json_decode($json, true);
+
+        return is_array($decoded) ? $decoded : null;
     }
 }

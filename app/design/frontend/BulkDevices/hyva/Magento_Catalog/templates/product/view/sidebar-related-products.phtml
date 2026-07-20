@@ -5,6 +5,7 @@
 
 declare(strict_types=1);
 
+use BSD\ProductAttributes\ViewModel\RelatedProducts as AttributeRelatedProducts;
 use Hyva\Theme\Model\ViewModelRegistry;
 use Hyva\Theme\ViewModel\ProductList;
 use Hyva\Theme\ViewModel\ProductPage;
@@ -27,6 +28,9 @@ $productPageViewModel = $viewModels->require(ProductPage::class);
 /** @var ProductList $productListViewModel */
 $productListViewModel = $viewModels->require(ProductList::class);
 
+/** @var AttributeRelatedProducts $attributeRelatedProducts */
+$attributeRelatedProducts = $viewModels->require(AttributeRelatedProducts::class);
+
 /** @var ProductPrice $productPriceViewModel */
 $productPriceViewModel = $viewModels->require(ProductPrice::class);
 
@@ -37,17 +41,20 @@ $storeViewModel = $viewModels->require(Store::class);
 $pricingHelper = $this->helper(PricingHelper::class);
 
 $currentProduct = $productPageViewModel->getProduct();
-$pageSize = (int) ($block->getData('page_size') ?: 6);
+$pageSize = (int) ($block->getData('page_size') ?: 8);
 
-$productListViewModel->setPageSize($pageSize);
-$productListViewModel->addFilter('website_id', $storeViewModel->getWebsiteId());
-$productListViewModel->addFilter(
-    'visibility',
-    [ProductVisibility::VISIBILITY_IN_CATALOG, ProductVisibility::VISIBILITY_BOTH],
-    'in'
-);
+$relatedProducts = $attributeRelatedProducts->getAttributeBasedRelatedProducts($currentProduct);
 
-$relatedProducts = $productListViewModel->getLinkedItems('related', $currentProduct);
+if ($relatedProducts === [] && !$attributeRelatedProducts->hasManagedAttributes($currentProduct)) {
+    $productListViewModel->setPageSize($pageSize);
+    $productListViewModel->addFilter('website_id', $storeViewModel->getWebsiteId());
+    $productListViewModel->addFilter(
+        'visibility',
+        [ProductVisibility::VISIBILITY_IN_CATALOG, ProductVisibility::VISIBILITY_BOTH],
+        'in'
+    );
+    $relatedProducts = $productListViewModel->getLinkedItems('related', $currentProduct);
+}
 
 if (!$relatedProducts) {
     return;
@@ -74,7 +81,7 @@ if (!$relatedProducts) {
             $finalPrice = (float) $productPriceViewModel->getPriceValue(FinalPrice::PRICE_CODE, $relatedProduct);
             $priceLabel = $finalPrice > 0
                 ? $pricingHelper->currency($finalPrice, true, false)
-                : __('Call for Price');
+                : __('Quote');
             ?>
             <li class="bb-pdp-related__item">
                 <a class="bb-pdp-related__link" href="<?= $escaper->escapeUrl($productUrl) ?>">

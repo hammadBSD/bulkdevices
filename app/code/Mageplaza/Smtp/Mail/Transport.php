@@ -34,8 +34,8 @@ use Mageplaza\Smtp\Model\Log;
 use Mageplaza\Smtp\Model\LogFactory;
 use Psr\Log\LoggerInterface;
 use ReflectionClass;
-use Zend\Mail\Message;
-use Zend_Exception;
+use Laminas\Mail\Message;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class Transport
@@ -101,7 +101,7 @@ class Transport
      * @param Closure $proceed
      *
      * @throws MailException
-     * @throws Zend_Exception
+     * @throws LocalizedException
      */
     public function aroundSendMessage(
         TransportInterface $subject,

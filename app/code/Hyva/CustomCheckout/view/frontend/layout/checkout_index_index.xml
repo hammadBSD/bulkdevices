@@ -14,7 +14,7 @@
         <link rel="preconnect" src="https://js.stripe.com" src_type="url"/>
         <link rel="preconnect" src="https://api.stripe.com" src_type="url"/>
         <script src="https://js.stripe.com/v3/" src_type="url"/>
-        <script src="Hyva_CustomCheckout::js/checkout-stripe.js"/>
+        <script src="Hyva_CustomCheckout::js/checkout-stripe-v2.js"/>
     </head>
     <body>
         <attribute name="class" value="hyva-custom-checkout"/>

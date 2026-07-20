@@ -12,6 +12,7 @@ use Magento\Framework\View\Element\Template;
 
 $stripeConfigJson = $escaper->escapeHtmlAttr(json_encode($magewire->stripeConfig ?: [], JSON_THROW_ON_ERROR));
 $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementOptions ?: [], JSON_THROW_ON_ERROR));
+$regionsJson = $escaper->escapeHtmlAttr(json_encode($magewire->regions ?: [], JSON_THROW_ON_ERROR));
 ?>
 <div class="hcc-checkout"
      wire:loading.class="hcc-is-loading"
@@ -27,10 +28,12 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
      data-success-url="<?= $escaper->escapeHtmlAttr($block->getUrl('checkout/onepage/success')) ?>"
      data-msg-unavailable="<?= $escaper->escapeHtmlAttr(__('Payment system is unavailable. Please try again later.')) ?>"
      data-msg-failed="<?= $escaper->escapeHtmlAttr(__('Payment failed. Please try again.')) ?>"
+     data-regions="<?= $regionsJson ?>"
      @checkout-cart-updated.window="refreshElements"
      @checkout-payment-method-changed.window="onPaymentMethodChanged"
      @order-placed.window="handleAuthentication"
      @order-place-failed.window="onPlaceFailed">
+    <script type="application/json" id="hcc-regions-catalog"><?= /* @noEscape */ str_replace('</', '<\/', json_encode($magewire->regions ?: [], JSON_THROW_ON_ERROR)) ?></script>
     <?php if ($magewire->errorMessage): ?>
         <div class="hcc-error" role="alert"><?= $escaper->escapeHtml($magewire->errorMessage) ?></div>
     <?php endif; ?>
@@ -99,6 +102,7 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                         <option value=""><?= $escaper->escapeHtml(__('Please select')) ?></option>
                         <?php foreach ($magewire->regions as $region): ?>
                             <option value="<?= $escaper->escapeHtmlAttr($region['id']) ?>"
+                                data-region-code="<?= $escaper->escapeHtmlAttr($region['code']) ?>"
                                 <?= (string) $magewire->regionId === (string) $region['id'] ? 'selected' : '' ?>>
                                 <?= $escaper->escapeHtml($region['name']) ?>
                             </option>
@@ -247,6 +251,15 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                 </div>
             <?php endif; ?>
 
+            <?php foreach ($magewire->agreements as $agreement): ?>
+                <label class="hcc-checkbox">
+                    <input type="checkbox"
+                           value="<?= (int) $agreement['id'] ?>"
+                           wire:model="agreementIds"/>
+                    <span><?= /* @noEscape */ $agreement['content'] ?: $escaper->escapeHtml($agreement['name']) ?></span>
+                </label>
+            <?php endforeach; ?>
+
             <button type="button"
                     class="hcc-btn-place hcc-btn-place--mobile"
                     @click="submitOrder"
@@ -297,15 +310,6 @@ $elementOptions = $escaper->escapeHtmlAttr(json_encode($magewire->stripeElementO
                         </div>
                     </div>
                 </div>
-            <?php endforeach; ?>
-
-            <?php foreach ($magewire->agreements as $agreement): ?>
-                <label class="hcc-checkbox">
-                    <input type="checkbox"
-                           value="<?= (int) $agreement['id'] ?>"
-                           wire:model="agreementIds"/>
-                    <span><?= /* @noEscape */ $agreement['content'] ?: $escaper->escapeHtml($agreement['name']) ?></span>
-                </label>
             <?php endforeach; ?>
 
             <button type="button"

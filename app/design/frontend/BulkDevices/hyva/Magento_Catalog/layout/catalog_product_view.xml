@@ -174,7 +174,7 @@
                             template="Magento_Catalog::product/view/sidebar-related-products.phtml"
                         >
                             <arguments>
-                                <argument name="page_size" xsi:type="number">6</argument>
+                                <argument name="page_size" xsi:type="number">8</argument>
                             </arguments>
                         </block>
                     </block>

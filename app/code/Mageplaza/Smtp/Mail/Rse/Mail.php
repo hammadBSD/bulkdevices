@@ -22,11 +22,10 @@
 namespace Mageplaza\Smtp\Mail\Rse;
 
 use Mageplaza\Smtp\Helper\Data;
-use Zend\Mail\Message;
-use Zend\Mail\Transport\Smtp;
-use Zend\Mail\Transport\SmtpOptions;
-use Zend_Exception;
-use Zend_Mail_Transport_Smtp;
+use Laminas\Mail\Message;
+use Laminas\Mail\Transport\Smtp;
+use Laminas\Mail\Transport\SmtpOptions;
+use Magento\Framework\Exception\LocalizedException;
 
 /**
  * Class Mail
@@ -70,7 +69,7 @@ class Mail
     protected $_returnPath = [];
 
     /**
-     * @var Zend_Mail_Transport_Smtp
+     * @var Smtp|null
      */
     protected $_transport;
 
@@ -122,8 +121,8 @@ class Mail
     /**
      * @param $storeId
      *
-     * @return Zend_Mail_Transport_Smtp | Smtp
-     * @throws Zend_Exception
+     * @return Smtp
+     * @throws LocalizedException
      */
     public function getTransport($storeId)
     {
@@ -151,7 +150,7 @@ class Mail
             }
 
             if (!isset($this->_smtpOptions[$storeId]['host']) || !$this->_smtpOptions[$storeId]['host']) {
-                throw new Zend_Exception(__('A host is necessary for smtp transport, but none was given'));
+                throw new LocalizedException(__('A host is necessary for smtp transport, but none was given'));
             }
 
             if ($this->smtpHelper->versionCompare('2.2.8')) {
@@ -173,11 +172,6 @@ class Mail
                 $options = new SmtpOptions($options);
 
                 $this->_transport = new Smtp($options);
-            } else {
-                $this->_transport = new Zend_Mail_Transport_Smtp(
-                    $this->_smtpOptions[$storeId]['host'],
-                    $this->_smtpOptions[$storeId]
-                );
             }
         }
 

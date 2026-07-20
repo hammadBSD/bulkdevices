@@ -22,7 +22,7 @@ $posts = $featuredBlogs->getPosts();
             <h2 id="home-featured-blogs-heading" class="home-featured-blogs__title">
                 <?= $escaper->escapeHtml(__('Featured Blogs')) ?>
             </h2>
-            <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => ltrim($featuredBlogs->getViewAllUrl(), '/')])) ?>"
+            <a href="<?= $escaper->escapeUrl($featuredBlogs->getViewAllUrl()) ?>"
                class="home-featured-blogs__view-all">
                 <?= $escaper->escapeHtml(__('View All')) ?>
             </a>
@@ -31,7 +31,7 @@ $posts = $featuredBlogs->getPosts();
         <div class="home-featured-blogs__grid">
             <?php foreach ($posts as $post): ?>
                 <article class="home-featured-blogs__card">
-                    <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => ltrim($post['url'], '/')])) ?>"
+                    <a href="<?= $escaper->escapeUrl($post['url']) ?>"
                        class="home-featured-blogs__media">
                         <img class="home-featured-blogs__image"
                              src="<?= $escaper->escapeUrl($post['image']) ?>"
@@ -43,14 +43,14 @@ $posts = $featuredBlogs->getPosts();
                     </a>
                     <div class="home-featured-blogs__body">
                         <h3 class="home-featured-blogs__card-title">
-                            <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => ltrim($post['url'], '/')])) ?>">
+                            <a href="<?= $escaper->escapeUrl($post['url']) ?>">
                                 <?= $escaper->escapeHtml(__($post['title'])) ?>
                             </a>
                         </h3>
                         <p class="home-featured-blogs__excerpt">
                             <?= $escaper->escapeHtml(__($post['excerpt'])) ?>
                         </p>
-                        <a href="<?= $escaper->escapeUrl($block->getUrl('', ['_direct' => ltrim($post['url'], '/')])) ?>"
+                        <a href="<?= $escaper->escapeUrl($post['url']) ?>"
                            class="home-featured-blogs__read-more">
                             <?= $escaper->escapeHtml(__('Read More')) ?>
                         </a>

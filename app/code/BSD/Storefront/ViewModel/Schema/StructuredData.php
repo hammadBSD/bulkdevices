@@ -29,7 +29,7 @@ class StructuredData implements ArgumentInterface
     private const STORE_STREET = '13207 Lone Creek';
     private const STORE_CITY = 'Pearland';
     private const STORE_REGION = 'TX';
-    private const STORE_POSTAL = '77548';
+    private const STORE_POSTAL = '77584';
     private const STORE_COUNTRY = 'US';
     private const PDP_AGGREGATE_RATING_VALUE = '4.8';
 

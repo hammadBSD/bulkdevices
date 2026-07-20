@@ -7,8 +7,10 @@
  */
 
 @source "../../../../../../../../vendor/hyva-themes/magento2-theme-module/src";
+@source "../../../../../../../../vendor/magewirephp/magewire/src";
 @source "../../../../../../../../vendor/hyva-themes/magento2-default-theme";
 
 
-@import "../../../../../../../../vendor/mollie/magento2-hyva-compatibility/src/Mollie_HyvaCompatibility/view/frontend/tailwind/module.css";
+@import "../../../../../../../../vendor/mollie/magento2-hyva-compatibility/src/view/frontend/tailwind/module.css";
+@import "../../../../../../../../vendor/magewirephp/magewire/themes/Hyva/view/frontend/tailwind/module.css";
 

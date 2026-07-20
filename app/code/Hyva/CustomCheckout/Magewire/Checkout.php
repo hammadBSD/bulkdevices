@@ -154,6 +154,7 @@ class Checkout extends Component
                 $this->telephone = (string) $shippingAddress->getTelephone();
                 $this->company = (string) $shippingAddress->getCompany();
                 $this->regionId = (string) ($shippingAddress->getRegionId() ?? '');
+                $this->region = $this->resolveRegionLabel($this->regionId, $this->regions);
                 $this->hydrateShippingFromQuote($quote);
                 $this->loadCart(false);
             } else {
@@ -180,6 +181,18 @@ class Checkout extends Component
             $this->loadPaymentMethods($this->quoteProvider->getActiveQuote());
         } catch (LocalizedException) {
             $this->paymentMethods = [];
+        }
+    }
+
+    public function updatedRegionId(string $value): void
+    {
+        $this->region = $this->resolveRegionLabel($value, $this->regions);
+    }
+
+    public function updatedBillingRegionId(string $value): void
+    {
+        if (!$this->billingSameAsShipping) {
+            $this->billingRegion = $this->resolveRegionLabel($value, $this->regions);
         }
     }
 
@@ -655,5 +668,23 @@ class Checkout extends Component
                 throw new LocalizedException(__('Please accept all required terms and conditions.'));
             }
         }
+    }
+
+    /**
+     * @param array<int, array{id: string, code: string, name: string}> $regions
+     */
+    private function resolveRegionLabel(string $regionId, array $regions): string
+    {
+        if ($regionId === '') {
+            return '';
+        }
+
+        foreach ($regions as $region) {
+            if ((string) $region['id'] === $regionId) {
+                return $region['code'] !== '' ? $region['code'] : $region['name'];
+            }
+        }
+
+        return '';
     }
 }

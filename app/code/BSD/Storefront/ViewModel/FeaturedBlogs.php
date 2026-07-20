@@ -21,31 +21,31 @@ class FeaturedBlogs implements ArgumentInterface
     {
         return [
             [
-                'title' => 'Everything You Need To Know About Computer Primary Memory',
-                'url' => '/blog/everything-you-need-to-know-about-computer-primary-memory/',
-                'excerpt' => 'Primary memory explained: RAM types, speeds, channels, and optimization.',
-                'image' => 'https://bdusrevamp.bsdtechs.com/blog/wp-content/uploads/2025/02/primary-memory-768x512.jpg',
-                'image_alt' => 'Computer memory module on a circuit board',
+                'title' => 'SAS vs SATA: Which Server Hard Drive Should You Choose?',
+                'url' => '/blog/sas-vs-sata/',
+                'excerpt' => 'SAS vs SATA: Which Server Hard Drive Should You Choose?',
+                'image' => 'https://bulkdevices.com/blog/wp-content/uploads/2026/07/sas-vs-sata.webp',
+                'image_alt' => 'SAS vs SATA: Which Server Hard Drive Should You Choose?',
             ],
             [
-                'title' => 'Server Room Best Practices for SMB IT Teams',
-                'url' => '/blog/server-room-best-practices-for-smb-it-teams/',
-                'excerpt' => 'Essential tips for cable management, cooling, and redundancy.',
-                'image' => 'https://bdusrevamp.bsdtechs.com/blog/wp-content/uploads/2025/02/server-room-768x431.jpg',
-                'image_alt' => 'Server hardware in a rack environment',
+                'title' => 'Refurbished vs New Network Switches: Which Offers Better Value?',
+                'url' => '/blog/refurbished-vs-new-network-switches/',
+                'excerpt' => 'Refurbished vs New Network Switches: Which Offers Better Value?',
+                'image' => 'https://bulkdevices.com/blog/wp-content/uploads/2026/07/refurbished-vs-new.webp',
+                'image_alt' => 'Refurbished vs New Network Switches',
             ],
             [
-                'title' => 'Laptop Upgrade Guide: SSD vs HDD in 2025',
-                'url' => '/blog/laptop-upgrade-guide-ssd-vs-hdd-in-2025/',
-                'excerpt' => 'Should you choose SSD or HDD for your next laptop upgrade?',
-                'image' => 'https://bdusrevamp.bsdtechs.com/blog/wp-content/uploads/2025/02/laptop-upgrade-768x544.jpg',
-                'image_alt' => 'Technician upgrading a laptop storage drive',
+                'title' => 'Cisco vs HP vs Ubiquiti Network Switches Comparison (2026)',
+                'url' => '/blog/cisco-vs-hp-vs-ubiquiti-network-switches/',
+                'excerpt' => 'Cisco vs HP vs Ubiquiti Network Switches Comparison (2026)',
+                'image' => 'https://bulkdevices.com/blog/wp-content/uploads/2026/07/cisco-vs-hp-vs-ubiquito.webp',
+                'image_alt' => 'Cisco vs HP vs Ubiquiti Network Switches Comparison (2026)',
             ],
         ];
     }
 
     public function getViewAllUrl(): string
     {
-        return '/blog';
+        return '/blog/';
     }
 }

@@ -2,7 +2,7 @@
  * Site footer — static 4-column middle section + bottom bar
  */
 
-.site-footer {
+ .site-footer {
     --bb-footer-accent: #eb7d1e;
     --bb-footer-container-max: 96rem;
     background: #1f2937;
